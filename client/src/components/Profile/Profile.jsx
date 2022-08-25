@@ -20,7 +20,9 @@ function Profile(props) {
     }, [data, id])
 
     useEffect(() => {
-        fetchProfileData();
+        fetchProfileData().then(()=>{
+            console.log(data);
+        });
     }, [id])
 
     if(!data){

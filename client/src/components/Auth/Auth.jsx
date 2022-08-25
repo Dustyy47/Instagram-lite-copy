@@ -19,12 +19,13 @@ function Auth() {
     const [password, setPassword] = useState("");
     const [avatarImage,setAvatarImage] = useState(null);
     const [fullName, setFullName] = useState("");
+    const [nickName,setNickName] = useState("");
 
     const onLogin = async ()=>{
         try{
             const response = await login(email,password);
             navigate(`/profile/${response.userId}`);
-            redirect(response.userId);
+            redirect(response.nickName);
         }catch(e){
             console.log(e);
         }
@@ -37,8 +38,9 @@ function Auth() {
             data.append('password',password);
             data.append('fullName',fullName);
             data.append('avatarImage',avatarImage);
+            data.append('nickName',nickName);
             const response = await registration(data);
-            redirect(response.userId);
+            redirect(response.nickName);
         }catch(e){
             console.log(e);
         }
@@ -54,7 +56,7 @@ function Auth() {
     }
 
     const registrationProps = {
-        ...loginProps, fullName, setFullName ,setAvatarImage, onRegister
+        ...loginProps, fullName, setFullName ,setAvatarImage, onRegister,nickName,setNickName
     }
 
     if (isLogin)

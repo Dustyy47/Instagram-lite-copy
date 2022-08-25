@@ -7,18 +7,19 @@ import {__dirname} from "../start.js";
 class AuthController {
     async register(req, res) {
         try {
-            const {email, password, fullName} = req.body;
+            const {email, password, fullName,nickName} = req.body;
             const {avatarImage} = req.files;
             const avatarName = Date.now() + '--' + avatarImage.name;
-            avatarImage.mv(path.resolve(__dirname,'images/avatars',avatarName))
+            await avatarImage.mv(path.resolve(__dirname,'images/avatars',avatarName))
 
             const candidate = await UserModel.findOne({email});
             if (candidate)
                 return res.status(400).json({message: "Такой email занят"});
             const passwordHash = await bcrypt.hash(password, 10);
-            const user = await UserModel.create({email, password: passwordHash, fullName,avatarUrl : avatarName});
+            const user = await UserModel.create({email,nickName, password: passwordHash, fullName,avatarUrl : avatarName});
             const token = jwt.sign({
-                userId: user._id
+                userId: user._id,
+                nickName: user.nickName,
             }, process.env.SECRET, {expiresIn: '7d'});
             res.json(token);
         } catch (e) {
@@ -40,7 +41,8 @@ class AuthController {
                 return res.status(404).json({message: "Неверный логин или пароль"});
             }
             const token = jwt.sign({
-                userId: user._id
+                userId: user._id,
+                nickName: user.nickName,
             }, process.env.SECRET, {expiresIn: '7d'});
             res.json(token);
         }catch(e){
