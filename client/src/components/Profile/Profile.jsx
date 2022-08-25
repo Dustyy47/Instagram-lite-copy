@@ -5,9 +5,6 @@ import "./Profile.scss"
 import ProfileInfo from "./ProfileInfo";
 import Post from "./Post";
 import Button from "../Button/Button";
-import Modal from "../Modal/Modal";
-import Input from "../Input/Input";
-import FileInput from "../Input/FileInput";
 import CreatingPost from "./CreatingPost";
 
 function Profile(props) {
@@ -23,9 +20,21 @@ function Profile(props) {
     }, [data, id])
 
     useEffect(() => {
-        console.log('id changed')
         fetchProfileData();
     }, [id])
+
+    if(!data){
+        return (
+            <div className="not-found">
+                <h1 className="not-found__title">
+                    404
+                </h1>
+                <p className="not-found__text">
+                    Данный пользователь не найден
+                </p>
+            </div>
+        )
+    }
 
     if (!data.profileInfo) {
         return (
