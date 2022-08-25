@@ -1,0 +1,25 @@
+@import "../../styles/variables.scss";
+
+.button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width:133px;
+  height:66px;
+  border:none;
+  background:white;
+  color:$accentColor;
+  font-size:24px;
+  border-radius:10px;
+  font-weight:500;
+  cursor:pointer;
+  box-shadow:0 2px 7px -3px rgba(0, 0, 0, 0.25);
+  transition: .3s;
+  padding:20px 28px;
+
+  &:hover{
+    color: white;
+    background : $accentColor;
+    box-shadow: 0 2px 7px -3px rgba(72, 197, 209, 0.74);
+  }
+}

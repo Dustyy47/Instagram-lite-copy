@@ -1,0 +1,30 @@
+@import "../../styles/variables.scss";
+
+.label{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width:225px;
+  width : 100%;
+  height:50px;
+  color:$accentColor;
+  font-size:20px;
+  border-radius:10px;
+  font-weight:500;
+  cursor:pointer;
+  box-shadow:0 2px 7px -3px rgba(0, 0, 0, 0.25);
+  transition: .3s;
+  padding:20px 28px;
+
+  &:hover{
+    color: white;
+    background : $accentColor;
+    box-shadow: 0 2px 7px -3px rgba(72, 197, 209, 0.74);
+  }
+}
+
+.input{
+  opacity : 0;
+  width: 0;
+  height: 0;
+}

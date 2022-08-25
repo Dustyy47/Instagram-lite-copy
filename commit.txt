@@ -1,0 +1,12 @@
+Initial Commit
+
+Initially implemented:
+-Profile page
+--Posts (without likes and full description popup)
+--Profile info (Avatar, user fullName, user description)
+--Possibility to open another users page (at the same time, you can only add posts at your page if you`re logged in)
+--Guest system
+-JWT Authorization
+--Login (Automatic if the user has already logged in) 
+--Registration
+
