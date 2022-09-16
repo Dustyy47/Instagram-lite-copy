@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
-import {useLocation,useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import Login from "./Login";
 import Registration from "./Registration";
-import {login} from '../../http/userApi.js'
-import {registration} from '../../http/userApi.js'
+import {getUserInfo, login, registration} from '../../http/userApi.js'
 import {useDispatch} from "react-redux";
-import {setId} from "../../store/userSlice";
+import {setId, setInfo} from "../../store/userSlice";
 
 function Auth() {
 
@@ -46,9 +45,12 @@ function Auth() {
         }
     }
 
-    const redirect = userId=>{
+
+    const redirect = async userId=>{
         navigate(`/profile/${userId}`);
         dispatch(setId());
+        const userInfo = await getUserInfo();
+        dispatch(setInfo(userInfo));
     }
 
     const loginProps = {

@@ -4,6 +4,7 @@ import FileInput from "../Input/FileInput";
 import Button from "../Button/Button";
 import Modal from "../Modal/Modal";
 import {addPost} from "../../http/userApi";
+import './Profile.scss'
 
 function CreatingPost({isActive , setActive , onPostAdded}) {
     const [newPostImageUrl, setNewPostImageUrl] = useState("");
@@ -46,7 +47,7 @@ function CreatingPost({isActive , setActive , onPostAdded}) {
                 newPostImageUrl &&
                 <img className="preview" src={newPostImageUrl} alt=""/>
             }
-            <div className="buttons">
+            <div className='buttons'>
                 <Button onClick={createPost}>Создать</Button>
                 <Button onClick={() => setActive(false)}>Отменить</Button>
             </div>

@@ -11,8 +11,8 @@ $subText: #929292;
   box-sizing: border-box;
 }
 
-
   .buttons{
+    display: flex;
     position:absolute;
     right: 20px;
     bottom: 20px;
@@ -66,6 +66,20 @@ $subText: #929292;
       font-size: 20px;
       color: $subText;
     }
+
+    &__subscribesBlock{
+      display: flex;
+    }
+
+    &__subscribes , &__subscribers{
+      font-size: 16px;
+      text-decoration: underline;
+      color: #363636;
+      cursor: pointer;
+      margin-top: 10px;
+      margin-right: 10px;
+    }
+
 
   }
 
@@ -173,6 +187,7 @@ $subText: #929292;
 
         &--liked{
           filter : none;
+          animation : .2s like;
         }
 
       }
@@ -196,5 +211,17 @@ $subText: #929292;
   &__text{
     font-size:30px;
     color : #ededed;
+  }
+}
+
+@keyframes like {
+  0%{
+    transform:scale(1.2);
+  }
+  50%{
+    transform:scale(1.4);
+  }
+  100%{
+    transform:scale(1.2);
   }
 }

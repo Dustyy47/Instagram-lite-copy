@@ -1,46 +1,67 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
-import {addPost, getProfileData} from "../../http/userApi";
+import {getPosts, getProfileInfo, likePost, subscribe} from "../../http/userApi";
 import "./Profile.scss"
 import ProfileInfo from "./ProfileInfo";
-import Post from "./Post";
 import Button from "../Button/Button";
 import CreatingPost from "./CreatingPost";
+import PostsList from "../Posts/PostsList";
+import NotFound from "../Errors/NotFound";
+import {useDispatch, useSelector} from "react-redux";
+import Loading from "../Loading/Loading";
 
-function Profile(props) {
+function Profile() {
+    //console.log('rerender')
+    const [isLoading, setLoading] = useState(true);
+    const [isSubscribed, setSubscribe] = useState(true);
 
-    const {id} = useParams()
-    const [data, setData] = useState({})
+    const dispatch = useDispatch();
+    const {likedPosts, subscribes} = useSelector(state => state.user);
 
+    const {id: paramsId} = useParams()
+    const [profileInfo, setProfileInfo] = useState(null)
+    const [posts, setPosts] = useState([]);
     const [isCreatingPost, setCreatingPost] = useState(false);
 
-    const fetchProfileData = useCallback(async () => {
-        const data = await getProfileData(id);
-        setData(data)
-    }, [data, id])
+    const fetchProfileData = async () => {
+        setLoading(true);
+        const profileInfo = await getProfileInfo(paramsId);
+        const posts = await getPosts(paramsId);
+        setProfileInfo(profileInfo);
+        const res = !!subscribes.find(subscribe => subscribe === profileInfo.profileId)
+        //console.log(res);
+        setSubscribe(res);
+        setPosts(posts);
+        setLoading(false);
+    }
 
-    useEffect(() => {
-        fetchProfileData().then(()=>{
-            console.log(data);
-        });
-    }, [id])
+    useEffect( () => {
+    if(subscribes)
+        fetchProfileData();
+    }, [paramsId,subscribes])
 
-    if(!data){
+    const toggleSubscribe = async () => {
+        try {
+            await subscribe(paramsId);
+            setSubscribe(!isSubscribed);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const like = async (postId) => {
+        await likePost(postId);
+    }
+
+    if (isLoading) {
         return (
-            <div className="not-found">
-                <h1 className="not-found__title">
-                    404
-                </h1>
-                <p className="not-found__text">
-                    Данный пользователь не найден
-                </p>
-            </div>
+            <Loading/>
         )
     }
 
-    if (!data.profileInfo) {
+    if (!profileInfo) {
         return (
-            "Загрузка"
+            <NotFound/>
         )
     }
 
@@ -48,25 +69,31 @@ function Profile(props) {
         <section className="page">
             <div className="page-wrapper">
                 <div style={{display: "flex", justifyContent: "space-between"}}>
-                    <ProfileInfo fullName={data.profileInfo.fullName || ""} email={data.profileInfo.email || ""}
-                                 avatarUrl={`${process.env.REACT_APP_API_URL}/avatars/${data.profileInfo.avatarUrl}`}/>
+                    <ProfileInfo fullName={profileInfo.fullName || ""} email={profileInfo.email || ""}
+                                 avatarUrl={`${process.env.REACT_APP_API_URL}/avatars/${profileInfo.avatarUrl}`}
+                                 subscribesId={profileInfo.subscribes}
+                                 subscribersId={profileInfo.subscribers}
+                    />
                     {
-                        data.profileInfo.isUserPage &&
-                        <Button onClick={() => setCreatingPost(true)}>Создать пост</Button>
-                    }
-                </div>
-                <div className="page-content">
-                    {
-                        data.posts.length !== 0 ?
-                            data.posts.map(post => (
-                                <Post key={post._id} data={post}/>
-                            ))
+                        profileInfo.isUserProfile ?
+                            <Button onClick={() => setCreatingPost(true)}>Создать пост</Button>
                             :
-                            "Нет постов"
+                            <div style = {{display:'flex',alignItems:'top'}}>
+                            <Button style = {{margin: "0 20px"}}>Чат</Button>
+                                {
+                                    isSubscribed === true ?
+                                        <Button onClick={toggleSubscribe}>Отписаться</Button>
+                                        :
+                                        <Button onClick={toggleSubscribe}>Подписаться</Button>
+                                }
+                            </div>
+
+
                     }
                 </div>
+                <PostsList likedPosts={likedPosts} posts={posts} onLike={like}/>
             </div>
-            <CreatingPost isActive = {isCreatingPost} setActive = {setCreatingPost} onPostAdded={fetchProfileData}/>
+            <CreatingPost isActive={isCreatingPost} setActive={setCreatingPost} onPostAdded={fetchProfileData}/>
         </section>
     );
 }

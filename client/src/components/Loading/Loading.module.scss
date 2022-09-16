@@ -1,0 +1,18 @@
+.loading{
+  font-size: 100px;
+  fill : #ededed;
+  display: block;
+  animation : 1s spin infinite;
+  margin: 50px auto 0;
+}
+
+@keyframes spin {
+    0%{
+      opacity:.7;
+      transform:rotate(0);
+    }
+  100%{
+    opacity:1;
+    transform:rotate(360deg);
+  }
+}

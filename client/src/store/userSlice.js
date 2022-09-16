@@ -6,6 +6,9 @@ const userSlice = createSlice({
     initialState:{
         userId:null,
         isLoading:true,
+        likedPosts:[],
+        subscribes:null,
+        nickName:"",
     },
     reducers: {
         setId(state){
@@ -24,9 +27,15 @@ const userSlice = createSlice({
         },
         setLoading(state,action){
             state.isLoading = action.payload;
+        },
+        setInfo(state,action){
+            const {likedPosts,nickName,subscribes} = action.payload;
+            state.likedPosts = likedPosts;
+            state.nickName = nickName;
+            state.subscribes = subscribes;
         }
     }
 })
 
 export default userSlice.reducer;
-export const {setId,setLoading} = userSlice.actions;
+export const {setId,setLoading,setInfo} = userSlice.actions;

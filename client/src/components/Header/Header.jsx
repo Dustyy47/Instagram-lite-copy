@@ -1,28 +1,33 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import styles from './Header.module.scss'
 import Button from "../Button/Button";
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {setId} from "../../store/userSlice";
-import {getProfileData} from "../../http/userApi";
+import {getProfileInfo} from "../../http/userApi";
 import {placeholderUrl} from "../Auth/Registration";
+import Search from "./Search";
 
 function Header() {
 
     const [profileInfo,setProfileInfo] = useState(null);
+    const [loading,setLoading] = useState(true);
 
-    const  {userId,isLoading} = useSelector(state=>state.user);
+    const  {userId,nickName} = useSelector(state=>state.user);
     const dispatch = useDispatch()
     const navigate = useNavigate();
 
     const fetchData = async ()=>{
         try{
+            setLoading(true);
             if(!userId){
                 setProfileInfo(null);
+                setLoading(false);
                 return;
             }
-            const {profileInfo} = await getProfileData(userId);
+            const profileInfo = await getProfileInfo(userId);
             setProfileInfo(profileInfo);
+            setLoading(false);
         }catch(e){
             console.log(e);
         }
@@ -42,21 +47,27 @@ function Header() {
         <header className={styles.header}>
             <div className={styles.wrapper}>
                 <div>
-                    <Link to = {userId ? `/profile/${userId}` : '/auth/login'} className={styles.userInfo}>
+                    <Link to = {userId ? `/profile/${nickName}` : '/auth/login'} className={styles.userInfo}>
                         {
+                            loading ?
+                                <img className={styles['avatar--loading']} src="#" alt=""/>
+                                :
                             profileInfo
                                 ?
-                                <img className={styles.avatar} src={process.env.REACT_APP_API_URL+'/avatars/'+profileInfo.avatarUrl} alt="ava"/>
+                                <img className={styles.avatar} src={process.env.REACT_APP_API_URL+'/avatars/'+profileInfo.avatarUrl} alt=""/>
                                 :
-                                <img className={styles.avatar} src={placeholderUrl} alt="ava"/>
+                                <img className={styles.avatar} src={placeholderUrl} alt=""/>
                         }
 
 
-                        <span className={styles.userName}>{profileInfo ? profileInfo.fullName : 'Гость'} </span>
+                        <span className={styles.userName}>{loading ? "" : profileInfo ? profileInfo.fullName : 'Гость'} </span>
                     </Link>
                 </div>
                 <nav>
-                    <ul>
+                    <ul className={styles.list}>
+                        <li>
+                            <Search/>
+                        </li>
                         <li>
                             {
                                 userId &&

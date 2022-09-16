@@ -5,6 +5,10 @@ const UserModel = new Schema({
         fullName: {type: String, required: true},
         password: {type: String, required: true},
         nickName: {type:String,requires: true},
+        likedPosts:[ {type:Schema.Types.ObjectId,ref:'Post',default:[]} ],
+        subscribers:[ {type:Schema.Types.ObjectId,ref:'User',default:[]} ],
+        subscribes:[ {type:Schema.Types.ObjectId,ref:'User',default:[]} ],
+        conversations:[{type:Schema.Types.ObjectId,ref:'Conversation'}],
         avatarUrl: String
     }
 )

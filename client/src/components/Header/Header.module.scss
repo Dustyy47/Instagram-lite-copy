@@ -21,6 +21,11 @@
   height: 50px;
   object-fit: cover;
   border-radius: 50%;
+  background : #ededed;
+
+  &--loading{
+    animation : 1s loading infinite;
+  }
 }
 
 .userName{
@@ -32,4 +37,18 @@
   justify-content: space-between;
   align-items: center;
   padding : 15px
+}
+
+.list{
+  display: flex;
+  align-items: center;
+}
+
+@keyframes loading {
+  0%{
+    opacity : .7;
+  }
+  100%{
+    opacity:1;
+  }
 }
