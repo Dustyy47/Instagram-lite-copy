@@ -24,12 +24,11 @@
     transition: .3s;
   }
 
-
   &Title {
     font-weight: 500;
+    margin-bottom: 75px;
   }
   .buttons{
-    margin-top: 80px;
     display: flex;
     justify-content: space-between;
     align-items: center;

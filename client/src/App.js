@@ -1,47 +1,64 @@
 import './App.css';
 import {Navigate, Route, Routes} from "react-router-dom";
-import Auth from "./components/Auth/Auth";
-import Profile from "./components/Profile/Profile";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import Header from "./components/Header/Header";
 import {useDispatch, useSelector} from "react-redux";
-import {setId, setInfo} from "./store/userSlice";
-import {getUserInfo} from "./http/userApi";
-import io from 'socket.io-client';
-import Chat from "./components/Chat/Chat";
+import {fetchUserData, LoadingStatuses, setId} from "./store/userSlice";
+import Loading from "./components/Loading/Loading";
+import {useLogout} from "./utils/useLogout";
+import {authRoutes, publicRoutes} from "./routes";
 
 function App() {
 
-    const socket = io.connect(process.env.REACT_APP_API_URL);
-    const {userId, isLoading} = useSelector(state => state.user);
-    const dispatch = useDispatch()
+    const {userId, entranceLoadingStatus} = useSelector(state => state.user);
+    const dispatch = useDispatch();
+    const logout = useLogout();
+
+    let isAuth = userId != null;
 
     useEffect(() => {
         dispatch(setId());
     }, [])
 
     useEffect(() => {
-        const setUserInfo = async () => {
-            if (userId) {
-                const userInfo = await getUserInfo();
-                dispatch(setInfo(userInfo));
-            }
-        }
-        setUserInfo();
+        //TODO:Replace condition to something smarter
+        if (userId)
+            dispatch(fetchUserData());
     }, [userId])
 
-    if (isLoading) return ("Загрузка...")
+    const getRoutes = (routes) => {
+        return routes.map(route => (
+            <Route key={route.path} path={route.path} exact={route.exact} element={<route.element/>}/>
+        ))
+    }
+
+    if (entranceLoadingStatus === LoadingStatuses.loading) {
+        return (
+            <>
+                <Header/>
+                <Loading/>
+            </>
+        )
+    }
+
+    if (entranceLoadingStatus === LoadingStatuses.error) {
+        logout();
+    }
 
     return (
         <div className="App">
             <Header/>
             <Routes>
-                <Route path="/profile/:id" element={<Profile/>}/>
-                <Route path="/chat" element={<Chat/>}/>
-                <Route path="/auth/login" element={<Auth/>}/>
-                <Route path="/auth/register" element={<Auth/>}/>
-                <Route exact path="*" element={!userId ? <Navigate replace to="/auth/login"/> :
-                    <Navigate replace to={`/profile/${userId}`}/>}/>
+                {
+                    isAuth
+                        ? getRoutes(authRoutes)
+                        : getRoutes(publicRoutes)
+                }
+                <Route exact path="*" element={
+                    isAuth ?
+                        <Navigate replace to={`/profile/${userId}`}/> :
+                        <Navigate replace to="/auth/login"/>
+                }/>
             </Routes>
         </div>
     );

@@ -1,10 +1,17 @@
 @import "../../styles/variables";
 
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  position: relative;
+}
+
 .group{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin : 43px 0;
+  margin-bottom: 70px;
 
   .input{
     background: #FCFCFC;
@@ -28,13 +35,6 @@
   }
 }
 
-.column{
-  display: flex;
-  flex-direction:column;
-  align-items: start;
-
-  .input{
-    margin-top: 10px;
-    margin-left: 0;
-  }
+.input{
+  margin-left: 0;
 }

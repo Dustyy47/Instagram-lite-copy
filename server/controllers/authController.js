@@ -3,6 +3,7 @@ import UserModel from "../Models/UserModel.js";
 import jwt from "jsonwebtoken";
 import path from "path";
 import {__dirname} from "../start.js";
+import {createToken} from "../utils/createToken.js";
 
 class AuthController {
     async register(req, res) {
@@ -17,10 +18,7 @@ class AuthController {
                 return res.status(400).json({message: "Такой email занят"});
             const passwordHash = await bcrypt.hash(password, 10);
             const user = await UserModel.create({email,nickName, password: passwordHash, fullName,avatarUrl : avatarName});
-            const token = jwt.sign({
-                userId: user._id,
-                nickName: user.nickName,
-            }, process.env.SECRET, {expiresIn: '7d'});
+            const token = createToken(user._id,user.nickName);
             res.json(token);
         } catch (e) {
             console.log(e);
@@ -40,10 +38,7 @@ class AuthController {
             if (!isPasswordValid) {
                 return res.status(404).json({message: "Неверный логин или пароль"});
             }
-            const token = jwt.sign({
-                userId: user._id,
-                nickName: user.nickName,
-            }, process.env.SECRET, {expiresIn: '7d'});
+            const token = createToken(user.nickName,user._id);
             res.json(token);
         }catch(e){
             console.log(e);

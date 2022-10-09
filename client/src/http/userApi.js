@@ -7,7 +7,7 @@ export const login = async (email,password) => {
         localStorage.setItem('token',data);
         return jwtDecode(data);
     }catch(e){
-        console.log(e);
+        throw new Error(e?.response?.data?.message);
     }
 }
 
@@ -17,7 +17,14 @@ export const registration = async (inputData) => {
         localStorage.setItem('token',data);
         return jwtDecode(data);
     }catch(e){
-        console.log(e.request.response);
+        console.log(e);
+        const errors = e?.response?.data;
+        let errorMessage = '';
+        if(Array.isArray(errors)){
+            errors.forEach(error => errorMessage += error.message);
+        }
+        else errorMessage = errors.message;
+        throw new Error(errorMessage);
     }
 }
 
@@ -52,7 +59,9 @@ export const getUserInfo = async() => {
         const {data} = await $authHost.get('/profile/me');
         return data;
     }catch(e){
-        console.log(e.request.response);
+        // jwt expired
+        console.log(e);
+
     }
 }
 

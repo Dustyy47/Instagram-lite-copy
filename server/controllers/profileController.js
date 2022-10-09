@@ -9,7 +9,8 @@ class ProfileController {
     // return data in format : {email,nickName,fullName,likedPosts,avatarUrl,isUserAuth,isUserProfile}
     async getProfileData(req, res) {
         try {
-            const profileId = req.paramsId;
+            const profileId = req.validProfileID;
+            console.log('ID',profileId);
             const userId = req.userId;
             const isUserAuth = !!userId;
             const isUserProfile = profileId === userId;
@@ -53,7 +54,11 @@ class ProfileController {
     async findUsers(req, res) {
         try {
             const name = req.params.name;
-            const users = await UserModel.find({nickName: new RegExp(name, "i")}, null, {limit: 10});
+            let users = await UserModel.find({nickName: new RegExp(name, "i")}, null, {limit: 10});
+            users = users.map(user=>{
+                const {nickName,fullName,avatarUrl,subscribes,_id:profileId} = user;
+                return {nickName,fullName,avatarUrl,subscribes,profileId} ;
+            });
             res.json(users);
         } catch (e) {
             console.log(e);

@@ -7,7 +7,7 @@ function Button({onClick,...props}) {
         onClick();
     }
     return (
-        <button style = {props.style}  onClick={click} className={styles.button}>
+        <button style = {props.style} disabled={props.disabled} onClick={click} className={`${styles.button} ${props.disabled ? styles.disabled : ""}`}>
             {props.children}
         </button>
     );

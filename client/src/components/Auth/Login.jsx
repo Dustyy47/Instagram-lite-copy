@@ -5,33 +5,48 @@ import {Link} from "react-router-dom";
 import styles from './Auth.module.scss'
 import HideIcon from "../HideIcon/HideIcon";
 import Button from "../Button/Button";
+import {checkEmail, checkLength, useFormValidator, useValidator, Validation} from "../../utils/Validation";
 
-function Login({email, setEmail, password, setPassword , onLogin}) {
+function Login({email, setEmail, password, setPassword, onLogin , resetFields , error}) {
+
+    const emailValidator = useValidator([
+        new Validation(checkEmail,"Неверный формат почты"),
+    ]);
+    const passwordValidator = useValidator([
+        new Validation(checkLength(6,25),"Пароль должен быть длиной от 6 до 25 символов"),
+    ]);
+
+    const loginFormValidator = useFormValidator(emailValidator,passwordValidator);
 
     const [isPasswordHidden, setPasswordHidden] = useState(true);
+
 
     return (
         <form className={styles.auth}>
             <h1 className={styles.authTitle}>Авторизация</h1>
-            <Input onChange={value => setEmail(value)} value={email} name="Почта" placeholder="Введите почту">
+            <Input validator={emailValidator} onChange={value => setEmail(value)} value={email} type="email"
+                   name="Почта" placeholder="Введите почту">
                 <AiOutlineMail style={{
                     marginRight: "10px",
                     fontSize: "23px",
                     transform: "translateY(2px)"
                 }}/>
             </Input>
-            <Input onChange={value => setPassword(value)} value={password} type={isPasswordHidden ? "password" : "text"}
+            <Input validator={passwordValidator} onChange={value => setPassword(value)} value={password}
+                   type={isPasswordHidden ? "password" : "text"}
                    name="Пароль" placeholder="Введите пароль">
                 <HideIcon toggleValue={isPasswordHidden} toggleAction={() => setPasswordHidden(!isPasswordHidden)}/>
             </Input>
+            {error}
             <div className={styles.buttons}>
                 <Link className={styles.link}
+                      onClick = {resetFields}
                       to="/auth/register">
                     <p>
                         У вас ещё<br/> нет аккаунта ?
                     </p>
                 </Link>
-                <Button onClick = {onLogin}>Войти</Button>
+                <Button disabled = {loginFormValidator.hasErrors()} onClick={onLogin}>Войти</Button>
             </div>
         </form>
     );

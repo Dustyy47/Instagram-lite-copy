@@ -3,46 +3,48 @@ import {useParams} from "react-router-dom";
 import {getPosts, getProfileInfo, likePost, subscribe} from "../../http/userApi";
 import "./Profile.scss"
 import ProfileInfo from "./ProfileInfo";
-import Button from "../Button/Button";
 import CreatingPost from "./CreatingPost";
 import PostsList from "../Posts/PostsList";
 import NotFound from "../Errors/NotFound";
 import {useDispatch, useSelector} from "react-redux";
 import Loading from "../Loading/Loading";
+import ProfileButtons from "./ProfileButtons";
+import {fetchUserData, LoadingStatuses, setId} from "../../store/userSlice";
 
 function Profile() {
-    //console.log('rerender')
+
     const [isLoading, setLoading] = useState(true);
     const [isSubscribed, setSubscribe] = useState(true);
-
-    const dispatch = useDispatch();
-    const {likedPosts, subscribes} = useSelector(state => state.user);
-
-    const {id: paramsId} = useParams()
     const [profileInfo, setProfileInfo] = useState(null)
     const [posts, setPosts] = useState([]);
     const [isCreatingPost, setCreatingPost] = useState(false);
 
+    const {likedPosts, subscribes: userSubscribes, isGuest,loadingStatus} = useSelector(state => state.user);
+    const dispatch = useDispatch();
+    const {id: profileId} = useParams()
+
     const fetchProfileData = async () => {
         setLoading(true);
-        const profileInfo = await getProfileInfo(paramsId);
-        const posts = await getPosts(paramsId);
+        const profileInfo = await getProfileInfo(profileId);
+        const posts = await getPosts(profileId);
         setProfileInfo(profileInfo);
-        const res = !!subscribes.find(subscribe => subscribe === profileInfo.profileId)
-        //console.log(res);
-        setSubscribe(res);
+        if (userSubscribes === null && !isGuest) {
+            return;
+        }
+        const isUserSubscribedOnProfile = isGuest ? false : !!userSubscribes.find(subscribe => subscribe === profileInfo.profileId);
+        setSubscribe(isUserSubscribedOnProfile);
         setPosts(posts);
         setLoading(false);
     }
 
-    useEffect( () => {
-    if(subscribes)
+    useEffect(() => {
         fetchProfileData();
-    }, [paramsId,subscribes])
+    }, [profileId, userSubscribes])
 
     const toggleSubscribe = async () => {
         try {
-            await subscribe(paramsId);
+            await subscribe(profileId);
+            await dispatch(fetchUserData());
             setSubscribe(!isSubscribed);
         } catch (e) {
             console.log(e);
@@ -75,20 +77,12 @@ function Profile() {
                                  subscribersId={profileInfo.subscribers}
                     />
                     {
-                        profileInfo.isUserProfile ?
-                            <Button onClick={() => setCreatingPost(true)}>Создать пост</Button>
-                            :
-                            <div style = {{display:'flex',alignItems:'top'}}>
-                            <Button style = {{margin: "0 20px"}}>Чат</Button>
-                                {
-                                    isSubscribed === true ?
-                                        <Button onClick={toggleSubscribe}>Отписаться</Button>
-                                        :
-                                        <Button onClick={toggleSubscribe}>Подписаться</Button>
-                                }
-                            </div>
-
-
+                        !isGuest &&
+                        <ProfileButtons isUserProfile={profileInfo.isUserProfile}
+                                        isSubscribed={isSubscribed}
+                                        setCreatingPost={setCreatingPost}
+                                        toggleSubscribe={()=>toggleSubscribe()}
+                        />
                     }
                 </div>
                 <PostsList likedPosts={likedPosts} posts={posts} onLike={like}/>

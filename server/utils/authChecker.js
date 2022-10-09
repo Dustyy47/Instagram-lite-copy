@@ -14,7 +14,7 @@ export const getUserId = (req, res, next)=>{
         next();
     }catch(e){
         console.log(e);
-        res.status(500).json({message:"Что-то пошло не так, попробуйте позже..."});
+        res.status(500).json({message : e.message});
     }
 }
 

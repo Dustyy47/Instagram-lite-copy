@@ -33,15 +33,15 @@
 }
 
 .wrapper{
+  height : 100%;
   display:flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: start;
   padding : 15px
 }
 
 .list{
   display: flex;
-  align-items: center;
 }
 
 @keyframes loading {

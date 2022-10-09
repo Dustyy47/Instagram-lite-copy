@@ -12,7 +12,8 @@ function Search() {
     const [users,setUsers] = useState([]);
 
     const focusSearch = () => {
-        setUsersHidden(false);
+        if(value)
+            setUsersHidden(false);
     }
 
     const typing = async value => {
@@ -20,8 +21,10 @@ function Search() {
         setValue(value);
         if(!value){
             setUsers([])
+            setUsersHidden(true);
             return
         }
+        setUsersHidden(false);
         const foundUsers = await searchUsers(value);
         setUsers([...foundUsers])
     }
@@ -36,7 +39,10 @@ function Search() {
             <BiSearchAlt2 style = {{fontSize:32,fill:"#ededed",margin:"0 15px"}}/>
         </Input>
             <div className={`${style.users} ${areUsersHidden ? style.hidden : ''}`}>
-                <UsersList users={users} absenceText={""} title={""}/>
+                <UsersList users={users}  title={""}>
+                    <p>Пользователей с таким именем не существует</p>
+                    <p>🙁</p>
+                </UsersList>
             </div>
         </div>
     );
