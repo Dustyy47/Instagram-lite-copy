@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import UserModel from "../Models/UserModel.js";
-import jwt from "jsonwebtoken";
 import path from "path";
 import {__dirname} from "../start.js";
 import {createToken} from "../utils/createToken.js";
@@ -18,7 +17,7 @@ class AuthController {
                 return res.status(400).json({message: "Такой email занят"});
             const passwordHash = await bcrypt.hash(password, 10);
             const user = await UserModel.create({email,nickName, password: passwordHash, fullName,avatarUrl : avatarName});
-            const token = createToken(user._id,user.nickName);
+            const token = createToken(user.nickName,user._id);
             res.json(token);
         } catch (e) {
             console.log(e);

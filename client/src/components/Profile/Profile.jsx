@@ -25,16 +25,25 @@ function Profile() {
 
     const fetchProfileData = async () => {
         setLoading(true);
-        const profileInfo = await getProfileInfo(profileId);
-        const posts = await getPosts(profileId);
-        setProfileInfo(profileInfo);
-        if (userSubscribes === null && !isGuest) {
-            return;
+        try{
+            const profileInfo = await getProfileInfo(profileId);
+            if(!profileInfo) {
+                setLoading(false);
+                return;
+            }
+            const posts = await getPosts(profileId);
+            document.title = profileInfo.fullName;
+            setProfileInfo(profileInfo);
+            if (userSubscribes === null && !isGuest) {
+                return;
+            }
+            const isUserSubscribedOnProfile = isGuest ? false : !!userSubscribes.find(subscribe => subscribe === profileInfo.profileId);
+            setSubscribe(isUserSubscribedOnProfile);
+            setPosts(posts);
+            setLoading(false);
+        }catch(e){
+            console.log(e);
         }
-        const isUserSubscribedOnProfile = isGuest ? false : !!userSubscribes.find(subscribe => subscribe === profileInfo.profileId);
-        setSubscribe(isUserSubscribedOnProfile);
-        setPosts(posts);
-        setLoading(false);
     }
 
     useEffect(() => {

@@ -10,7 +10,6 @@ class ProfileController {
     async getProfileData(req, res) {
         try {
             const profileId = req.validProfileID;
-            console.log('ID',profileId);
             const userId = req.userId;
             const isUserAuth = !!userId;
             const isUserProfile = profileId === userId;
@@ -34,7 +33,7 @@ class ProfileController {
     }
 
     async getPosts(req, res) {
-        const validId = req.paramsId;
+        const validId = req.validProfileID;
         const posts = await PostModel.find({postedBy: validId});
         res.json(posts);
     }
@@ -55,9 +54,9 @@ class ProfileController {
         try {
             const name = req.params.name;
             let users = await UserModel.find({nickName: new RegExp(name, "i")}, null, {limit: 10});
-            users = users.map(user=>{
-                const {nickName,fullName,avatarUrl,subscribes,_id:profileId} = user;
-                return {nickName,fullName,avatarUrl,subscribes,profileId} ;
+            users = users.map(user => {
+                const {nickName, fullName, avatarUrl, subscribes, _id: profileId} = user;
+                return {nickName, fullName, avatarUrl, subscribes, profileId};
             });
             res.json(users);
         } catch (e) {
@@ -69,7 +68,7 @@ class ProfileController {
     async toggleSubscribe(req, res) {
         try {
             const userId = req.userId;
-            const userToSubscribeId = req.paramsId;
+            const userToSubscribeId = req.validProfileID;
             const activeUser = await UserModel.findById(userId);
             const isSubscribed = !!activeUser.subscribes.find(subscribe => subscribe.toString() === userToSubscribeId);
             if (isSubscribed) {

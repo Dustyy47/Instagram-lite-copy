@@ -36,7 +36,7 @@ function Registration({
         new Validation(checkEmail, "Неверный формат почты"),
     ]);
     const passwordValidator = useValidator([
-        new Validation(checkLength(5, 25), "Пароль должен быть длиной от 6 до 25 символов"),
+        new Validation(checkLength(6, 25), "Пароль должен быть длиной от 6 до 25 символов"),
     ]);
 
     const registerFormValidator = useFormValidator(userNameValidator, nickNameValidator, emailValidator, passwordValidator);
