@@ -1,20 +1,24 @@
 import styles from './Input.module.scss'
-import ValidationMessage from "../Auth/ValidationMessage";
+import ValidationMessage from "../ValidationMessage/ValidationMessage";
 import {useEffect, useState} from "react";
 
-function Input({name, onChange, value, type, placeholder, className, isColumn, validator,forwardRef, ...props}) {
+function Input({name, onChange, value, type, placeholder, className, isColumn, validator, forwardRef, ...props}) {
 
-    const [showValidation,setShowValidation] = useState(false);
+    const [showValidation, setShowValidation] = useState(false);
 
-    const blur = ()=> {
+    const blur = () => {
         setShowValidation(true);
-        if(props.onBlur)
+        if (props.onBlur)
             props.onBlur();
     }
 
-    useEffect(()=>{
+    useEffect(() => {
+        if(!props.needToValidate){
+            setShowValidation(false);
+            return;
+        }
         validator?.validate('');
-    },[])
+    }, [props.needToValidate])
 
     const change = (e) => {
         validator?.validate(e.target.value);
@@ -26,7 +30,7 @@ function Input({name, onChange, value, type, placeholder, className, isColumn, v
             <div className={styles.group}>
                 <label style={props.styleLabel} className={styles.label}
                 >{props.children}<span>{name}</span></label>
-                <input ref ={forwardRef} onBlur={blur} onFocus={props.onFocus} style={props.styleInput}
+                <input ref={forwardRef} onBlur={blur} onFocus={props.onFocus} style={props.styleInput}
                        onChange={change} value={value} type={type === "" ? "text" : type}
                        id={props.id}
                        autoComplete="on" className={styles.input} placeholder={placeholder}/>

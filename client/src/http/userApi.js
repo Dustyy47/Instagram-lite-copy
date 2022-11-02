@@ -82,9 +82,9 @@ export const likePost = async(postId) => {
     }
 }
 
-export const searchUsers = async(nickname) =>{
+export const searchUsers = async(nickname,limit,skip) =>{
     try{
-        const {data} = await $host.get(`/profile/find/${nickname}`)
+        const {data} = await $host.get(`/profile/find/${nickname}` + (limit ? `?limit=${limit}` : '') + (skip ? `&skip=${skip}` : ''))
         return data;
     }catch(e){
         console.log(e.request.response);

@@ -3,6 +3,9 @@ import PostModel from "../Models/PostModel.js";
 import path from "path";
 import {__dirname} from "../utils/directoryVariables.js";
 
+const DEFAULT_LIMIT = 10;
+const DEFAULT_SKIP = 0;
+
 class ProfileController {
 
     // profileId may be in two existing formats - /:id or /:nickName , like /123ASfs67dfSgsS or /someNickName
@@ -52,9 +55,12 @@ class ProfileController {
 
     async findUsers(req, res) {
         try {
+            let limit = req.query.limit === undefined ? DEFAULT_LIMIT : req.query.limit;
+            const skip = req.query.skip === undefined ? DEFAULT_SKIP : req.query.skip;
             const name = req.params.name;
-            let users = await UserModel.find({nickName: new RegExp(name, "i")}, null, {limit: 10});
-            users = users.map(user => {
+            console.log(limit,skip,name)
+            let users = await UserModel.find({nickName: new RegExp(name, "i")}).skip(skip).limit(limit);
+            users = users?.map(user => {
                 const {nickName, fullName, avatarUrl, subscribes, _id: profileId} = user;
                 return {nickName, fullName, avatarUrl, subscribes, profileId};
             });
@@ -88,7 +94,7 @@ class ProfileController {
     async addPost(req, res) {
         try {
             const userId = req.userId;
-            const {title} = req.body;
+            const {title,description} = req.body;
             const {img} = req.files;
             const fileName = Date.now() + '--' + img.name;
             const types = ["jpg", "jpeg", "png"];
@@ -97,7 +103,7 @@ class ProfileController {
             }
             await img.mv(path.resolve(__dirname, '..', 'images', fileName));
 
-            const post = await PostModel.create({title, postedBy: userId, imageUrl: fileName});
+            const post = await PostModel.create({title,description, postedBy: userId, imageUrl: fileName});
             res.json(post);
         } catch (e) {
             console.log(e);
