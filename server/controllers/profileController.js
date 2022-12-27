@@ -2,6 +2,7 @@ import UserModel from "../Models/UserModel.js";
 import PostModel from "../Models/PostModel.js";
 import path from "path";
 import {__dirname} from "../utils/directoryVariables.js";
+import CommentModel from "../Models/CommentModel.js";
 
 const DEFAULT_LIMIT = 10;
 const DEFAULT_SKIP = 0;
@@ -48,6 +49,18 @@ class ProfileController {
             const {email, nickName, fullName, avatarUrl, likedPosts, subscribes} = user;
             res.json({email, nickName, fullName, avatarUrl, likedPosts, subscribes})
         } catch (e) {
+            console.log(e);
+            res.status(500);
+        }
+    }
+
+    async getComments(req,res){
+        try{
+            const postId = req.params.id;
+            const comments = await CommentModel.find({post: postId}).populate('author',['fullName','nickName','avatarUrl','_id']);
+            console.log(comments);
+            res.json(comments);
+        }catch(e){
             console.log(e);
             res.status(500);
         }
@@ -151,6 +164,19 @@ class ProfileController {
             res.status(500).json({message: "Что-то пошло не так, попробуйте позже..."});
         }
     }
+
+    async sendComment(req,res){
+        const {text} = req.body;
+        const postId = req.params.id;
+        const userId = req.userId;
+
+        const user = await UserModel.findById(userId);
+        const post = await PostModel.findById(postId);
+        const comment = await CommentModel.create({text,author:user,post});
+        await post.updateOne({$push : {comments : comment}});
+        res.json({message : comment})
+    }
+
 }
 
 export default new ProfileController()

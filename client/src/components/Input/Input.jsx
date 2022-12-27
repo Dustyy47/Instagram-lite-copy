@@ -2,7 +2,7 @@ import styles from './Input.module.scss'
 import ValidationMessage from "../ValidationMessage/ValidationMessage";
 import {useEffect, useState} from "react";
 
-function Input({name, onChange, value, type, placeholder, className, isColumn, validator, forwardRef, ...props}) {
+function Input({name, onChange, value, type, placeholder, isColumn, validator, forwardRef, ...props}) {
 
     const [showValidation, setShowValidation] = useState(false);
 
@@ -25,7 +25,7 @@ function Input({name, onChange, value, type, placeholder, className, isColumn, v
         onChange(e.target.value);
     }
     return (
-        <div style={props.styleWrapper} className={styles.wrapper}>
+        <div style={props.styleWrapper} className={`${styles.wrapper} ${props.className ? props.className : ''}`}>
             <ValidationMessage show={showValidation} errorsString={validator?.errors}/>
             <div className={styles.group}>
                 <label style={props.styleLabel} className={styles.label}

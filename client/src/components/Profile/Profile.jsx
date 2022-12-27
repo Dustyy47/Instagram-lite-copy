@@ -9,25 +9,28 @@ import NotFound from "../Errors/NotFound";
 import {useDispatch, useSelector} from "react-redux";
 import Loading from "../Loading/Loading";
 import ProfileButtons from "./ProfileButtons";
-import {fetchUserData, LoadingStatuses, setId} from "../../store/userSlice";
+import {fetchLikePost, fetchUserData} from "../../store/userSlice";
+import ExtendedPost from "../Posts/ExtendedPost";
+import {isPostLiked} from "../../utils/isLikedPost";
 
 function Profile() {
-
     const [isLoading, setLoading] = useState(true);
     const [isSubscribed, setSubscribe] = useState(true);
     const [profileInfo, setProfileInfo] = useState(null)
     const [posts, setPosts] = useState([]);
     const [isCreatingPost, setCreatingPost] = useState(false);
+    const [extendedPostData, setExtendedPostData] = useState(undefined)
+    const [isExtendedPostOpen, setExtendedPostOpen] = useState(false)
 
-    const {likedPosts, subscribes: userSubscribes, isGuest,loadingStatus} = useSelector(state => state.user);
+    const {likedPosts, subscribes: userSubscribes, isGuest, loadingStatus} = useSelector(state => state.user);
     const dispatch = useDispatch();
     const {id: profileId} = useParams()
 
     const fetchProfileData = async () => {
         setLoading(true);
-        try{
+        try {
             const profileInfo = await getProfileInfo(profileId);
-            if(!profileInfo) {
+            if (!profileInfo) {
                 setLoading(false);
                 return;
             }
@@ -41,7 +44,7 @@ function Profile() {
             setSubscribe(isUserSubscribedOnProfile);
             setPosts(posts);
             setLoading(false);
-        }catch(e){
+        } catch (e) {
             console.log(e);
         }
     }
@@ -60,8 +63,13 @@ function Profile() {
         }
     }
 
+    const handlePostClick = async (data) => {
+        setExtendedPostData(data);
+        setExtendedPostOpen(true);
+    }
+
     const like = async (postId) => {
-        await likePost(postId);
+        await dispatch(fetchLikePost(postId));
     }
 
     if (isLoading) {
@@ -90,12 +98,18 @@ function Profile() {
                         <ProfileButtons isUserProfile={profileInfo.isUserProfile}
                                         isSubscribed={isSubscribed}
                                         setCreatingPost={setCreatingPost}
-                                        toggleSubscribe={()=>toggleSubscribe()}
+                                        toggleSubscribe={() => toggleSubscribe()}
                         />
                     }
                 </div>
-                <PostsList likedPosts={likedPosts} posts={posts} onLike={like}/>
+                <PostsList likedPosts={likedPosts} posts={posts} onLike={like} onClickPost={handlePostClick}/>
             </div>
+            <ExtendedPost authorInfo={profileInfo} postData={extendedPostData} isActive={isExtendedPostOpen}
+                          setActive={() => setExtendedPostOpen(false)}
+                          likeInfo={{
+                              onLike: like,
+                              isLiked : isPostLiked(extendedPostData?._id,likedPosts),
+                          }}/>
             <CreatingPost isActive={isCreatingPost} setActive={setCreatingPost} onPostAdded={fetchProfileData}/>
         </section>
     );

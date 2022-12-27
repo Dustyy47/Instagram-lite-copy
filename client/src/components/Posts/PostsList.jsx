@@ -1,18 +1,15 @@
 import React from 'react';
 import Post from "./Post";
+import {isPostLiked} from "../../utils/isLikedPost";
 
-function PostsList({posts,onLike,likedPosts}) {
-    const isLiked = postId=>{
-        if(!likedPosts)
-            return false;
-        return likedPosts.indexOf(postId) !== -1;
-    }
+function PostsList({posts,onLike,likedPosts,onClickPost}) {
+
     return (
         <div className="page-content">
             {
                 posts?
                     posts.map(post => (
-                        <Post hasAlreadyLiked = {isLiked(post._id)} onLike={onLike} key={post._id} data={post}/>
+                        <Post onClick={onClickPost} isLiked = {isPostLiked(post._id,likedPosts)} onLike={onLike} key={post._id} data={post}/>
                     ))
                     :
                     "Нет постов"

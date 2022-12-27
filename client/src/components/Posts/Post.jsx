@@ -1,23 +1,27 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import '../Profile/Profile.scss'
+import LikeBtn from "../LikeBtn/LikeBtn";
 
-function Post({data,onLike,hasAlreadyLiked}) {
-    const [isLiked,setLiked] = useState(hasAlreadyLiked);
-    const like = id=>{
-        setLiked(!isLiked);
-        onLike(id);
+function Post({data,onLike,isLiked,onClick}) {
+
+    const [likesCountWithoutUser,setLikesCountWithoutUser] = useState();
+
+    const like = (e)=>{
+        e.stopPropagation();
+        onLike(data._id);
     }
+
+    useEffect(()=>{
+        setLikesCountWithoutUser(data.likes.length - (+isLiked));
+    },[])
+
     return (
-        <div className="post">
+        <div className="post" onClick={()=>onClick({...data,likesCountWithoutUser})}>
             <img src={`${process.env.REACT_APP_API_URL}/${data.imageUrl}`} alt=""
                  className="post-img"/>
             <div className="post-info">
                 <h5 className="post-info__title">{data.title}</h5>
-                <div className="post-info-likes">
-                    <img onClick = {()=>like(data._id)} className={`post-info-likes__img ${isLiked ? "post-info-likes__img--liked" : "" }`}
-                         src="https://img.icons8.com/color/96/000000/like--v3.png" alt="like"/>
-                    <p className="post-info-likes__counter">{data.likes.length + (isLiked ? 1 : 0) - (hasAlreadyLiked ? 1 : 0)}</p>
-                </div>
+                <LikeBtn className = "post-info-likes" onLike={like} likesCount={likesCountWithoutUser + +isLiked} isLiked={isLiked}/>
             </div>
         </div>
     );

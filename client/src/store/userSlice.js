@@ -1,7 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 import jwtDecode from "jwt-decode";
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {getUserInfo} from "../http/userApi";
+import {getUserInfo, likePost} from "../http/userApi";
 
 export const LoadingStatuses = {loading:"loading",idle:"idle",error:"error"};
 
@@ -9,6 +9,14 @@ export const fetchUserData = createAsyncThunk(
     'user/fetchData',
     async()=>{
         return await getUserInfo();
+    }
+)
+
+export const fetchLikePost = createAsyncThunk(
+    'user/likePost',
+    async(postId)=>{
+        await likePost(postId);
+        return postId
     }
 )
 
@@ -71,7 +79,17 @@ const userSlice = createSlice({
         [fetchUserData.pending]: (state,action) =>{
             state.entranceLoadingStatus = LoadingStatuses.loading;
         },
+        [fetchLikePost.fulfilled]: (state,action) =>{
+            let postIndex = state.likedPosts.indexOf(action.payload);
+            if(postIndex === -1){
+                state.likedPosts.push(action.payload);
+            }
+            else{
+                state.likedPosts.splice(postIndex,1);
+            }
+        }
     }
+
 })
 
 export default userSlice.reducer;

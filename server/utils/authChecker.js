@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 
+// get userId from token and set it in request for next usages
 export const getUserId = (req, res, next)=>{
     try{
         const token = (req.headers.authorization || '').split(' ')[1];

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styles from './Header.module.scss'
 import Button from "../Button/Button";
 import {Link} from "react-router-dom";
@@ -7,6 +7,8 @@ import {LoadingStatuses} from "../../store/userSlice";
 import {placeholderUrl} from "../Auth/Registration";
 import Search from "./Search";
 import {useLogout} from "../../utils/useLogout";
+import Avatar from "../../Avatar/Avatar";
+import {getCorrectAvatarUrl} from "../../utils/getCorrectAvatarUrl";
 
 function Header() {
 
@@ -21,14 +23,13 @@ function Header() {
                         {
                             loadingStatus === LoadingStatuses.loading
                                 ?
-                                <img className={styles['avatar--loading']} src="#" alt=""/>
+                                <Avatar url="#"/>
                                 :
                                 avatarUrl
                                     ?
-                                    <img className={styles.avatar}
-                                         src={process.env.REACT_APP_API_URL + '/avatars/' + avatarUrl} alt=""/>
+                                    <Avatar url={getCorrectAvatarUrl(avatarUrl)}/>
                                     :
-                                    <img className={styles.avatar} src={placeholderUrl} alt=""/>
+                                    <Avatar url={placeholderUrl}/>
                         }
 
                         <span

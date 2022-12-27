@@ -1,6 +1,6 @@
 import './App.css';
 import {Navigate, Route, Routes} from "react-router-dom";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Header from "./components/Header/Header";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchUserData, LoadingStatuses, setId} from "./store/userSlice";
@@ -20,7 +20,7 @@ function App() {
         dispatch(setId());
     }, [])
 
-    useEffect(() => {
+    useEffect(() => {   
         //TODO:Replace condition to something smarter
         if (userId)
             dispatch(fetchUserData());

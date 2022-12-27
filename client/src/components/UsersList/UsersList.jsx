@@ -1,15 +1,15 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import UsersListItem from "./UsersListItem";
 import {useNavigate} from "react-router-dom";
 import Loading from "../Loading/Loading";
 
-function UsersList({users, absenceText, title, onClick,isLoading,...props}) {
+function UsersList({users, absenceText, title, onClick, isLoading, ...props}) {
     const navigate = useNavigate();
     const handleClickToUser = user => {
         navigate('/profile/' + user.nickName);
     }
 
-    if(isLoading){
+    if (isLoading) {
         return <Loading/>
     }
 
@@ -30,10 +30,10 @@ function UsersList({users, absenceText, title, onClick,isLoading,...props}) {
                         alignItems: 'center',
                         color: "grey",
                         fontSize: 20,
-                        flexDirection:'column',
-                        width : '95%',
-                        height : '95%',
-                        textAlign:"center"
+                        flexDirection: 'column',
+                        width: '95%',
+                        height: '95%',
+                        textAlign: "center"
                     }}>
                         {props.children}
                     </div>

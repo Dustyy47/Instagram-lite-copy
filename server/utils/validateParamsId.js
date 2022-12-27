@@ -1,15 +1,13 @@
 import UserModel from "../Models/UserModel.js";
 
-// Convert all id formats to single (nickName to Id)
+// Convert id from params if it`s format is nickname to default ID format and set into req.validProfileID (set nickname to ID format)
 export const validateParamsId = async (req, res, next) => {
     try {
         const profileId = req.params.id; // id of profile what user are trying to get
         let candidate = await UserModel.findOne({nickName: profileId});
         if (candidate == null)
             candidate = await UserModel.findById(profileId);
-        if (candidate !== null) {
-            req.validProfileID = candidate?._id.toString();
-        }
+        req.validProfileID = candidate?._id.toString();
         next();
     } catch (e) {
         console.log(e);

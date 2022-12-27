@@ -61,10 +61,8 @@ export const getUserInfo = async() => {
     }catch(e){
         // jwt expired
         console.log(e);
-
     }
 }
-
 
 export const addPost = async(data) => {
     try{
@@ -76,7 +74,7 @@ export const addPost = async(data) => {
 
 export const likePost = async(postId) => {
     try{
-        await $authHost.put(`/profile/posts/${postId}`)
+        await $authHost.put(`/profile/posts/${postId}/like`)
     }catch(e){
         console.log(e.request.response);
     }
@@ -97,5 +95,22 @@ export const getConversations = async() => {
         return data;
     }catch(e){
         console.log(e.request.response);
+    }
+}
+
+export const sendComment = async(text,postId)=>{
+    try{
+        const {data} = await $authHost.put(`/profile/posts/${postId}/comment`,{text})
+    }catch(e){
+        console.log(e.request.response)
+    }
+}
+
+export const getComments = async(postId)=>{
+    try{
+        const {data} = await $authHost.get(`/profile/posts/${postId}/comments`)
+        return data;
+    }catch(e){
+        console.log(e.request.response)
     }
 }
