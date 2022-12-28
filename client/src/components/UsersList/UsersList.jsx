@@ -1,9 +1,8 @@
-import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import Loading from '../Loading/Loading'
-import UsersListItem from './UsersListItem'
+import { Loading } from '../Loading/Loading'
+import { UsersListItem } from './UsersListItem'
 
-function UsersList({ users, absenceText, title, onClick, isLoading, ...props }) {
+export function UsersList({ users, absenceText, title, onClick, isLoading, ...props }) {
     const navigate = useNavigate()
     const handleClickToUser = (user) => {
         navigate('/profile/' + user.nickName)
@@ -44,5 +43,3 @@ function UsersList({ users, absenceText, title, onClick, isLoading, ...props }) 
         </>
     )
 }
-
-export default UsersList

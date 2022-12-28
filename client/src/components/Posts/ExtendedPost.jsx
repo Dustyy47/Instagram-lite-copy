@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react'
 import { getComments, sendComment } from '../../http/userApi'
 import { getCorrectAvatarUrl } from '../../utils/getCorrectAvatarUrl'
-import Avatar from '../Avatar/Avatar'
-import Button from '../Button/Button'
-import Comments from '../Comments/Comments'
-import Input from '../Input/Input'
-import LikeBtn from '../LikeBtn/LikeBtn'
-import Modal from '../Modal/Modal'
+import { Avatar } from '../Avatar/Avatar'
+import { Button } from '../Button/Button'
+import { Comments } from '../Comments/Comments'
+import { Input } from '../Input/Input'
+import { LikeBtn } from '../LikeBtn/LikeBtn'
+import { Modal } from '../Modal/Modal'
 import styles from './Post.module.scss'
 
-const ExtendedPost = ({ isActive, setActive, postData, authorInfo, likeInfo: { onLike, isLiked } }) => {
+export function ExtendedPost({
+    isActive,
+    setActive,
+    postData,
+    authorInfo,
+    likeInfo: { onLike, isLiked },
+}) {
     const [commentText, setCommentText] = useState('')
     const [comments, setComments] = useState([])
     const like = (e) => {
@@ -34,9 +40,17 @@ const ExtendedPost = ({ isActive, setActive, postData, authorInfo, likeInfo: { o
     }, [postData])
 
     return (
-        <Modal isActive={isActive} setActive={() => setActive()} modalStyles={{ maxWidth: 1500, minHeight: 800 }}>
+        <Modal
+            isActive={isActive}
+            setActive={() => setActive()}
+            modalStyles={{ maxWidth: 1500, minHeight: 800 }}
+        >
             <div className={styles.extended}>
-                <img className={styles.photo} src={`${process.env.REACT_APP_API_URL}/${postData?.imageUrl}`} alt="" />
+                <img
+                    className={styles.photo}
+                    src={`${process.env.REACT_APP_API_URL}/${postData?.imageUrl}`}
+                    alt=""
+                />
                 <div className={styles.info}>
                     <div className={styles.header}>
                         <div className={styles.profileInfo}>
@@ -56,7 +70,11 @@ const ExtendedPost = ({ isActive, setActive, postData, authorInfo, likeInfo: { o
                     </div>
                     <Comments comments={comments} />
                     <form className={styles.sendForm}>
-                        <Input className={styles.commentInput} value={commentText} onChange={(v) => setCommentText(v)} />
+                        <Input
+                            className={styles.commentInput}
+                            value={commentText}
+                            onChange={(v) => setCommentText(v)}
+                        />
                         <Button className={styles.sendCommentBtn} onClick={fetchSendComment}>
                             Отправить
                         </Button>
@@ -67,5 +85,3 @@ const ExtendedPost = ({ isActive, setActive, postData, authorInfo, likeInfo: { o
         </Modal>
     )
 }
-
-export default ExtendedPost

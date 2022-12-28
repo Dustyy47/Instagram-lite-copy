@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom'
 import { LoadingStatuses } from '../../models/LoadingStatuses'
 import { useLogout } from '../../utils/useLogout'
 import { placeholderUrl } from '../Auth/Registration'
-import Avatar from '../Avatar/Avatar'
-import Button from '../Button/Button'
+import { Avatar } from '../Avatar/Avatar'
+import { Button } from '../Button/Button'
 import styles from './Header.module.scss'
-import Search from './Search'
+import { Search } from './Search'
 
-function Header() {
+export function Header() {
     const logout = useLogout()
 
     const { userId, nickName, avatarUrl, fullName, loadingStatus } = useSelector(
@@ -57,5 +57,3 @@ function Header() {
         </header>
     )
 }
-
-export default Header

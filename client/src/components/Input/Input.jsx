@@ -1,8 +1,18 @@
 import { useEffect, useState } from 'react'
-import ValidationMessage from '../ValidationMessage/ValidationMessage'
+import { ValidationMessage } from '../ValidationMessage/ValidationMessage'
 import styles from './Input.module.scss'
 
-function Input({ name, onChange, value, type, placeholder, isColumn, validator, forwardRef, ...props }) {
+export function Input({
+    name,
+    onChange,
+    value,
+    type,
+    placeholder,
+    isColumn,
+    validator,
+    forwardRef,
+    ...props
+}) {
     const [showValidation, setShowValidation] = useState(false)
 
     const blur = () => {
@@ -23,7 +33,10 @@ function Input({ name, onChange, value, type, placeholder, isColumn, validator, 
         onChange(e.target.value)
     }
     return (
-        <div style={props.styleWrapper} className={`${styles.wrapper} ${props.className ? props.className : ''}`}>
+        <div
+            style={props.styleWrapper}
+            className={`${styles.wrapper} ${props.className ? props.className : ''}`}
+        >
             <ValidationMessage show={showValidation} errorsString={validator?.errors} />
             <div className={styles.group}>
                 <label style={props.styleLabel} className={styles.label}>
@@ -47,5 +60,3 @@ function Input({ name, onChange, value, type, placeholder, isColumn, validator, 
         </div>
     )
 }
-
-export default Input

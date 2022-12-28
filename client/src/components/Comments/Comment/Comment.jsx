@@ -1,8 +1,8 @@
 import { getCorrectAvatarUrl } from '../../../utils/getCorrectAvatarUrl'
-import Avatar from '../../Avatar/Avatar'
+import { Avatar } from '../../Avatar/Avatar'
 import styles from './Comment.module.scss'
 
-const Comment = ({ authorInfo, commentInfo }) => {
+export function Comment({ authorInfo, commentInfo }) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.infoWrapper}>
@@ -15,11 +15,10 @@ const Comment = ({ authorInfo, commentInfo }) => {
             </div>
             <p className={styles.text}>
                 {' '}
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias consequatur iure modi, quibusdam quod sapiente vel.
-                Ab accusantium dolorem earum fugiat, in neque nihil reiciendis similique soluta tempore tenetur.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias consequatur iure
+                modi, quibusdam quod sapiente vel. Ab accusantium dolorem earum fugiat, in neque
+                nihil reiciendis similique soluta tempore tenetur.
             </p>
         </div>
     )
 }
-
-export default Comment

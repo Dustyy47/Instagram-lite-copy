@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { getProfileInfo } from '../../http/userApi'
-import Modal from '../Modal/Modal'
-import UsersList from '../UsersList/UsersList'
+import { Modal } from '../Modal/Modal'
+import { UsersList } from '../UsersList/UsersList'
 
-function ProfileInfo({ fullName, email, avatarUrl, subscribesId, subscribersId }) {
+export function ProfileInfo({ fullName, email, avatarUrl, subscribesId, subscribersId }) {
     const [users, setUsers] = useState([])
     const [title, setTitle] = useState('')
     const [isModalOpen, setModalOpen] = useState(false)
@@ -28,10 +28,16 @@ function ProfileInfo({ fullName, email, avatarUrl, subscribesId, subscribersId }
                 <h3 className="page-header__name">{fullName}</h3>
                 <p className="page-header__email">{email}</p>
                 <div className="page-header__subscribesBlock">
-                    <p onClick={() => openModal(subscribersId, 'Подписчики', 'Нет подписчиков')} className="page-header__subscribers">
+                    <p
+                        onClick={() => openModal(subscribersId, 'Подписчики', 'Нет подписчиков')}
+                        className="page-header__subscribers"
+                    >
                         {subscribersId.length} подписчиков
                     </p>
-                    <p onClick={() => openModal(subscribesId, 'Подписки', 'Нет подписок')} className="page-header__subscribes">
+                    <p
+                        onClick={() => openModal(subscribesId, 'Подписки', 'Нет подписок')}
+                        className="page-header__subscribes"
+                    >
                         {subscribesId.length} подписок
                     </p>
                 </div>
@@ -42,4 +48,3 @@ function ProfileInfo({ fullName, email, avatarUrl, subscribesId, subscribersId }
         </div>
     )
 }
-export default ProfileInfo

@@ -1,7 +1,6 @@
-import React from 'react'
-import Button from '../Button/Button'
+import { Button } from '../Button/Button'
 
-function ProfileButtons({ isUserProfile, setCreatingPost, isSubscribed, toggleSubscribe }) {
+export function ProfileButtons({ isUserProfile, setCreatingPost, isSubscribed, toggleSubscribe }) {
     return isUserProfile ? (
         <Button onClick={() => setCreatingPost(true)}>Создать пост</Button>
     ) : (
@@ -15,5 +14,3 @@ function ProfileButtons({ isUserProfile, setCreatingPost, isSubscribed, toggleSu
         </div>
     )
 }
-
-export default ProfileButtons

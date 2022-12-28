@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
-import ValidationMessage from '../ValidationMessage/ValidationMessage'
+import { useEffect } from 'react'
+import { ValidationMessage } from '../ValidationMessage/ValidationMessage'
 import styles from './FileInput.module.scss'
 
-function FileInput({ validator, setSelectedFile, ...props }) {
+export function FileInput({ validator, setSelectedFile, ...props }) {
     useEffect(() => {
         if (!props.needToValidate) return
         validator.validate(undefined)
@@ -19,10 +19,13 @@ function FileInput({ validator, setSelectedFile, ...props }) {
             <ValidationMessage show={true} errorsString={validator?.errors} />
             <label style={props.style} className={styles.label}>
                 {props.children || 'Добавить файл'}
-                <input onChange={load} type="file" className={styles.input} accept=".jpg,.png,.jpeg" />
+                <input
+                    onChange={load}
+                    type="file"
+                    className={styles.input}
+                    accept=".jpg,.png,.jpeg"
+                />
             </label>
         </div>
     )
 }
-
-export default FileInput

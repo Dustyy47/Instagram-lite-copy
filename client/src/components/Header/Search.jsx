@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import { searchUsers } from '../../http/userApi'
-import Input from '../Input/Input'
-import UsersList from '../UsersList/UsersList'
+import { Input } from '../Input/Input'
+import { UsersList } from '../UsersList/UsersList'
 import style from './Search.module.scss'
 
 const searchTime = 333
 const usersPerPage = 7
 
-function Search() {
+export function Search() {
     const [value, setValue] = useState('')
     const [areUsersHidden, setUsersHidden] = useState(true)
     const [users, setUsers] = useState([])
@@ -88,5 +88,3 @@ function Search() {
         </div>
     )
 }
-
-export default Search

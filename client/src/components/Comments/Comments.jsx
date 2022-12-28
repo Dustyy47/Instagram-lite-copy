@@ -1,7 +1,7 @@
-import Comment from './Comment/Comment'
+import { Comment } from './Comment/Comment'
 import styles from './Comments.module.scss'
 
-const Comments = ({ comments }) => {
+export function Comments({ comments }) {
     return (
         <div className={styles.wrapper}>
             {comments?.map((comment) => (
@@ -23,5 +23,3 @@ const Comments = ({ comments }) => {
         </div>
     )
 }
-
-export default Comments

@@ -1,7 +1,7 @@
-import Avatar from '../Avatar/Avatar'
+import { Avatar } from '../Avatar/Avatar'
 import styles from './UsersList.module.scss'
 
-function UsersListItem({ user, onClick }) {
+export function UsersListItem({ user, onClick }) {
     return (
         <div onClick={onClick} className={styles.item}>
             <Avatar url={user.avatarUrl} />
@@ -9,5 +9,3 @@ function UsersListItem({ user, onClick }) {
         </div>
     )
 }
-
-export default UsersListItem

@@ -1,7 +1,6 @@
-import React from 'react'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
-function HideIcon({ toggleValue, toggleAction }) {
+export function HideIcon({ toggleValue, toggleAction }) {
     const toggle = (e) => {
         e.preventDefault()
         toggleAction()
@@ -32,5 +31,3 @@ function HideIcon({ toggleValue, toggleAction }) {
         </div>
     )
 }
-
-export default HideIcon

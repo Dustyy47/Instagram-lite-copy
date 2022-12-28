@@ -3,10 +3,10 @@ import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { login, registration } from '../../http/userApi.js'
 import { fetchUserData } from '../../store/userSlice'
-import Login from './Login'
-import Registration from './Registration'
+import { Login } from './Login'
+import { Registration } from './Registration'
 
-function Auth() {
+export function Auth() {
     const location = useLocation()
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -85,5 +85,3 @@ function Auth() {
     if (isLogin) return <Login {...loginProps} />
     return <Registration {...registrationProps} />
 }
-
-export default Auth

@@ -1,20 +1,24 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { addPost } from '../../http/userApi'
 import { checkLength, useFormValidator, useValidator, Validation } from '../../utils/Validation'
-import Button from '../Button/Button'
-import FileInput from '../Input/FileInput'
-import Input from '../Input/Input'
-import Modal from '../Modal/Modal'
+import { Button } from '../Button/Button'
+import { FileInput } from '../Input/FileInput'
+import { Input } from '../Input/Input'
+import { Modal } from '../Modal/Modal'
 import './Profile.scss'
 
-function CreatingPost({ isActive, setActive, onPostAdded }) {
+export function CreatingPost({ isActive, setActive, onPostAdded }) {
     const [newPostImageUrl, setNewPostImageUrl] = useState('')
     const [newPostImage, setNewPostImage] = useState(null)
     const [newPostTitle, setNewPostTitle] = useState('')
     const [newPostDescription, setNewPostDescription] = useState('')
 
-    const titleValidator = useValidator([new Validation(checkLength(1, 30), 'Длина заголовка должна быть от 1 до 30 символов')])
-    const descriptionValidator = useValidator([new Validation(checkLength(1, 300), 'Длина описания должна быть от 1 до 300 символов')])
+    const titleValidator = useValidator([
+        new Validation(checkLength(1, 30), 'Длина заголовка должна быть от 1 до 30 символов'),
+    ])
+    const descriptionValidator = useValidator([
+        new Validation(checkLength(1, 300), 'Длина описания должна быть от 1 до 300 символов'),
+    ])
 
     const photoValidator = useValidator([new Validation((file) => !!file, 'Загрузите файл!')])
 
@@ -69,7 +73,11 @@ function CreatingPost({ isActive, setActive, onPostAdded }) {
                 isColumn
                 name="Описание"
             ></Input>
-            <FileInput validator={photoValidator} needToValidate={isActive} setSelectedFile={loadFile} />
+            <FileInput
+                validator={photoValidator}
+                needToValidate={isActive}
+                setSelectedFile={loadFile}
+            />
             {newPostImageUrl && <img className="preview" src={newPostImageUrl} alt="" />}
             <div className="buttons">
                 <Button disabled={formValidator.hasErrors()} onClick={createPost}>
@@ -80,5 +88,3 @@ function CreatingPost({ isActive, setActive, onPostAdded }) {
         </Modal>
     )
 }
-
-export default CreatingPost

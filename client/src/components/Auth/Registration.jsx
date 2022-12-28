@@ -1,17 +1,25 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { AiOutlineMail, AiOutlineUser } from 'react-icons/ai'
 import { BsChatLeftText } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
-import { checkEmail, checkLength, checkName, useFormValidator, useValidator, Validation } from '../../utils/Validation'
-import Button from '../Button/Button'
-import HideIcon from '../HideIcon/HideIcon'
-import FileInput from '../Input/FileInput'
-import Input from '../Input/Input'
+import {
+    checkEmail,
+    checkLength,
+    checkName,
+    useFormValidator,
+    useValidator,
+    Validation,
+} from '../../utils/Validation'
+import { Button } from '../Button/Button'
+import { HideIcon } from '../HideIcon/HideIcon'
+import { FileInput } from '../Input/FileInput'
+import { Input } from '../Input/Input'
 import styles from './Auth.module.scss'
 
-export const placeholderUrl = 'https://ikiwi.website/alteks/wp-content/uploads/2020/11/avatar-placeholder.png'
+export const placeholderUrl =
+    'https://ikiwi.website/alteks/wp-content/uploads/2020/11/avatar-placeholder.png'
 
-function Registration({
+export function Registration({
     email,
     setEmail,
     password,
@@ -25,12 +33,23 @@ function Registration({
     resetFields,
     error,
 }) {
-    const userNameValidator = useValidator([new Validation(checkName, 'Неверный формат имени. Следуйте шаблону "Имя Фамилия"')])
-    const nickNameValidator = useValidator([new Validation(checkLength(3, 25), 'Псевдоним должен быть длиной от 3 до 25 символов')])
+    const userNameValidator = useValidator([
+        new Validation(checkName, 'Неверный формат имени. Следуйте шаблону "Имя Фамилия"'),
+    ])
+    const nickNameValidator = useValidator([
+        new Validation(checkLength(3, 25), 'Псевдоним должен быть длиной от 3 до 25 символов'),
+    ])
     const emailValidator = useValidator([new Validation(checkEmail, 'Неверный формат почты')])
-    const passwordValidator = useValidator([new Validation(checkLength(6, 25), 'Пароль должен быть длиной от 6 до 25 символов')])
+    const passwordValidator = useValidator([
+        new Validation(checkLength(6, 25), 'Пароль должен быть длиной от 6 до 25 символов'),
+    ])
 
-    const registerFormValidator = useFormValidator(userNameValidator, nickNameValidator, emailValidator, passwordValidator)
+    const registerFormValidator = useFormValidator(
+        userNameValidator,
+        nickNameValidator,
+        emailValidator,
+        passwordValidator
+    )
 
     const [isPasswordHidden, setPasswordHidden] = useState(true)
     const [avatarPreviewUrl, setAvatarPreviewUrl] = useState('')
@@ -119,7 +138,10 @@ function Registration({
                 name="Пароль"
                 placeholder="Введите пароль"
             >
-                <HideIcon toggleValue={isPasswordHidden} toggleAction={() => setPasswordHidden(!isPasswordHidden)} />
+                <HideIcon
+                    toggleValue={isPasswordHidden}
+                    toggleAction={() => setPasswordHidden(!isPasswordHidden)}
+                />
             </Input>
             {error}
             <div className={styles.buttons}>
@@ -138,5 +160,3 @@ function Registration({
         </form>
     )
 }
-
-export default Registration

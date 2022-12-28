@@ -1,7 +1,6 @@
-import React from 'react'
 import styles from './LikeBtn.module.scss'
 
-const LikeBtn = ({ isLiked, likesCount, onLike, ...props }) => {
+export function LikeBtn({ isLiked, likesCount, onLike, ...props }) {
     return (
         <div className={`${styles.like} ${props?.className}`}>
             <img
@@ -14,5 +13,3 @@ const LikeBtn = ({ isLiked, likesCount, onLike, ...props }) => {
         </div>
     )
 }
-
-export default LikeBtn

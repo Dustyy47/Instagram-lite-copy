@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getPosts, getProfileInfo, subscribe } from '../../http/userApi'
 import { fetchLikePost, fetchUserData } from '../../store/userSlice'
 import { isPostLiked } from '../../utils/isLikedPost'
-import NotFound from '../Errors/NotFound'
-import Loading from '../Loading/Loading'
-import ExtendedPost from '../Posts/ExtendedPost'
-import PostsList from '../Posts/PostsList'
-import CreatingPost from './CreatingPost'
+import { NotFound } from '../Errors/NotFound'
+import { Loading } from '../Loading/Loading'
+import { ExtendedPost } from '../Posts/ExtendedPost'
+import { PostsList } from '../Posts/PostsList'
+import { CreatingPost } from './CreatingPost'
 import './Profile.scss'
-import ProfileButtons from './ProfileButtons'
-import ProfileInfo from './ProfileInfo'
+import { ProfileButtons } from './ProfileButtons'
+import { ProfileInfo } from './ProfileInfo'
 
-function Profile() {
+export function Profile() {
     const [isLoading, setLoading] = useState(true)
     const [isSubscribed, setSubscribe] = useState(true)
     const [profileInfo, setProfileInfo] = useState(null)
@@ -22,7 +22,12 @@ function Profile() {
     const [extendedPostData, setExtendedPostData] = useState(undefined)
     const [isExtendedPostOpen, setExtendedPostOpen] = useState(false)
 
-    const { likedPosts, subscribes: userSubscribes, isGuest, loadingStatus } = useSelector((state) => state.user)
+    const {
+        likedPosts,
+        subscribes: userSubscribes,
+        isGuest,
+        loadingStatus,
+    } = useSelector((state) => state.user)
     const dispatch = useDispatch()
     const { id: profileId } = useParams()
 
@@ -102,7 +107,12 @@ function Profile() {
                         />
                     )}
                 </div>
-                <PostsList likedPosts={likedPosts} posts={posts} onLike={like} onClickPost={handlePostClick} />
+                <PostsList
+                    likedPosts={likedPosts}
+                    posts={posts}
+                    onLike={like}
+                    onClickPost={handlePostClick}
+                />
             </div>
             <ExtendedPost
                 authorInfo={profileInfo}
@@ -114,9 +124,11 @@ function Profile() {
                     isLiked: isPostLiked(extendedPostData?._id, likedPosts),
                 }}
             />
-            <CreatingPost isActive={isCreatingPost} setActive={setCreatingPost} onPostAdded={fetchProfileData} />
+            <CreatingPost
+                isActive={isCreatingPost}
+                setActive={setCreatingPost}
+                onPostAdded={fetchProfileData}
+            />
         </section>
     )
 }
-
-export default Profile
