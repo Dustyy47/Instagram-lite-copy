@@ -54,7 +54,8 @@ export function useValidator(
     }
 }
 
-export const checkEmail = (value) => value?.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
+export const checkEmail = (value) =>
+    value?.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
 export const checkName = (value) => value?.match(/[аАaA-яЯzZ]\s[аАaA-яЯzZ]/)
-export const checkLength = (min, max) => (value) => value.length >= min && value.length <= max
-export const checkEqual = (valueToCompare) => (value) => valueToCompare === value
+export const checkLength = (min, max) => (value) =>
+    value.length >= min && value.length <= max

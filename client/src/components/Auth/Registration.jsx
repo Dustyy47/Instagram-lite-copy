@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { getCorrectAvatarUrl } from '../../utils/getCorrectAvatarUrl'
 import {
     checkEmail,
+    checkEqual,
     checkLength,
     checkName,
     useFormValidator,
@@ -33,6 +34,8 @@ export function Registration({
     resetFields,
     error,
 }) {
+    const [passwordConfirm, setPasswordConfirm] = useState()
+
     const userNameValidator = useValidator([
         new Validation(checkName, 'Неверный формат имени. Следуйте шаблону "Имя Фамилия"'),
     ])
@@ -43,12 +46,16 @@ export function Registration({
     const passwordValidator = useValidator([
         new Validation(checkLength(6, 25), 'Пароль должен быть длиной от 6 до 25 символов'),
     ])
+    const passwordConfirmValidator = useValidator([
+        new Validation(checkEqual(password, passwordConfirm), 'Введённые пароли не совпадают!'),
+    ])
 
     const registerFormValidator = useFormValidator(
         userNameValidator,
         nickNameValidator,
         emailValidator,
-        passwordValidator
+        passwordValidator,
+        passwordConfirmValidator
     )
 
     const [isPasswordHidden, setPasswordHidden] = useState(true)
@@ -135,6 +142,20 @@ export function Registration({
                 value={password}
                 type={isPasswordHidden ? 'password' : 'text'}
                 name="Пароль"
+                className={styles.authInput}
+                placeholder="Введите пароль"
+            >
+                <HideIcon
+                    toggleValue={isPasswordHidden}
+                    toggleAction={() => setPasswordHidden(!isPasswordHidden)}
+                />
+            </Input>
+            <Input
+                validator={passwordConfirmValidator}
+                onChange={(value) => setPasswordConfirm(value)}
+                value={passwordConfirm}
+                type={isPasswordHidden ? 'password' : 'text'}
+                name="Подтвердить пароль"
                 className={styles.authInput}
                 placeholder="Введите пароль"
             >

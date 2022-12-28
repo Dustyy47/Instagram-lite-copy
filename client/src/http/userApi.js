@@ -59,7 +59,6 @@ export const getUserInfo = async () => {
         const { data } = await $authHost.get('/profile/me')
         return data
     } catch (e) {
-        // jwt expired
         console.log(e)
     }
 }
@@ -83,7 +82,9 @@ export const likePost = async (postId) => {
 export const searchUsers = async (nickname, limit, skip) => {
     try {
         const { data } = await $host.get(
-            `/profile/find/${nickname}` + (limit ? `?limit=${limit}` : '') + (skip ? `&skip=${skip}` : '')
+            `/profile/find/${nickname}` +
+                (limit ? `?limit=${limit}` : '') +
+                (skip ? `&skip=${skip}` : '')
         )
         return data
     } catch (e) {

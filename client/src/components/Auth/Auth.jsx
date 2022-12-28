@@ -21,7 +21,6 @@ export function Auth() {
     const [error, setError] = useState('')
 
     const resetFields = useCallback((fromRegister = false) => {
-        console.log('reset..')
         setEmail('')
         setPassword('')
         if (!fromRegister) return
