@@ -1,11 +1,9 @@
-import React from 'react';
+import React from 'react'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import styles from './Loading.module.scss'
-import {AiOutlineLoading3Quarters} from "react-icons/ai";
 
 function Loading() {
-    return (
-        <AiOutlineLoading3Quarters className={styles.loading}/>
-    );
+    return <AiOutlineLoading3Quarters className={styles.loading} />
 }
 
-export default Loading;
+export default Loading

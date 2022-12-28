@@ -1,53 +1,53 @@
-.header{
-  width: 70vw;
-  height: 80px;
-  background : white;
-  box-shadow: 0px 2px 38px 1px rgba(0, 0, 0, 0.06);
-  position: sticky;
-  margin: 0 auto;
-  border-radius: 0 0 10px 10px;
+.header {
+    width: 70vw;
+    height: 80px;
+    background: white;
+    box-shadow: 0px 2px 38px 1px rgba(0, 0, 0, 0.06);
+    position: sticky;
+    margin: 0 auto;
+    border-radius: 0 0 10px 10px;
 }
 
-.userInfo{
-  display:flex;
-  cursor: pointer;
-  align-items: center;
+.userInfo {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
 }
 
-.avatar{
-  margin-right: 20px;
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 50%;
-  background : #ededed;
+.avatar {
+    margin-right: 20px;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    background: #ededed;
 
-  &--loading{
-    animation : 1s loading infinite;
-  }
+    &--loading {
+        animation: 1s loading infinite;
+    }
 }
 
-.userName{
-  font-size: 20px;
+.userName {
+    font-size: 20px;
 }
 
-.wrapper{
-  height : 100%;
-  display:flex;
-  justify-content: space-between;
-  align-items: start;
-  padding : 15px
+.wrapper {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    padding: 15px;
 }
 
-.list{
-  display: flex;
+.list {
+    display: flex;
 }
 
 @keyframes loading {
-  0%{
-    opacity : .7;
-  }
-  100%{
-    opacity:1;
-  }
+    0% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 1;
+    }
 }

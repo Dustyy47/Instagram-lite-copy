@@ -1,84 +1,89 @@
-import React, {memo, useCallback, useState} from 'react';
-import {useLocation, useNavigate} from "react-router-dom";
-import Login from "./Login";
-import Registration from "./Registration";
-import {login, registration} from '../../http/userApi.js'
-import {useDispatch} from "react-redux";
-import {fetchUserData, setId} from "../../store/userSlice";
+import { useCallback, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { login, registration } from '../../http/userApi.js'
+import { fetchUserData } from '../../store/userSlice'
+import Login from './Login'
+import Registration from './Registration'
 
 function Auth() {
+    const location = useLocation()
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
-    const location = useLocation();
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+    let isLogin = location.pathname === '/auth/login'
 
-    let isLogin = location.pathname === '/auth/login';
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [avatarImage, setAvatarImage] = useState(null)
+    const [fullName, setFullName] = useState('')
+    const [nickName, setNickName] = useState('')
+    const [error, setError] = useState('')
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [avatarImage, setAvatarImage] = useState(null);
-    const [fullName, setFullName] = useState("");
-    const [nickName, setNickName] = useState("");
-    const [error,setError] = useState("");
-
-    const resetFields = useCallback((fromRegister = false)=>{
+    const resetFields = useCallback((fromRegister = false) => {
         console.log('reset..')
-        setEmail("");
-        setPassword("");
-        if(!fromRegister) return;
-        setAvatarImage(null);
-        setFullName("");
-        setNickName("");
-    },[isLogin]);
+        setEmail('')
+        setPassword('')
+        if (!fromRegister) return
+        setAvatarImage(null)
+        setFullName('')
+        setNickName('')
+    }, [])
 
     const onLogin = async () => {
         try {
-            const response = await login(email, password);
-            setError("");
-            redirect(response.nickName);
+            const response = await login(email, password)
+            setError('')
+            redirect(response.nickName)
         } catch (e) {
-            console.log(e.message);
-            setError(e.message);
+            console.log(e.message)
+            setError(e.message)
         }
     }
 
     const onRegister = async () => {
         try {
-            const data = new FormData;
-            data.append('email', email);
-            data.append('password', password);
-            data.append('fullName', fullName);
-            data.append('avatarImage', avatarImage);
-            data.append('nickName', nickName);
-            const response = await registration(data);
-            redirect(response.nickName);
+            const data = new FormData()
+            data.append('email', email)
+            data.append('password', password)
+            data.append('fullName', fullName)
+            data.append('avatarImage', avatarImage)
+            data.append('nickName', nickName)
+            const response = await registration(data)
+            redirect(response.nickName)
         } catch (e) {
-            console.log(e.message);
-            setError(e.message);
+            console.log(e.message)
+            setError(e.message)
         }
     }
 
-    const redirect = async userId => {
-        navigate(`/profile/${userId}`);
-        dispatch(setId());
-        dispatch(fetchUserData());
+    const redirect = async (userId) => {
+        navigate(`/profile/${userId}`)
+        dispatch(fetchUserData())
     }
 
     const loginProps = {
-        email, setEmail, password, setPassword, onLogin , resetFields , error
+        email,
+        setEmail,
+        password,
+        setPassword,
+        onLogin,
+        resetFields,
+        error,
     }
 
     const registrationProps = {
-        ...loginProps, fullName, setFullName, setAvatarImage, onRegister, nickName, setNickName
+        ...loginProps,
+        fullName,
+        setFullName,
+        setAvatarImage,
+        onRegister,
+        nickName,
+        setNickName,
     }
 
-    if (isLogin)
-        return (
-            <Login {...loginProps}/>
-        )
-    return (
-        <Registration {...registrationProps}/>
-    )
+    if (isLogin) return <Login {...loginProps} />
+    return <Registration {...registrationProps} />
 }
 
-export default Auth;
+export default Auth

@@ -1,45 +1,48 @@
-import React from 'react';
-import UsersListItem from "./UsersListItem";
-import {useNavigate} from "react-router-dom";
-import Loading from "../Loading/Loading";
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import Loading from '../Loading/Loading'
+import UsersListItem from './UsersListItem'
 
-function UsersList({users, absenceText, title, onClick, isLoading, ...props}) {
-    const navigate = useNavigate();
-    const handleClickToUser = user => {
-        navigate('/profile/' + user.nickName);
+function UsersList({ users, absenceText, title, onClick, isLoading, ...props }) {
+    const navigate = useNavigate()
+    const handleClickToUser = (user) => {
+        navigate('/profile/' + user.nickName)
     }
 
     if (isLoading) {
-        return <Loading/>
+        return <Loading />
     }
 
     return (
         <>
             <h3>{title}</h3>
-            {
-                users.length > 0
-                    ?
-                    users.map(user => (
-                        <UsersListItem onClick={onClick ? () => onClick(user) : () => handleClickToUser(user)}
-                                       key={user.profileId} user={user}/>
-                    ))
-                    :
-                    <div style={{
+            {users.length > 0 ? (
+                users.map((user) => (
+                    <UsersListItem
+                        onClick={onClick ? () => onClick(user) : () => handleClickToUser(user)}
+                        key={user.profileId}
+                        user={user}
+                    />
+                ))
+            ) : (
+                <div
+                    style={{
                         display: 'flex',
-                        justifyContent: "center",
+                        justifyContent: 'center',
                         alignItems: 'center',
-                        color: "grey",
+                        color: 'grey',
                         fontSize: 20,
                         flexDirection: 'column',
                         width: '95%',
                         height: '95%',
-                        textAlign: "center"
-                    }}>
-                        {props.children}
-                    </div>
-            }
+                        textAlign: 'center',
+                    }}
+                >
+                    {props.children}
+                </div>
+            )}
         </>
-    );
+    )
 }
 
-export default UsersList;
+export default UsersList

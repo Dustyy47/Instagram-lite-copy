@@ -1,56 +1,55 @@
-.like{
-  display: flex;
-  align-items: center;
-  position: absolute;
-  left: 15px;
-  bottom: 15px;
-  width: 50%;
-  transition: inherit;
-  color : white;
-  z-index: 100;
-  font-size: 20px;
-  font-weight: 500;
+.like {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 15px;
+    bottom: 15px;
+    width: 50%;
+    transition: inherit;
+    color: white;
+    z-index: 100;
+    font-size: 20px;
+    font-weight: 500;
 
-  .image{
-    opacity : .85;
-    width: 40px;
-    margin-right: 15px;
-    filter : brightness(0) invert(100%) brightness(.3);
-    transition: filter .1s, transform .3s;
+    .image {
+        opacity: 0.85;
+        width: 40px;
+        margin-right: 15px;
+        filter: brightness(0) invert(100%) brightness(0.3);
+        transition: filter 0.1s, transform 0.3s;
 
-    &:hover{
-      transform: scale(1.2);
+        &:hover {
+            transform: scale(1.2);
+        }
     }
-  }
 
-  .imageLiked{
-    opacity : .85;
-    width: 40px;
-    margin-right: 15px;
-    filter : none;
-    transition: filter .1s, transform .3s;
-    animation: .2s like;
+    .imageLiked {
+        opacity: 0.85;
+        width: 40px;
+        margin-right: 15px;
+        filter: none;
+        transition: filter 0.1s, transform 0.3s;
+        animation: 0.2s like;
 
-    &:hover{
-      transform: scale(1.2);
+        &:hover {
+            transform: scale(1.2);
+        }
     }
-  }
 
-  .counter{
-    color : white;
-    font-size: 24px;
-
-  }
+    .counter {
+        color: white;
+        font-size: 24px;
+    }
 }
 
 @keyframes like {
-  0%{
-    transform:scale(1.2);
-  }
-  50%{
-    transform:scale(1.4);
-  }
-  100%{
-    transform:scale(1.2);
-  }
+    0% {
+        transform: scale(1.2);
+    }
+    50% {
+        transform: scale(1.4);
+    }
+    100% {
+        transform: scale(1.2);
+    }
 }

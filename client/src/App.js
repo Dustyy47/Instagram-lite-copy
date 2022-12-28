@@ -1,67 +1,46 @@
-import './App.css';
-import {Navigate, Route, Routes} from "react-router-dom";
-import React, {useEffect, useState} from "react";
-import Header from "./components/Header/Header";
-import {useDispatch, useSelector} from "react-redux";
-import {fetchUserData, LoadingStatuses, setId} from "./store/userSlice";
-import Loading from "./components/Loading/Loading";
-import {useLogout} from "./utils/useLogout";
-import {authRoutes, publicRoutes} from "./routes";
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import './App.css'
+import Header from './components/Header/Header'
+import Loading from './components/Loading/Loading'
+import { RoutesManager } from './components/Navigate/RoutesManager'
+import { LoadingStatuses } from './models/LoadingStatuses'
+import { fetchUserData } from './store/userSlice'
+import { useLogout } from './utils/useLogout'
 
-function App() {
+export function App() {
+    const [userId, entranceLoadingStatus] = useSelector((state) => [
+        state.user.userId,
+        state.user.entranceLoadingStatus,
+    ])
 
-    const {userId, entranceLoadingStatus} = useSelector(state => state.user);
-    const dispatch = useDispatch();
-    const logout = useLogout();
+    function renderApplication() {
+        if (entranceLoadingStatus === LoadingStatuses.loading) {
+            return (
+                <div className="App">
+                    <Header />
+                    <Loading />
+                </div>
+            )
+        }
+        if (entranceLoadingStatus === LoadingStatuses.error) {
+            logout()
+        }
 
-    let isAuth = userId != null;
-
-    useEffect(() => {
-        dispatch(setId());
-    }, [])
-
-    useEffect(() => {   
-        //TODO:Replace condition to something smarter
-        if (userId)
-            dispatch(fetchUserData());
-    }, [userId])
-
-    const getRoutes = (routes) => {
-        return routes.map(route => (
-            <Route key={route.path} path={route.path} exact={route.exact} element={<route.element/>}/>
-        ))
-    }
-
-    if (entranceLoadingStatus === LoadingStatuses.loading) {
         return (
-            <>
-                <Header/>
-                <Loading/>
-            </>
+            <div className="App">
+                <Header />
+                <RoutesManager userId={userId} />
+            </div>
         )
     }
 
-    if (entranceLoadingStatus === LoadingStatuses.error) {
-        logout();
-    }
+    const dispatch = useDispatch()
+    const logout = useLogout()
 
-    return (
-        <div className="App">
-            <Header/>
-            <Routes>
-                {
-                    isAuth
-                        ? getRoutes(authRoutes)
-                        : getRoutes(publicRoutes)
-                }
-                <Route exact path="*" element={
-                    isAuth ?
-                        <Navigate replace to={`/profile/${userId}`}/> :
-                        <Navigate replace to="/auth/login"/>
-                }/>
-            </Routes>
-        </div>
-    );
+    useEffect(() => {
+        dispatch(fetchUserData())
+    }, [userId])
+
+    return renderApplication()
 }
-
-export default App;

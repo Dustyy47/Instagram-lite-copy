@@ -1,31 +1,31 @@
-@import "../../../styles/variables.scss";
+@import '../../../styles/variables.scss';
 
-.wrapper{
-  width: 90%;
-  height: 70px;
-  background: white;
-  box-shadow: $lightShadow;
-  border-radius: 5px;
-  display: flex;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  align-items: center;
+.wrapper {
+    width: 90%;
+    height: 70px;
+    background: white;
+    box-shadow: $lightShadow;
+    border-radius: 5px;
+    display: flex;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    align-items: center;
 }
 
-.infoWrapper{
-  position: relative;
+.infoWrapper {
+    position: relative;
 }
 
-.nickName{
-  position: absolute;
-  top: 0;
-  right: -80px;
-  color : grey;
-  font-size: 15px;
+.nickName {
+    position: absolute;
+    top: 0;
+    right: -80px;
+    color: grey;
+    font-size: 15px;
 }
 
-.text{
-  font-size: 13px;
-  position: relative;
-  top: 0px;
+.text {
+    font-size: 13px;
+    position: relative;
+    top: 0px;
 }

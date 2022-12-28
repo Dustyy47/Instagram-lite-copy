@@ -1,45 +1,43 @@
-@import "../../styles/variables.scss";
+@import '../../styles/variables.scss';
 
-.avatarPreview{
-  width: 150px;
-  height: 150px;
-  box-sizing: content-box;
-  box-shadow: 0px 2px 38px 1px rgba(0, 0, 0, 0.18);
-  border-radius: 50%;
-  object-fit: cover;
+.avatarPreview {
+    width: 150px;
+    height: 150px;
+    box-sizing: content-box;
+    box-shadow: 0px 2px 38px 1px rgba(0, 0, 0, 0.18);
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .auth {
-  background: white;
-  border-radius: 30px;
-  margin: 50px auto 0;
-  padding: 40px;
-  box-shadow: 0px 2px 38px 1px rgba(0, 0, 0, 0.06);
-  max-width: 600px;
-  width: 100%;
-  min-height: 450px;
+    background: white;
+    border-radius: 30px;
+    margin: 50px auto 0;
+    padding: 40px;
+    box-shadow: 0px 2px 38px 1px rgba(0, 0, 0, 0.06);
+    max-width: 600px;
+    width: 100%;
+    min-height: 450px;
 
-  * {
-    color: $accentColor;
-    transition: .3s;
-  }
-
-  &Title {
-    font-weight: 500;
-    margin-bottom: 75px;
-  }
-  .buttons{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width:100%;
-
-    .link{
-      color : #6CC2CC;
-      width :225px;
-      text-align: left;
+    * {
+        color: $accentColor;
+        transition: 0.3s;
     }
 
-  }
-}
+    &Title {
+        font-weight: 500;
+        margin-bottom: 75px;
+    }
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
 
+        .link {
+            color: #6cc2cc;
+            width: 225px;
+            text-align: left;
+        }
+    }
+}
