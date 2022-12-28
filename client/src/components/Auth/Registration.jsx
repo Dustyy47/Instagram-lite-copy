@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AiOutlineMail, AiOutlineUser } from 'react-icons/ai'
 import { BsChatLeftText } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
+import { getCorrectAvatarUrl } from '../../utils/getCorrectAvatarUrl'
 import {
     checkEmail,
     checkLength,
@@ -51,7 +52,7 @@ export function Registration({
     )
 
     const [isPasswordHidden, setPasswordHidden] = useState(true)
-    const [avatarPreviewUrl, setAvatarPreviewUrl] = useState('')
+    const [avatarPreviewUrl, setAvatarPreviewUrl] = useState(getCorrectAvatarUrl(placeholderUrl))
 
     const loadAvatarPreview = (e) => {
         const img = e.target.files[0]
@@ -78,11 +79,7 @@ export function Registration({
                 <FileInput style={{ fontSize: 18 }} setSelectedFile={loadAvatarPreview}>
                     Загрузить аватар
                 </FileInput>
-                {avatarPreviewUrl ? (
-                    <img className={styles.avatarPreview} src={avatarPreviewUrl} alt="" />
-                ) : (
-                    <img className={styles.avatarPreview} src={placeholderUrl} alt="" />
-                )}
+                <img className={styles.avatarPreview} src={avatarPreviewUrl} alt=" " />
             </div>
             <Input
                 validator={userNameValidator}

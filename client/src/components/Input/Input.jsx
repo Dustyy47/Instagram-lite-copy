@@ -33,7 +33,7 @@ export function Input({
         validator?.validate('')
     }, [props.needToValidate])
 
-    const wrapperClassName = `${styles.wrapper} ${props.className ? props.className : ''}`
+    const wrapperClassName = `${styles.wrapper} ${props.className}`
 
     return (
         <div style={props.styleWrapper} className={wrapperClassName}>
