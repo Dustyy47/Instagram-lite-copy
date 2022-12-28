@@ -32,6 +32,7 @@ export function Login({ email, setEmail, password, setPassword, onLogin, resetFi
                 value={email}
                 type="email"
                 name="Почта"
+                className={styles.authInput}
                 placeholder="Введите почту"
             >
                 <AiOutlineMail
@@ -48,6 +49,7 @@ export function Login({ email, setEmail, password, setPassword, onLogin, resetFi
                 value={password}
                 type={isPasswordHidden ? 'password' : 'text'}
                 name="Пароль"
+                className={styles.authInput}
                 placeholder="Введите пароль"
             >
                 <HideIcon

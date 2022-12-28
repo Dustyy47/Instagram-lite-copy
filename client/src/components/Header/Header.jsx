@@ -1,12 +1,11 @@
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { LoadingStatuses } from '../../models/LoadingStatuses'
 import { useLogout } from '../../utils/useLogout'
 import { placeholderUrl } from '../Auth/Registration'
-import { Avatar } from '../Avatar/Avatar'
 import { Button } from '../Button/Button'
+import { Search } from '../Search/Search'
+import { AccountLabel } from './AccountLabel'
 import styles from './Header.module.scss'
-import { Search } from './Search'
 
 export function Header() {
     const logout = useLogout()
@@ -14,30 +13,33 @@ export function Header() {
     const { userId, nickName, avatarUrl, fullName, loadingStatus } = useSelector(
         (state) => state.user
     )
+
+    function getAccountLabelData() {
+        if (loadingStatus === LoadingStatuses.loading) {
+            return {
+                avatarUrl: '#',
+                userName: '',
+                link: '/auth/login',
+            }
+        }
+        if (avatarUrl !== '')
+            return {
+                avatarUrl: avatarUrl,
+                userName: fullName,
+                link: '/auth/login',
+            }
+        return {
+            avatarUrl: placeholderUrl,
+            userName: 'Гость',
+            link: `/profile/${nickName}`,
+        }
+    }
+
     return (
         <header className={styles.header}>
             <div className={styles.wrapper}>
                 <div>
-                    <Link
-                        to={userId ? `/profile/${nickName}` : '/auth/login'}
-                        className={styles.userInfo}
-                    >
-                        {loadingStatus === LoadingStatuses.loading ? (
-                            <Avatar url="#" />
-                        ) : avatarUrl ? (
-                            <Avatar url={avatarUrl} />
-                        ) : (
-                            <Avatar url={placeholderUrl} />
-                        )}
-
-                        <span className={styles.userName}>
-                            {loadingStatus === LoadingStatuses.loading
-                                ? ''
-                                : fullName
-                                ? fullName
-                                : 'Гость'}{' '}
-                        </span>
-                    </Link>
+                    <AccountLabel data={getAccountLabelData()}></AccountLabel>
                 </div>
                 <nav>
                     <ul className={styles.list}>

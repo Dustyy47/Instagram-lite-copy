@@ -15,9 +15,14 @@ export function Input({
 }) {
     const [showValidation, setShowValidation] = useState(false)
 
-    const blur = () => {
+    function blur() {
         setShowValidation(true)
         if (props.onBlur) props.onBlur()
+    }
+
+    const change = (e) => {
+        validator?.validate(e.target.value)
+        onChange(e.target.value)
     }
 
     useEffect(() => {
@@ -28,15 +33,10 @@ export function Input({
         validator?.validate('')
     }, [props.needToValidate])
 
-    const change = (e) => {
-        validator?.validate(e.target.value)
-        onChange(e.target.value)
-    }
+    const wrapperClassName = `${styles.wrapper} ${props.className ? props.className : ''}`
+
     return (
-        <div
-            style={props.styleWrapper}
-            className={`${styles.wrapper} ${props.className ? props.className : ''}`}
-        >
+        <div style={props.styleWrapper} className={wrapperClassName}>
             <ValidationMessage show={showValidation} errorsString={validator?.errors} />
             <div className={styles.group}>
                 <label style={props.styleLabel} className={styles.label}>

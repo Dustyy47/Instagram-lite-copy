@@ -16,8 +16,7 @@ import { FileInput } from '../Input/FileInput'
 import { Input } from '../Input/Input'
 import styles from './Auth.module.scss'
 
-export const placeholderUrl =
-    'https://ikiwi.website/alteks/wp-content/uploads/2020/11/avatar-placeholder.png'
+export const placeholderUrl = 'placeholder.jpg'
 
 export function Registration({
     email,
@@ -90,6 +89,7 @@ export function Registration({
                 onChange={(value) => setFullName(value)}
                 value={fullName}
                 name="Имя"
+                className={styles.authInput}
                 placeholder="Введите полное имя"
             >
                 <AiOutlineUser
@@ -105,6 +105,7 @@ export function Registration({
                 onChange={(value) => setNickName(value)}
                 value={nickName}
                 name="Псевдоним"
+                className={styles.authInput}
                 placeholder="Введите псевдоним"
             >
                 <BsChatLeftText
@@ -120,6 +121,7 @@ export function Registration({
                 onChange={(value) => setEmail(value)}
                 value={email}
                 name="Почта"
+                className={styles.authInput}
                 placeholder="Введите почту"
             >
                 <AiOutlineMail
@@ -136,6 +138,7 @@ export function Registration({
                 value={password}
                 type={isPasswordHidden ? 'password' : 'text'}
                 name="Пароль"
+                className={styles.authInput}
                 placeholder="Введите пароль"
             >
                 <HideIcon

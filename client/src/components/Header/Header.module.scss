@@ -8,46 +8,14 @@
     border-radius: 0 0 10px 10px;
 }
 
-.userInfo {
-    display: flex;
-    cursor: pointer;
-    align-items: center;
-}
-
-.avatar {
-    margin-right: 20px;
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 50%;
-    background: #ededed;
-
-    &--loading {
-        animation: 1s loading infinite;
-    }
-}
-
-.userName {
-    font-size: 20px;
-}
-
 .wrapper {
     height: 100%;
     display: flex;
     justify-content: space-between;
-    align-items: start;
+    align-items: center;
     padding: 15px;
 }
 
 .list {
     display: flex;
-}
-
-@keyframes loading {
-    0% {
-        opacity: 0.7;
-    }
-    100% {
-        opacity: 1;
-    }
 }

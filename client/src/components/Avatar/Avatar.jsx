@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { getCorrectAvatarUrl } from '../../utils/getCorrectAvatarUrl'
 import styles from './Avatar.module.scss'
 
-export const Avatar = ({ url, nickName = '', ...props }) => {
+export function Avatar({ url, nickName = '', ...props }) {
     const navigate = useNavigate()
 
     function handleClick() {

@@ -5,8 +5,8 @@ import { Input } from '../Input/Input'
 import { UsersList } from '../UsersList/UsersList'
 import style from './Search.module.scss'
 
-const searchTime = 333
-const usersPerPage = 7
+const SEARCH_TIME = 333
+const USERS_PER_PAGE = 7
 
 export function Search() {
     const [value, setValue] = useState('')
@@ -20,7 +20,7 @@ export function Search() {
 
     function handleScroll(e) {
         if (e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight) === 0) {
-            fetchUsers(usersPerPage, page.current * usersPerPage)
+            fetchUsers(USERS_PER_PAGE, page.current * USERS_PER_PAGE)
         }
     }
 
@@ -58,8 +58,8 @@ export function Search() {
         setLoading(true)
         clearTimeout(timer.current)
         timer.current = setTimeout(() => {
-            fetchUsers(usersPerPage, 0)
-        }, searchTime)
+            fetchUsers(USERS_PER_PAGE, 0)
+        }, SEARCH_TIME)
     }
 
     const unFocusSearch = () => {
