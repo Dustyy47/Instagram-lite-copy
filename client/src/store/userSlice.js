@@ -34,6 +34,7 @@ const userSlice = createSlice({
     extraReducers: {
         [fetchUserData.fulfilled]: (state, action) => {
             try {
+                console.log('action:', action)
                 // jwt expired or user deleted
                 if (!action.payload) {
                     state.entranceLoadingStatus = 'error'
@@ -51,7 +52,7 @@ const userSlice = createSlice({
                 state.entranceLoadingStatus = 'error'
             }
         },
-        [fetchUserData.pending]: (state, action) => {
+        [fetchUserData.pending]: (state) => {
             //try to grab token from localstorage and set userId from this, if fails , reset state
             const token = localStorage.getItem('token')
             state.entranceLoadingStatus = LoadingStatuses.idle

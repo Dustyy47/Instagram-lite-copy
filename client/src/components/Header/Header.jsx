@@ -26,12 +26,12 @@ export function Header() {
             return {
                 avatarUrl: avatarUrl,
                 userName: fullName,
-                link: '/auth/login',
+                link: `/profile/${nickName}`,
             }
         return {
             avatarUrl: placeholderUrl,
             userName: 'Гость',
-            link: `/profile/${nickName}`,
+            link: '/auth/login',
         }
     }
 

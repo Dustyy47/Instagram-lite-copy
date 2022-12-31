@@ -14,6 +14,15 @@ export function App() {
         state.user.entranceLoadingStatus,
     ])
 
+    const dispatch = useDispatch()
+    const logout = useLogout()
+
+    console.log('render APP')
+
+    useEffect(() => {
+        dispatch(fetchUserData())
+    }, [userId])
+
     function renderApplication() {
         if (entranceLoadingStatus === LoadingStatuses.loading) {
             return (
@@ -22,8 +31,8 @@ export function App() {
                     <Loading />
                 </div>
             )
-        }
-        if (entranceLoadingStatus === LoadingStatuses.error) {
+        } else if (entranceLoadingStatus === LoadingStatuses.error) {
+            console.log('render loading', entranceLoadingStatus)
             logout()
         }
 
@@ -34,13 +43,6 @@ export function App() {
             </div>
         )
     }
-
-    const dispatch = useDispatch()
-    const logout = useLogout()
-
-    useEffect(() => {
-        dispatch(fetchUserData())
-    }, [userId])
 
     return renderApplication()
 }

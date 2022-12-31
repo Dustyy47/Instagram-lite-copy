@@ -57,9 +57,10 @@ export const getPosts = async (id) => {
 export const getUserInfo = async () => {
     try {
         const { data } = await $authHost.get('/profile/me')
+        console.log('userInfo', data)
         return data
     } catch (e) {
-        console.log(e)
+        console.log(e.request.response)
     }
 }
 

@@ -9,7 +9,7 @@ export function LikeBtn({ isLiked, likesCount, onLike, ...props }) {
                 src="https://img.icons8.com/color/96/000000/like--v3.png"
                 alt="like"
             />
-            <p className={styles.counter}>{likesCount}</p>
+            <p className={styles.counter}>{String(likesCount)}</p>
         </div>
     )
 }

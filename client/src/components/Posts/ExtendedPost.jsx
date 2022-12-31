@@ -31,7 +31,6 @@ export function ExtendedPost({
     async function fetchComments() {
         if (!postData) return
         let fetchedComments = await getComments(postData?._id)
-        console.log('COMMENTS', fetchedComments)
         setComments(fetchedComments)
     }
 
