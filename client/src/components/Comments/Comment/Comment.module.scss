@@ -2,14 +2,15 @@
 
 .wrapper {
     width: 90%;
-    height: 70px;
+    height: 100px;
     background: white;
     box-shadow: $lightShadow;
     border-radius: 5px;
     display: flex;
     text-overflow: ellipsis;
-    overflow: hidden;
-    align-items: center;
+    align-items: top;
+    margin-bottom: 20px;
+    padding-top: 15px;
 }
 
 .infoWrapper {
@@ -17,7 +18,6 @@
 }
 
 .nickName {
-    position: absolute;
     top: 0;
     right: -80px;
     color: grey;
@@ -27,5 +27,6 @@
 .text {
     font-size: 13px;
     position: relative;
-    top: 0px;
+    height: 80%;
+    overflow: auto;
 }

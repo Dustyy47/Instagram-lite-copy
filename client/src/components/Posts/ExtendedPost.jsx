@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { getComments, sendComment } from '../../http/userApi'
-import { getCorrectAvatarUrl } from '../../utils/getCorrectAvatarUrl'
 import { Avatar } from '../Avatar/Avatar'
 import { Button } from '../Button/Button'
 import { Comments } from '../Comments/Comments'
@@ -53,7 +52,7 @@ export function ExtendedPost({
                 <div className={styles.info}>
                     <div className={styles.header}>
                         <div className={styles.profileInfo}>
-                            <Avatar url={getCorrectAvatarUrl(authorInfo.avatarUrl)} />
+                            <Avatar url={authorInfo.avatarUrl} />
                             <p className={styles.nickName}>{authorInfo?.nickName}</p>
                         </div>
                         <LikeBtn
