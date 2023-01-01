@@ -69,11 +69,13 @@ export function CreatingPost({ isActive, setActive, onPostAdded }) {
                 validator={descriptionValidator}
                 needToValidate={isActive}
                 value={newPostDescription}
+                styleWrapper={{ marginTop: 50 }}
                 onChange={(value) => setNewPostDescription(value)}
                 isColumn
                 name="Описание"
             ></Input>
             <FileInput
+                style={{ marginTop: 50 }}
                 validator={photoValidator}
                 needToValidate={isActive}
                 setSelectedFile={loadFile}
