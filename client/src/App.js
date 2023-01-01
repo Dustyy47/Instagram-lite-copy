@@ -17,16 +17,15 @@ export function App() {
     const dispatch = useDispatch()
     const logout = useLogout()
 
-    console.log('render APP')
+    console.log('render APP', entranceLoadingStatus)
 
     useEffect(() => {
         console.log('dispatch user id in app')
         dispatch(fetchUserData())
-    }, [userId])
+    }, [])
 
     function renderApplication() {
         if (entranceLoadingStatus === LoadingStatuses.loading) {
-            console.log('render loading', entranceLoadingStatus)
             return (
                 <div className="App">
                     <Header />
@@ -34,12 +33,10 @@ export function App() {
                 </div>
             )
         } else if (entranceLoadingStatus === LoadingStatuses.error) {
-            console.log('render error', entranceLoadingStatus)
             logout()
             return <p>Some error</p>
         }
 
-        console.log('render routes', entranceLoadingStatus)
         return (
             <div className="App">
                 <Header />

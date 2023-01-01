@@ -6,6 +6,7 @@ export function Avatar({ url, nickName = '', className = '', ...props }) {
     const navigate = useNavigate()
 
     function handleClick() {
+        console.log('clicked to avatar')
         if (nickName) navigate('/profile/' + nickName)
         if (props.onClick) props.onClick()
     }

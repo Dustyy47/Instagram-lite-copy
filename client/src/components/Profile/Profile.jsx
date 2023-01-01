@@ -52,7 +52,6 @@ export function Profile() {
     }
 
     useEffect(() => {
-        console.log('changed profileId or subscribes in profile')
         fetchProfileData()
     }, [profileId, userSubscribes])
 

@@ -35,7 +35,6 @@ const userSlice = createSlice({
     extraReducers: {
         [fetchUserData.fulfilled]: (state, action) => {
             try {
-                console.log('action:', action)
                 // jwt expired or user deleted
                 if (!action.payload) {
                     resetState(state, initialState)
