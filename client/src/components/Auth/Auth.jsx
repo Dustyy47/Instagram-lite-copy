@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { login, registration } from '../../http/userApi.js'
-import { fetchUserData } from '../../store/userSlice'
+import { fetchUserData } from '../../store/slices/userSlice'
 import { Login } from './Login'
 import { Registration } from './Registration'
 

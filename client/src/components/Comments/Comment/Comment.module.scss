@@ -2,12 +2,11 @@
 
 .wrapper {
     width: 90%;
-    height: 100px;
+    min-height: 80px;
     background: white;
     box-shadow: $lightShadow;
     border-radius: 5px;
     display: flex;
-    text-overflow: ellipsis;
     align-items: top;
     margin-bottom: 20px;
     padding-top: 15px;
@@ -25,7 +24,7 @@
 }
 
 .text {
-    font-size: 13px;
+    font-size: 14px;
     position: relative;
     height: 80%;
     overflow: auto;

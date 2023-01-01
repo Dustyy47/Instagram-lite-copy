@@ -1,40 +1,59 @@
-import { useEffect, useState } from 'react'
-import { getComments, sendComment } from '../../http/userApi'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { LoadingStatuses } from '../../models/LoadingStatuses'
+import {
+    fetchGetComments,
+    fetchSendComment,
+    open,
+    setCommentText,
+} from '../../store/slices/extendedPostSlice'
+import { getCorrectImageUrl } from '../../utils/getCorrectAvatarUrl'
 import { Avatar } from '../Avatar/Avatar'
 import { Button } from '../Button/Button'
 import { Comments } from '../Comments/Comments'
 import { Input } from '../Input/Input'
 import { LikeBtn } from '../LikeBtn/LikeBtn'
+import { Loading } from '../Loading/Loading'
 import { Modal } from '../Modal/Modal'
 import styles from './Post.module.scss'
 
 export function ExtendedPost({
     isActive,
     setActive,
-    postData,
+    postData = {},
     authorInfo,
     likeInfo: { onLike, isLiked },
 }) {
-    const [commentText, setCommentText] = useState('')
-    const [comments, setComments] = useState([])
+    const { _id, title, description, likesCountWithoutUser, imageUrl } = postData
+    const dispatch = useDispatch()
+    const { commentText, comments, postLoadingStatus } = useSelector((state) => state.extendedPost)
     const like = (e) => {
         console.log(e)
-        onLike(postData?._id)
+        onLike(_id)
     }
 
-    async function fetchSendComment(e) {
-        await sendComment(commentText, postData._id)
-        setCommentText('')
+    function handleInputComment(value) {
+        dispatch(setCommentText(value))
     }
 
-    async function fetchComments() {
-        if (!postData) return
-        let fetchedComments = await getComments(postData?._id)
-        setComments(fetchedComments)
+    function handleSendComment() {
+        dispatch(fetchSendComment())
+    }
+
+    function renderComments() {
+        if (!comments || comments.length === 0) {
+            return <h5>Нет комментариев :\ </h5>
+        }
+        if (postLoadingStatus === LoadingStatuses.loading) {
+            return <Loading />
+        }
+        return <Comments comments={comments} />
     }
 
     useEffect(() => {
-        fetchComments()
+        if (!_id) return
+        dispatch(fetchGetComments(_id))
+        dispatch(open(_id))
     }, [postData])
 
     return (
@@ -44,11 +63,7 @@ export function ExtendedPost({
             modalStyles={{ maxWidth: 1500, minHeight: 800 }}
         >
             <div className={styles.extended}>
-                <img
-                    className={styles.photo}
-                    src={`${process.env.REACT_APP_API_URL}/${postData?.imageUrl}`}
-                    alt=""
-                />
+                <img className={styles.photo} src={getCorrectImageUrl(imageUrl)} alt="" />
                 <div className={styles.info}>
                     <div className={styles.header}>
                         <div className={styles.profileInfo}>
@@ -58,22 +73,32 @@ export function ExtendedPost({
                         <LikeBtn
                             isLiked={isLiked}
                             onLike={like}
-                            likesCount={postData?.likesCountWithoutUser + +isLiked}
+                            likesCount={likesCountWithoutUser + +isLiked}
                             className={styles.likeBtn}
                         />
                     </div>
                     <div className={styles.content}>
-                        <h3 className={styles.title}>{postData?.title}</h3>
-                        <p>{postData?.description}</p>
+                        <h3 className={styles.title}>{title}</h3>
+                        <p>
+                            {description} Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                            Tempora, atque quia dolorum nesciunt quod pariatur laborum officia
+                            debitis possimus doloremque consequatur dolor inventore perferendis
+                            nobis iure, nisi dolorem. Recusandae, laborum. Lorem ipsum dolor sit
+                            amet consectetur adipisicing elit. Quos ducimus rerum similique eveniet
+                            exercitationem in sit cum quia fugiat nisi! Ducimus officiis repellat,
+                            consequuntur doloribus eaque quidem autem hic sint!
+                        </p>
                     </div>
-                    <Comments comments={comments} />
+
+                    {renderComments()}
+
                     <form className={styles.sendForm}>
                         <Input
                             className={styles.commentInput}
                             value={commentText}
-                            onChange={(v) => setCommentText(v)}
+                            onChange={handleInputComment}
                         />
-                        <Button className={styles.sendCommentBtn} onClick={fetchSendComment}>
+                        <Button className={styles.sendCommentBtn} onClick={handleSendComment}>
                             Отправить
                         </Button>
                     </form>

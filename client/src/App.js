@@ -5,14 +5,11 @@ import { Header } from './components/Header/Header'
 import { Loading } from './components/Loading/Loading'
 import { RoutesManager } from './components/Navigate/RoutesManager'
 import { LoadingStatuses } from './models/LoadingStatuses'
-import { fetchUserData } from './store/userSlice'
+import { fetchUserData } from './store/slices/userSlice'
 import { useLogout } from './utils/useLogout'
 
 export function App() {
-    const [userId, entranceLoadingStatus] = useSelector((state) => [
-        state.user.userId,
-        state.user.entranceLoadingStatus,
-    ])
+    const { userId, entranceLoadingStatus } = useSelector((state) => state.user)
 
     const dispatch = useDispatch()
     const logout = useLogout()

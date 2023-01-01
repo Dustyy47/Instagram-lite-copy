@@ -21,17 +21,11 @@ html {
     }
 
     .likeBtn {
-        width: auto;
         cursor: pointer;
-        transform: none;
-        object-fit: cover;
         left: 0;
         bottom: 0;
         p {
             color: black;
-        }
-        img {
-            width: 35px;
         }
     }
 
@@ -63,7 +57,15 @@ html {
     }
 
     .content {
-        padding: 10px;
+        width: 97%;
+        padding: 15px;
+        height: 15%;
+        margin: 0 auto 40px;
+        p {
+            width: 90%;
+            height: 60%;
+            overflow: auto;
+        }
     }
 
     .commentInput {

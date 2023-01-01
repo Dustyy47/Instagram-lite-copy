@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { logout } from '../store/userSlice'
+import { logout } from '../store/slices/userSlice'
 
 //remove token from localstorage, reset user state and navigate user to login form
 export function useLogout() {

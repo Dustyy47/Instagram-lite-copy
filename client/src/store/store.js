@@ -1,10 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import { chatSlice } from './chatSlice'
-import userSlice from './userSlice'
+import { extendedPostSliceReducer } from './slices/extendedPostSlice'
+import { userSliceReducer } from './slices/userSlice'
 
 const rootReducer = combineReducers({
-    user: userSlice,
-    chat: chatSlice,
+    user: userSliceReducer,
+    extendedPost: extendedPostSliceReducer,
 })
 
 export const store = configureStore({
