@@ -14,6 +14,8 @@ export function Header() {
         (state) => state.user
     )
 
+    console.log('render header')
+
     function getAccountLabelData() {
         if (loadingStatus === LoadingStatuses.loading) {
             return {

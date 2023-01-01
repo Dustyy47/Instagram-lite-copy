@@ -2,8 +2,6 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { authRoutes, publicRoutes } from '../../routes'
 
 export function RoutesManager({ userId }) {
-    let isAuth = userId != null
-
     function getRoutes(routes) {
         return routes.map((route) => (
             <Route
@@ -17,12 +15,12 @@ export function RoutesManager({ userId }) {
 
     return (
         <Routes>
-            {isAuth ? getRoutes(authRoutes) : getRoutes(publicRoutes)}
+            {userId ? getRoutes(authRoutes) : getRoutes(publicRoutes)}
             <Route
                 exact
                 path="*"
                 element={
-                    isAuth ? (
+                    userId ? (
                         <Navigate replace to={`/profile/${userId}`} />
                     ) : (
                         <Navigate replace to="/auth/login" />

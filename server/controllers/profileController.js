@@ -69,6 +69,7 @@ class ProfileController {
         avatarUrl,
         likedPosts,
         subscribes,
+        userId,
       });
     } catch (e) {
       console.log(e);

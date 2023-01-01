@@ -10,6 +10,8 @@ export function Post({ data, onLike, isLiked, onClick }) {
         onLike(data._id)
     }
 
+    console.log('render post')
+
     useEffect(() => {
         setLikesCountWithoutUser(data.likes.length - +isLiked)
     }, [])

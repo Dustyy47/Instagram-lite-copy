@@ -22,12 +22,7 @@ export function Profile() {
     const [extendedPostData, setExtendedPostData] = useState(undefined)
     const [isExtendedPostOpen, setExtendedPostOpen] = useState(false)
 
-    const {
-        likedPosts,
-        subscribes: userSubscribes,
-        isGuest,
-        loadingStatus,
-    } = useSelector((state) => state.user)
+    const { likedPosts, subscribes: userSubscribes, isGuest } = useSelector((state) => state.user)
     const dispatch = useDispatch()
     const { id: profileId } = useParams()
 
@@ -57,6 +52,7 @@ export function Profile() {
     }
 
     useEffect(() => {
+        console.log('changed profileId or subscribes in profile')
         fetchProfileData()
     }, [profileId, userSubscribes])
 
@@ -78,6 +74,8 @@ export function Profile() {
     const like = async (postId) => {
         await dispatch(fetchLikePost(postId))
     }
+
+    console.log('render profile')
 
     if (isLoading) {
         return <Loading />

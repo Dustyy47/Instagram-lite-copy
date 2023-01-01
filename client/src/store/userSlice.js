@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import jwtDecode from 'jwt-decode'
 import { getUserInfo, likePost } from '../http/userApi'
 import { LoadingStatuses } from '../models/LoadingStatuses'
 import { resetState } from '../utils/resetState'
 
 export const fetchUserData = createAsyncThunk('user/fetchData', async () => {
+    console.log('get user info')
     return await getUserInfo()
 })
 
@@ -16,7 +16,7 @@ export const fetchLikePost = createAsyncThunk('user/likePost', async (postId) =>
 const initialState = {
     isGuest: true,
     userId: null,
-    entranceLoadingStatus: LoadingStatuses.idle,
+    entranceLoadingStatus: LoadingStatuses.loading,
     likedPosts: null,
     subscribes: null,
     avatarUrl: '',
@@ -29,6 +29,7 @@ const userSlice = createSlice({
     reducers: {
         logout(state) {
             resetState(state, initialState)
+            state.entranceLoadingStatus = LoadingStatuses.idle
         },
     },
     extraReducers: {
@@ -37,36 +38,22 @@ const userSlice = createSlice({
                 console.log('action:', action)
                 // jwt expired or user deleted
                 if (!action.payload) {
+                    resetState(state, initialState)
                     state.entranceLoadingStatus = 'error'
                     return
                 }
                 state.entranceLoadingStatus = LoadingStatuses.idle
-                const { likedPosts, nickName, subscribes, avatarUrl, fullName } = action.payload
+                const { likedPosts, nickName, subscribes, avatarUrl, fullName, userId } =
+                    action.payload
                 state.likedPosts = likedPosts
                 state.nickName = nickName
+                state.userId = userId
                 state.subscribes = subscribes
                 state.avatarUrl = avatarUrl
                 state.fullName = fullName
                 state.isGuest = false
             } catch (e) {
                 state.entranceLoadingStatus = 'error'
-            }
-        },
-        [fetchUserData.pending]: (state) => {
-            //try to grab token from localstorage and set userId from this, if fails , reset state
-            const token = localStorage.getItem('token')
-            state.entranceLoadingStatus = LoadingStatuses.idle
-            if (!token) {
-                resetState(state, initialState)
-                return
-            }
-            try {
-                const payload = jwtDecode(token)
-                if (payload) {
-                    state.userId = payload.userId
-                }
-            } catch (e) {
-                state.entranceLoadingStatus = LoadingStatuses.error
             }
         },
         [fetchLikePost.fulfilled]: (state, action) => {
