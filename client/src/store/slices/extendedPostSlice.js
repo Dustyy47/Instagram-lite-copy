@@ -22,10 +22,10 @@ const initialState = {
     comments: [],
     commentText: '',
     postId: '',
-    postLoadingStatus: LoadingStatuses.loading,
+    loadingStatus: LoadingStatuses.loading,
 }
 
-export const extendedPostSlice = createSlice({
+const extendedPostSlice = createSlice({
     name: 'comments',
     initialState,
     reducers: {

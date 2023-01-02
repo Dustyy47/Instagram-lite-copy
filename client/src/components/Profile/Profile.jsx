@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getPosts, getProfileInfo, subscribe } from '../../http/userApi'
+import { fetchProfileData as fetchData } from '../../store/slices/profileSlice'
 import { fetchLikePost, fetchUserData } from '../../store/slices/userSlice'
 import { isPostLiked } from '../../utils/isLikedPost'
 import { NotFound } from '../Errors/NotFound'
@@ -52,6 +53,7 @@ export function Profile() {
     }
 
     useEffect(() => {
+        dispatch(fetchData(profileId))
         fetchProfileData()
     }, [profileId, userSubscribes])
 

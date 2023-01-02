@@ -25,7 +25,6 @@ class ProfileController {
         nickName,
         fullName,
         avatarUrl,
-        isUserAuth,
         subscribes,
         subscribers,
         isUserProfile,

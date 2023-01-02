@@ -81,15 +81,7 @@ export function ExtendedPost({
                     </div>
                     <div className={styles.content}>
                         <h3 className={styles.title}>{title}</h3>
-                        <p>
-                            {description} Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            Tempora, atque quia dolorum nesciunt quod pariatur laborum officia
-                            debitis possimus doloremque consequatur dolor inventore perferendis
-                            nobis iure, nisi dolorem. Recusandae, laborum. Lorem ipsum dolor sit
-                            amet consectetur adipisicing elit. Quos ducimus rerum similique eveniet
-                            exercitationem in sit cum quia fugiat nisi! Ducimus officiis repellat,
-                            consequuntur doloribus eaque quidem autem hic sint!
-                        </p>
+                        <p>{description}</p>
                     </div>
 
                     {renderComments()}
