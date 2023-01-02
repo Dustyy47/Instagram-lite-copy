@@ -37,7 +37,7 @@ export function App() {
         return (
             <div className="App">
                 <Header />
-                <RoutesManager userId={userId} />
+                <RoutesManager />
             </div>
         )
     }

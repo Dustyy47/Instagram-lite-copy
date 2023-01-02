@@ -34,6 +34,7 @@ export function AccountLabel() {
     let data = generateData()
 
     function handleClick(e) {
+        debugger
         if (data.link === location.pathname) {
             return
         }

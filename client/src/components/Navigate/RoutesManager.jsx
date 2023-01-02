@@ -1,7 +1,10 @@
+import { useSelector } from 'react-redux'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { authRoutes, publicRoutes } from '../../routes'
 
-export function RoutesManager({ userId }) {
+export function RoutesManager() {
+    const nickName = useSelector((state) => state.user.nickName)
+
     function getRoutes(routes) {
         return routes.map((route) => (
             <Route
@@ -15,13 +18,13 @@ export function RoutesManager({ userId }) {
 
     return (
         <Routes>
-            {userId ? getRoutes(authRoutes) : getRoutes(publicRoutes)}
+            {nickName ? getRoutes(authRoutes) : getRoutes(publicRoutes)}
             <Route
                 exact
                 path="*"
                 element={
-                    userId ? (
-                        <Navigate replace to={`/profile/${userId}`} />
+                    nickName ? (
+                        <Navigate replace to={`/profile/${nickName}`} />
                     ) : (
                         <Navigate replace to="/auth/login" />
                     )
