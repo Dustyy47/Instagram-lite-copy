@@ -104,6 +104,7 @@ export const getConversations = async () => {
 export const sendComment = async (text, postId) => {
     try {
         const { data } = await $authHost.put(`/profile/posts/${postId}/comment`, { text })
+        return data
     } catch (e) {
         console.log(e.request.response)
     }
@@ -111,8 +112,8 @@ export const sendComment = async (text, postId) => {
 
 export const getComments = async (postId) => {
     try {
-        const { data } = await $authHost.get(`/profile/posts/${postId}/comments`)
-        return data
+        const { data: comment } = await $authHost.get(`/profile/posts/${postId}/comments`)
+        return comment
     } catch (e) {
         console.log(e.request.response)
     }

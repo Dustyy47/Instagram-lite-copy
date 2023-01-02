@@ -6,7 +6,7 @@ export const fetchSendComment = createAsyncThunk(
     'comments/sendComment',
     async (_, { getState }) => {
         const { commentText, postId } = getState().extendedPost
-        sendComment(commentText, postId)
+        return sendComment(commentText, postId)
     }
 )
 
@@ -39,6 +39,11 @@ export const extendedPostSlice = createSlice({
     extraReducers: {
         [fetchSendComment.fulfilled]: (state, action) => {
             state.commentText = ''
+            state.comments.push(action.payload)
+            state.postLoadingStatus = LoadingStatuses.idle
+        },
+        [fetchSendComment.pending]: (state) => {
+            state.postLoadingStatus = LoadingStatuses.loading
         },
         [fetchGetComments.fulfilled]: (state, action) => {
             const { comments, postId } = action.payload

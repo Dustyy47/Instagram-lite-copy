@@ -234,7 +234,7 @@ class ProfileController {
     const post = await PostModel.findById(postId);
     const comment = await CommentModel.create({ text, author: user, post });
     await post.updateOne({ $push: { comments: comment } });
-    res.json({ message: comment });
+    res.json(comment);
   }
 }
 
