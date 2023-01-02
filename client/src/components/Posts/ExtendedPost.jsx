@@ -21,9 +21,11 @@ export function ExtendedPost({
     isActive,
     setActive,
     postData = {},
-    authorInfo,
-    likeInfo: { onLike, isLiked },
+    authorInfo = {},
+    likeInfo = {},
 }) {
+    const { onLike, isLiked } = likeInfo
+    const { avatarUrl, nickName } = authorInfo
     const { _id, title, description, likesCountWithoutUser, imageUrl } = postData
     const dispatch = useDispatch()
     const { commentText, comments, postLoadingStatus } = useSelector((state) => state.extendedPost)
@@ -67,8 +69,8 @@ export function ExtendedPost({
                 <div className={styles.info}>
                     <div className={styles.header}>
                         <div className={styles.profileInfo}>
-                            <Avatar url={authorInfo.avatarUrl} />
-                            <p className={styles.nickName}>{authorInfo?.nickName}</p>
+                            <Avatar url={avatarUrl} />
+                            <p className={styles.nickName}>{nickName}</p>
                         </div>
                         <LikeBtn
                             isLiked={isLiked}
