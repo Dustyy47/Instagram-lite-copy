@@ -21,6 +21,7 @@ export function ProfileInfo({ fullName, email, avatarUrl, subscribesId, subscrib
         setModalOpen(true)
     }
 
+    //TODO Сделать динамические подписи в зависимости от чисел
     return (
         <div className="page-header">
             <img className="page-avatar" src={avatarUrl} alt="avatar" />

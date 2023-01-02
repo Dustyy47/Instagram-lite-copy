@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { getPosts, getProfileInfo, subscribe } from '../../http/userApi'
-import { fetchProfileData as fetchData } from '../../store/slices/profileSlice'
+import { subscribe } from '../../http/userApi'
+import { LoadingStatuses } from '../../models/LoadingStatuses'
+import { fetchProfileData as fetchData, fetchProfileData } from '../../store/slices/profileSlice'
 import { fetchLikePost, fetchUserData } from '../../store/slices/userSlice'
+import { getCorrectAvatarUrl } from '../../utils/getCorrectAvatarUrl'
 import { isPostLiked } from '../../utils/isLikedPost'
 import { NotFound } from '../Errors/NotFound'
 import { Loading } from '../Loading/Loading'
@@ -15,53 +17,27 @@ import { ProfileButtons } from './ProfileButtons'
 import { ProfileInfo } from './ProfileInfo'
 
 export function Profile() {
-    const [isLoading, setLoading] = useState(true)
-    const [isSubscribed, setSubscribe] = useState(true)
-    const [profileInfo, setProfileInfo] = useState(null)
-    const [posts, setPosts] = useState([])
     const [isCreatingPost, setCreatingPost] = useState(false)
     const [extendedPostData, setExtendedPostData] = useState(undefined)
     const [isExtendedPostOpen, setExtendedPostOpen] = useState(false)
 
-    const { likedPosts, subscribes: userSubscribes, isGuest } = useSelector((state) => state.user)
+    const { likedPosts, isGuest } = useSelector((state) => state.user)
+    const { posts, profileInfo, isUserSubscribed, loadingStatus } = useSelector(
+        (state) => state.profile
+    )
+
     const dispatch = useDispatch()
     const { id: profileId } = useParams()
 
-    const fetchProfileData = async () => {
-        setLoading(true)
-        try {
-            const profileInfo = await getProfileInfo(profileId)
-            if (!profileInfo) {
-                setLoading(false)
-                return
-            }
-            const posts = await getPosts(profileId)
-            document.title = profileInfo.fullName
-            setProfileInfo(profileInfo)
-            if (userSubscribes === null && !isGuest) {
-                return
-            }
-            const isUserSubscribedOnProfile = isGuest
-                ? false
-                : !!userSubscribes.find((subscribe) => subscribe === profileInfo.profileId)
-            setSubscribe(isUserSubscribedOnProfile)
-            setPosts(posts)
-            setLoading(false)
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
     useEffect(() => {
         dispatch(fetchData(profileId))
-        fetchProfileData()
-    }, [profileId, userSubscribes])
+    }, [profileId])
 
     const toggleSubscribe = async () => {
         try {
             await subscribe(profileId)
             await dispatch(fetchUserData())
-            setSubscribe(!isSubscribed)
+            //setSubscribe(!isSubscribed)
         } catch (e) {
             console.log(e)
         }
@@ -78,14 +54,15 @@ export function Profile() {
 
     console.log('render profile')
 
-    if (isLoading) {
+    if (loadingStatus === LoadingStatuses.loading) {
         return <Loading />
     }
 
-    if (!profileInfo) {
+    if (loadingStatus === LoadingStatuses.error) {
         return <NotFound />
     }
 
+    //TODO Изменить пропсы для дочерних компонентов, получать данные из стора
     return (
         <section className="page">
             <div className="page-wrapper">
@@ -93,14 +70,14 @@ export function Profile() {
                     <ProfileInfo
                         fullName={profileInfo.fullName || ''}
                         email={profileInfo.email || ''}
-                        avatarUrl={`${process.env.REACT_APP_API_URL}/avatars/${profileInfo.avatarUrl}`}
+                        avatarUrl={getCorrectAvatarUrl(profileInfo.avatarUrl)}
                         subscribesId={profileInfo.subscribes}
                         subscribersId={profileInfo.subscribers}
                     />
                     {!isGuest && (
                         <ProfileButtons
                             isUserProfile={profileInfo.isUserProfile}
-                            isSubscribed={isSubscribed}
+                            isSubscribed={isUserSubscribed}
                             setCreatingPost={setCreatingPost}
                             toggleSubscribe={() => toggleSubscribe()}
                         />
@@ -126,7 +103,7 @@ export function Profile() {
             <CreatingPost
                 isActive={isCreatingPost}
                 setActive={setCreatingPost}
-                onPostAdded={fetchProfileData}
+                onPostAdded={() => dispatch(fetchProfileData(profileId))}
             />
         </section>
     )

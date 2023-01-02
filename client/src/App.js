@@ -8,6 +8,12 @@ import { LoadingStatuses } from './models/LoadingStatuses'
 import { fetchUserData } from './store/slices/userSlice'
 import { useLogout } from './utils/useLogout'
 
+//TODO Вынести селекторы в отдельные файлы
+//TODO Отрефакторить scss
+//TODO Мемоизировать селекторы
+//TODO Убирать расширенный пост при переходе на другую страницу
+//TODO Написать useDebounce и отрефакторить вцелом Search
+
 export function App() {
     const { userId, entranceLoadingStatus } = useSelector((state) => state.user)
 
