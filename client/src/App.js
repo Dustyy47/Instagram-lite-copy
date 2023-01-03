@@ -13,6 +13,7 @@ import { useLogout } from './utils/useLogout'
 //TODO Мемоизировать селекторы
 //TODO Убирать расширенный пост при переходе на другую страницу
 //TODO Написать useDebounce и отрефакторить вцелом Search
+//TODO Добавить Loader в модальное окно подписок и подписчиков
 
 export function App() {
     const entranceLoadingStatus = useSelector((state) => state.user.entranceLoadingStatus)

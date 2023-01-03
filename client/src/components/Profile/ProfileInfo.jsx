@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { getProfileOwnerInfo } from '../../http/userApi'
+import { getLabel } from '../../utils/getCorrectLabel'
 import { Modal } from '../Modal/Modal'
 import { UsersList } from '../UsersList/UsersList'
 
@@ -10,15 +11,15 @@ export function ProfileInfo({ fullName, email, avatarUrl, subscribesId, subscrib
     const [absenceText, setAbsenceText] = useState('')
 
     async function openModal(usersId, title, absenceText) {
+        setModalOpen(true)
+        setTitle(title)
+        setAbsenceText(absenceText)
         const usersData = []
         for (const userId of usersId) {
             const userData = await getProfileOwnerInfo(userId)
             usersData.push(userData)
         }
         setUsers(usersData.map((data) => data))
-        setTitle(title)
-        setAbsenceText(absenceText)
-        setModalOpen(true)
     }
 
     //TODO Сделать динамические подписи в зависимости от чисел
@@ -33,13 +34,13 @@ export function ProfileInfo({ fullName, email, avatarUrl, subscribesId, subscrib
                         onClick={() => openModal(subscribersId, 'Подписчики', 'Нет подписчиков')}
                         className="page-header__subscribers"
                     >
-                        {subscribersId.length} подписчиков
+                        {getLabel(subscribersId.length, 'subscribers')}
                     </p>
                     <p
                         onClick={() => openModal(subscribesId, 'Подписки', 'Нет подписок')}
                         className="page-header__subscribes"
                     >
-                        {subscribesId.length} подписок
+                        {getLabel(subscribesId.length, 'subscribes')}
                     </p>
                 </div>
             </div>
