@@ -15,7 +15,7 @@ import { useLogout } from './utils/useLogout'
 //TODO Написать useDebounce и отрефакторить вцелом Search
 
 export function App() {
-    const { userId, entranceLoadingStatus } = useSelector((state) => state.user)
+    const entranceLoadingStatus = useSelector((state) => state.user.entranceLoadingStatus)
 
     const dispatch = useDispatch()
     const logout = useLogout()
@@ -23,7 +23,7 @@ export function App() {
     console.log('render APP', entranceLoadingStatus)
 
     useEffect(() => {
-        console.log('dispatch user id in app')
+        console.log('dispatch user data in app')
         dispatch(fetchUserData())
     }, [])
 

@@ -12,15 +12,15 @@ class ProfileController {
   // return data in format : {email,nickName,fullName,likedPosts,avatarUrl,isUserAuth,isUserProfile}
   async getProfileData(req, res) {
     try {
-      const profileId = req.validProfileID;
+      const id = req.validProfileID;
       const userId = req.userId;
       const isUserAuth = !!userId;
-      const isUserProfile = profileId === userId;
-      const user = await UserModel.findById(profileId);
+      const isUserProfile = id === userId;
+      const user = await UserModel.findById(id);
       const { email, nickName, fullName, avatarUrl, subscribes, subscribers } =
         user;
       res.json({
-        profileId,
+        id,
         email,
         nickName,
         fullName,
@@ -118,6 +118,7 @@ class ProfileController {
     }
   }
 
+  /** returns true if before operation user was subscribed , false if was unscribed**/
   async toggleSubscribe(req, res) {
     try {
       const userId = req.userId;
@@ -133,6 +134,7 @@ class ProfileController {
         await UserModel.findByIdAndUpdate(userId, {
           $pull: { subscribes: userToSubscribeId },
         });
+        return res.json({ wasSubscribed: true });
       } else {
         await UserModel.findByIdAndUpdate(userToSubscribeId, {
           $push: { subscribers: userId },
@@ -140,8 +142,8 @@ class ProfileController {
         await UserModel.findByIdAndUpdate(userId, {
           $push: { subscribes: userToSubscribeId },
         });
+        return res.json({ wasSubscribed: false });
       }
-      res.json(200);
     } catch (e) {
       console.log(e);
       res.status(500);

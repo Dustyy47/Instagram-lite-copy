@@ -49,7 +49,7 @@ export function ExtendedPost({
         if (postLoadingStatus === LoadingStatuses.loading) {
             return <Loading />
         }
-        return <Comments comments={comments} />
+        return <Comments onCommentAvatarClicked={() => setActive(false)} comments={comments} />
     }
 
     useEffect(() => {

@@ -1,14 +1,22 @@
-import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { LoadingStatuses } from '../../models/LoadingStatuses'
+import { useCombinedSelector } from '../../selectors/selectors'
 import { placeholderUrl } from '../Auth/Registration'
 import { Avatar } from '../Avatar/Avatar'
 import styles from './AccountLabel.module.scss'
 
 export function AccountLabel() {
-    const { loadingStatus, avatarUrl, nickName, fullName } = useSelector((state) => state.user)
+    const { loadingStatus, avatarUrl, nickName, fullName } = useCombinedSelector('user', [
+        'loadingStatus',
+        'avatarUrl',
+        'nickName',
+        'fullName',
+    ])
+
     const location = useLocation()
     const navigate = useNavigate()
+
+    console.log('rendered account label')
 
     function generateData() {
         if (loadingStatus === LoadingStatuses.loading) {
@@ -33,7 +41,7 @@ export function AccountLabel() {
 
     let data = generateData()
 
-    function handleClick(e) {
+    function handleClick() {
         if (data.link === location.pathname) {
             return
         }

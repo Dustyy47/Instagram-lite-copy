@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { subscribe } from '../../http/userApi'
 import { LoadingStatuses } from '../../models/LoadingStatuses'
-import { fetchProfileData as fetchData, fetchProfileData } from '../../store/slices/profileSlice'
-import { fetchLikePost, fetchUserData } from '../../store/slices/userSlice'
+import { useCombinedSelector } from '../../selectors/selectors'
+import { fetchProfileData } from '../../store/slices/profileSlice'
+import { fetchLikePost, fetchSubscribe } from '../../store/slices/userSlice'
 import { getCorrectAvatarUrl } from '../../utils/getCorrectAvatarUrl'
 import { isPostLiked } from '../../utils/isLikedPost'
 import { NotFound } from '../Errors/NotFound'
@@ -21,26 +21,23 @@ export function Profile() {
     const [extendedPostData, setExtendedPostData] = useState(undefined)
     const [isExtendedPostOpen, setExtendedPostOpen] = useState(false)
 
-    const { likedPosts, isGuest } = useSelector((state) => state.user)
-    const { posts, profileInfo, isUserSubscribed, loadingStatus } = useSelector(
-        (state) => state.profile
-    )
+    const { likedPosts, isGuest } = useCombinedSelector('user', ['likedPosts', 'isGuest'])
+    const { posts, profileOwnerInfo, loadingStatus } = useCombinedSelector('profile', [
+        'posts',
+        'profileOwnerInfo',
+        'loadingStatus',
+    ])
 
     const dispatch = useDispatch()
-    const { id: profileId } = useParams()
+    const { id: pathProfileId } = useParams()
+    console.log('render profile')
 
     useEffect(() => {
-        dispatch(fetchData(profileId))
-    }, [profileId])
+        dispatch(fetchProfileData(pathProfileId))
+    }, [pathProfileId])
 
     const toggleSubscribe = async () => {
-        try {
-            await subscribe(profileId)
-            await dispatch(fetchUserData())
-            //setSubscribe(!isSubscribed)
-        } catch (e) {
-            console.log(e)
-        }
+        dispatch(fetchSubscribe(profileOwnerInfo.id))
     }
 
     const handlePostClick = async (data) => {
@@ -51,8 +48,6 @@ export function Profile() {
     const like = async (postId) => {
         await dispatch(fetchLikePost(postId))
     }
-
-    console.log('render profile')
 
     if (loadingStatus === LoadingStatuses.loading) {
         return <Loading />
@@ -68,16 +63,14 @@ export function Profile() {
             <div className="page-wrapper">
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <ProfileInfo
-                        fullName={profileInfo.fullName || ''}
-                        email={profileInfo.email || ''}
-                        avatarUrl={getCorrectAvatarUrl(profileInfo.avatarUrl)}
-                        subscribesId={profileInfo.subscribes}
-                        subscribersId={profileInfo.subscribers}
+                        fullName={profileOwnerInfo.fullName || ''}
+                        email={profileOwnerInfo.email || ''}
+                        avatarUrl={getCorrectAvatarUrl(profileOwnerInfo.avatarUrl)}
+                        subscribesId={profileOwnerInfo.subscribes}
+                        subscribersId={profileOwnerInfo.subscribers}
                     />
                     {!isGuest && (
                         <ProfileButtons
-                            isUserProfile={profileInfo.isUserProfile}
-                            isSubscribed={isUserSubscribed}
                             setCreatingPost={setCreatingPost}
                             toggleSubscribe={() => toggleSubscribe()}
                         />
@@ -91,7 +84,7 @@ export function Profile() {
                 />
             </div>
             <ExtendedPost
-                authorInfo={profileInfo}
+                authorInfo={profileOwnerInfo}
                 postData={extendedPostData}
                 isActive={isExtendedPostOpen}
                 setActive={() => setExtendedPostOpen(false)}
@@ -103,7 +96,7 @@ export function Profile() {
             <CreatingPost
                 isActive={isCreatingPost}
                 setActive={setCreatingPost}
-                onPostAdded={() => dispatch(fetchProfileData(profileId))}
+                onPostAdded={() => dispatch(fetchProfileData(pathProfileId))}
             />
         </section>
     )

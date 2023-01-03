@@ -2,7 +2,7 @@ import { Loading } from '../Loading/Loading'
 import { Comment } from './Comment/Comment'
 import styles from './Comments.module.scss'
 
-export function Comments({ comments }) {
+export function Comments({ comments, onCommentAvatarClicked }) {
     if (!comments || comments?.length === 0) {
         return <Loading></Loading>
     }
@@ -10,6 +10,7 @@ export function Comments({ comments }) {
         <div className={styles.wrapper}>
             {comments?.map((comment) => (
                 <Comment
+                    onAvatarClicked={onCommentAvatarClicked}
                     key={comment._id}
                     authorInfo={{
                         id: comment.author._id,

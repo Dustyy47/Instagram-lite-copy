@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getUserInfo, likePost } from '../../http/userApi'
+import { getUserInfo, likePost, subscribe } from '../../http/userApi'
 import { LoadingStatuses } from '../../models/LoadingStatuses'
 import { resetState } from '../../utils/resetState'
 
-export const fetchUserData = createAsyncThunk('user/fetchData', async () => {
+export const fetchUserData = createAsyncThunk('user/getData', async () => {
     console.log('get user info')
     return await getUserInfo()
 })
@@ -13,14 +13,23 @@ export const fetchLikePost = createAsyncThunk('user/likePost', async (postId) =>
     return postId
 })
 
+export const fetchSubscribe = createAsyncThunk('user/subscribe', async (profileId) => {
+    const wasSubscribed = await subscribe(profileId)
+    return {
+        wasSubscribed,
+        profileId,
+    }
+})
+
 const initialState = {
     isGuest: true,
     userId: null,
     entranceLoadingStatus: LoadingStatuses.loading,
-    likedPosts: null,
-    subscribes: null,
+    likedPosts: [],
+    subscribes: [],
     avatarUrl: '',
     nickName: '',
+    fulName: '',
 }
 
 const userSlice = createSlice({
@@ -61,6 +70,14 @@ const userSlice = createSlice({
                 state.likedPosts.push(action.payload)
             } else {
                 state.likedPosts.splice(postIndex, 1)
+            }
+        },
+        [fetchSubscribe.fulfilled]: (state, action) => {
+            const { wasSubscribed, profileId } = action.payload
+            if (wasSubscribed) {
+                state.subscribes = state.subscribes.filter((id) => id !== profileId)
+            } else {
+                state.subscribes.push(profileId)
             }
         },
     },

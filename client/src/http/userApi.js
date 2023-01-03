@@ -28,15 +28,17 @@ export const registration = async (inputData) => {
     }
 }
 
+/** returns true if after operation user have subscribed , false if unscribed**/
 export const subscribe = async (id) => {
     try {
-        await $authHost.put(`/profile/${id}/subscribe`)
+        const { data } = await $authHost.put(`/profile/${id}/subscribe`)
+        return data.wasSubscribed
     } catch (e) {
         console.log(e.request.response)
     }
 }
 
-export const getProfileInfo = async (id) => {
+export const getProfileOwnerInfo = async (id) => {
     try {
         const { data } = await $authHost.get(`/profile/${id}`)
         return data

@@ -1,33 +1,28 @@
-import { getPosts, getProfileInfo } from '../../http/userApi'
+import { getPosts, getProfileOwnerInfo } from '../../http/userApi'
 import { LoadingStatuses } from '../../models/LoadingStatuses'
-import { getIsUserSubscribed } from '../../utils/isUserSubscribed'
 
 const { createSlice, createAsyncThunk } = require('@reduxjs/toolkit')
 
 export const fetchProfileData = createAsyncThunk(
     'profile/fetchData',
-    async (pathProfileId, { rejectWithValue, getState }) => {
-        const profileInfo = await getProfileInfo(pathProfileId)
-        if (!profileInfo) {
+    async (pathProfileId, { rejectWithValue }) => {
+        const profileOwnerInfo = await getProfileOwnerInfo(pathProfileId)
+        if (!profileOwnerInfo) {
             return rejectWithValue(404)
         }
-        const posts = await getPosts(profileInfo.profileId)
-        document.title = profileInfo.fullName
-        const { subscribes, isGuest } = getState().user
-        const isUserSubscribed = getIsUserSubscribed(subscribes, isGuest, profileInfo.profileId)
+        const posts = await getPosts(profileOwnerInfo.id)
+        document.title = profileOwnerInfo.fullName
         return {
-            profileInfo,
+            profileOwnerInfo,
             posts,
-            isUserSubscribed,
         }
     }
 )
 
 const initialState = {
     loadingStatus: LoadingStatuses.loading,
-    profileInfo: {},
+    profileOwnerInfo: {},
     posts: [],
-    isUserSubscribed: false,
 }
 
 const profileSlice = createSlice({
@@ -36,11 +31,10 @@ const profileSlice = createSlice({
     reducers: {},
     extraReducers: {
         [fetchProfileData.fulfilled]: (state, action) => {
-            const { profileInfo, posts, isUserSubscribed } = action.payload
+            const { profileOwnerInfo, posts } = action.payload
             state.loadingStatus = LoadingStatuses.idle
-            state.profileInfo = profileInfo
+            state.profileOwnerInfo = profileOwnerInfo
             state.posts = posts
-            state.isUserSubscribed = isUserSubscribed
         },
         [fetchProfileData.rejected]: (state) => {
             state.loadingStatus = LoadingStatuses.error

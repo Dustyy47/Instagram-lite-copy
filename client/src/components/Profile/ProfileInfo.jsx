@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { getProfileInfo } from '../../http/userApi'
+import { getProfileOwnerInfo } from '../../http/userApi'
 import { Modal } from '../Modal/Modal'
 import { UsersList } from '../UsersList/UsersList'
 
@@ -12,7 +12,7 @@ export function ProfileInfo({ fullName, email, avatarUrl, subscribesId, subscrib
     async function openModal(usersId, title, absenceText) {
         const usersData = []
         for (const userId of usersId) {
-            const userData = await getProfileInfo(userId)
+            const userData = await getProfileOwnerInfo(userId)
             usersData.push(userData)
         }
         setUsers(usersData.map((data) => data))
