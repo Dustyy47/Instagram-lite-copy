@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { addPost } from '../../http/userApi'
+import { useDispatch } from 'react-redux'
+import { fetchAddPost } from '../../store/slices/profileSlice'
 import { checkLength, useFormValidator, useValidator, Validation } from '../../utils/Validation'
 import { Button } from '../Button/Button'
 import { FileInput } from '../Input/FileInput'
@@ -21,8 +22,8 @@ export function CreatingPost({ isActive, setActive, onPostAdded }) {
     ])
 
     const photoValidator = useValidator([new Validation((file) => !!file, 'Загрузите файл!')])
-
     const formValidator = useFormValidator(titleValidator, descriptionValidator, photoValidator)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (!isActive) {
@@ -48,7 +49,7 @@ export function CreatingPost({ isActive, setActive, onPostAdded }) {
         data.append('title', newPostTitle)
         data.append('description', newPostDescription)
         data.append('img', newPostImage)
-        await addPost(data)
+        dispatch(fetchAddPost(data))
         onPostAdded()
     }
 

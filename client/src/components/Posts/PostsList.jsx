@@ -1,7 +1,10 @@
+import { useSelector } from 'react-redux'
 import { isPostLiked } from '../../utils/isLikedPost'
 import { Post } from './Post'
 
-export function PostsList({ posts, onLike, likedPosts, onClickPost }) {
+export function PostsList({ onLike, likedPosts, onClickPost }) {
+    const posts = useSelector((state) => state.profile.posts)
+
     return (
         <div className="page-content">
             {posts

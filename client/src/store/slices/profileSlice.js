@@ -1,10 +1,10 @@
-import { getPosts, getProfileOwnerInfo } from '../../http/userApi'
+import { addPost, getPosts, getProfileOwnerInfo } from '../../http/userApi'
 import { LoadingStatuses } from '../../models/LoadingStatuses'
 
 const { createSlice, createAsyncThunk } = require('@reduxjs/toolkit')
 
 export const fetchProfileData = createAsyncThunk(
-    'profile/fetchData',
+    'profile/getData',
     async (pathProfileId, { rejectWithValue }) => {
         const profileOwnerInfo = await getProfileOwnerInfo(pathProfileId)
         if (!profileOwnerInfo) {
@@ -18,6 +18,10 @@ export const fetchProfileData = createAsyncThunk(
         }
     }
 )
+
+export const fetchAddPost = createAsyncThunk('profile/addPost', async (postData) => {
+    return await addPost(postData)
+})
 
 const initialState = {
     loadingStatus: LoadingStatuses.loading,
@@ -42,8 +46,11 @@ const profileSlice = createSlice({
         [fetchProfileData.pending]: (state) => {
             state.loadingStatus = LoadingStatuses.loading
         },
+        [fetchAddPost.fulfilled]: (state,action) => {
+            const {post} = action.payload
+            state.posts.push(post)
+        },
     },
 })
 
 export const profileSliceReducer = profileSlice.reducer
-export const {} = profileSlice.actions

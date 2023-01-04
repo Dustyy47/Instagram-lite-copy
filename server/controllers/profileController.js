@@ -168,7 +168,7 @@ class ProfileController {
         postedBy: userId,
         imageUrl: fileName,
       });
-      res.json(post);
+      res.json({ post });
     } catch (e) {
       console.log(e);
       res
