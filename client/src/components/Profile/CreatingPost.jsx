@@ -50,7 +50,7 @@ export function CreatingPost({ isActive, setActive, onPostAdded }) {
         data.append('description', newPostDescription)
         data.append('img', newPostImage)
         dispatch(fetchAddPost(data))
-        onPostAdded()
+        if (onPostAdded) onPostAdded()
     }
 
     return (

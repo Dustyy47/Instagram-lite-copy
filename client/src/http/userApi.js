@@ -68,6 +68,7 @@ export const getUserInfo = async () => {
 export const addPost = async (formData) => {
     try {
         const { data } = await $authHost.post('/profile/posts', formData)
+        console.log(data, 'add post response')
         return data.post
     } catch (e) {
         console.log(e.request.response)

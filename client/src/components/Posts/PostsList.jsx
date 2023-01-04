@@ -13,7 +13,7 @@ export function PostsList({ onLike, likedPosts, onClickPost }) {
                           onClick={onClickPost}
                           isLiked={isPostLiked(post._id, likedPosts)}
                           onLike={onLike}
-                          key={post._id}
+                          key={post?._id}
                           data={post}
                       />
                   ))

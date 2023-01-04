@@ -93,11 +93,7 @@ export function Profile() {
                     isLiked: isPostLiked(extendedPostData?._id, likedPosts),
                 }}
             />
-            <CreatingPost
-                isActive={isCreatingPost}
-                setActive={setCreatingPost}
-                onPostAdded={() => dispatch(fetchProfileData(pathProfileId))}
-            />
+            <CreatingPost isActive={isCreatingPost} setActive={setCreatingPost} />
         </section>
     )
 }

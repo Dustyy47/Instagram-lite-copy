@@ -46,8 +46,8 @@ const profileSlice = createSlice({
         [fetchProfileData.pending]: (state) => {
             state.loadingStatus = LoadingStatuses.loading
         },
-        [fetchAddPost.fulfilled]: (state,action) => {
-            const {post} = action.payload
+        [fetchAddPost.fulfilled]: (state, action) => {
+            const post = action.payload
             state.posts.push(post)
         },
     },
