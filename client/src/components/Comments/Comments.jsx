@@ -1,11 +1,7 @@
-import { Loading } from '../Loading/Loading'
 import { Comment } from './Comment/Comment'
 import styles from './Comments.module.scss'
 
 export function Comments({ comments, onCommentAvatarClicked }) {
-    if (!comments || comments?.length === 0) {
-        return <Loading></Loading>
-    }
     return (
         <div className={styles.wrapper}>
             {comments?.map((comment) => (

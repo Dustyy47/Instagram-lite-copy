@@ -62,7 +62,7 @@ export function ExtendedPost({
         <Modal
             isActive={isActive}
             setActive={() => setActive()}
-            modalStyles={{ maxWidth: 1500, minHeight: 800 }}
+            modalStyles={{ width: '70%', maxWidth: 'auto', height: '90%' }}
         >
             <div className={styles.extended}>
                 <img className={styles.photo} src={getCorrectImageUrl(imageUrl)} alt="" />

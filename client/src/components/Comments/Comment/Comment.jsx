@@ -10,7 +10,7 @@ export function Comment({ authorInfo, commentInfo, onAvatarClicked }) {
                 onClick={onAvatarClicked}
                 nickName={nickName}
                 url={avatarUrl}
-                style={{ width: 45, height: 45, marginLeft: 10 }}
+                className={styles.avatar}
             />
             <div className={styles.infoWrapper}>
                 <span className={styles.nickName}>{nickName}</span>

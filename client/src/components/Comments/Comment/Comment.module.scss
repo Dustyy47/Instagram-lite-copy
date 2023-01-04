@@ -1,15 +1,14 @@
 @import '../../../styles/variables.scss';
 
 .wrapper {
-    width: 90%;
-    min-height: 80px;
+    width: 100%;
+    min-height: 23%;
+    box-shadow: $shadow;
     background: white;
-    box-shadow: $lightShadow;
     border-radius: 5px;
     display: flex;
     align-items: top;
     margin-bottom: 20px;
-    padding-top: 15px;
 }
 
 .infoWrapper {
@@ -23,9 +22,29 @@
     font-size: 15px;
 }
 
+.avatar {
+    width: 50px;
+    height: 50px;
+}
+
 .text {
     font-size: 14px;
     position: relative;
     height: 80%;
     overflow: auto;
+}
+
+@media screen and (max-width: 1400px) {
+    .wrapper {
+        padding: 5px;
+        margin-bottom: 15px;
+    }
+    .avatar {
+        width: 33px;
+        height: 33px;
+    }
+    .text {
+        font-size: 13px;
+        line-height: 13px;
+    }
 }
