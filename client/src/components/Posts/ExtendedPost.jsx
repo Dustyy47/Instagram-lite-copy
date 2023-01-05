@@ -27,8 +27,8 @@ export function ExtendedPost({
     const { onLike, isLiked } = likeInfo
     const { avatarUrl, nickName } = authorInfo
     const { _id, title, description, likesCountWithoutUser, imageUrl } = postData
-    const dispatch = useDispatch()
     const { commentText, comments, postLoadingStatus } = useSelector((state) => state.extendedPost)
+    const dispatch = useDispatch()
     const like = (e) => {
         console.log(e)
         onLike(_id)

@@ -32,11 +32,11 @@ html {
     .header {
         width: 100%;
         display: flex;
-        padding: 10px;
         justify-content: space-between;
         * {
             position: relative;
         }
+        margin-bottom: 20px;
     }
 
     .profileInfo {
@@ -52,13 +52,13 @@ html {
     }
 
     .info {
+        padding: 15px;
         width: 40%;
         position: relative;
     }
 
     .content {
         width: 97%;
-        padding: 15px;
         height: 15%;
         margin: 0 auto 10px;
         p {

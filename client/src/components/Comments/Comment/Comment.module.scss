@@ -2,13 +2,13 @@
 
 .wrapper {
     width: 100%;
-    min-height: 23%;
     box-shadow: $shadow;
     background: white;
     border-radius: 5px;
     display: flex;
     align-items: top;
     margin-bottom: 20px;
+    padding: 10px;
 }
 
 .infoWrapper {
@@ -30,14 +30,13 @@
 .text {
     font-size: 14px;
     position: relative;
-    height: 80%;
-    overflow: auto;
 }
 
 @media screen and (max-width: 1400px) {
     .wrapper {
         padding: 5px;
         margin-bottom: 15px;
+        min-height: 23%;
     }
     .avatar {
         width: 33px;
