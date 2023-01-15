@@ -12,6 +12,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	server "github.com/Dustyy47/Instagram-lite-copy/server-go/pkg"
+	"github.com/Dustyy47/Instagram-lite-copy/server-go/pkg/mongo"
 )
 
 type httpHandler struct {
@@ -29,10 +30,15 @@ func main() {
 		logrus.Fatalf("error loading env variables: %s", err.Error())
 	}
 
-	srv := new(server.Server)
+	db := mongo.NewMongoDatabase(os.Getenv("DB_URL"))
+	defer mongo.CloseMongoDBConnection(db)
+	logrus.Printf("Connected to MongoDB")
+
 	handler := httpHandler{
 		message: "Runed",
 	}
+
+	srv := new(server.Server)
 
 	go func() {
 		if err := srv.Run(os.Getenv("PORT"), handler); err != nil {
