@@ -2,6 +2,8 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -23,6 +25,15 @@ func (ac *AuthController) Register(c *gin.Context) {
 	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	var millisecondsUTC string = strconv.FormatInt(time.Now().UTC().UnixNano()/1e6, 10)
+	avatarName := millisecondsUTC + "--" + request.AvatarImage.Filename
+
+	err = c.SaveUploadedFile(request.AvatarImage, "images/avatars/"+avatarName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: "Failed to save the avatarImage on the server"})
 		return
 	}
 
@@ -54,7 +65,7 @@ func (ac *AuthController) Register(c *gin.Context) {
 		Subscribers:   make([]primitive.ObjectID, 0),
 		Conversations: make([]primitive.ObjectID, 0),
 
-		AvatarUrl: "Date.now() +\"--\" + avatarImage.name",
+		AvatarUrl: avatarName,
 	}
 
 	err = ac.AuthUsecase.Create(c, &user)

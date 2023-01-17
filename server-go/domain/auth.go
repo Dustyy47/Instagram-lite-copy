@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+	"mime/multipart"
 )
 
 type LoginRequest struct {
@@ -14,6 +15,8 @@ type RegisterRequest struct {
 	Password string `form:"password" binding:"required"`
 	FullName string `form:"fullName" binding:"required"`
 	NickName string `form:"nickName" binding:"required"`
+
+	AvatarImage *multipart.FileHeader `form:"avatarImage" binding:"required"`
 }
 
 type AuthResponse struct {
