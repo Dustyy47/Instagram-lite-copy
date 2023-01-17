@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
-	routeV1 "github.com/Dustyy47/Instagram-lite-copy/server-go/api/route/v1"
+	route "github.com/Dustyy47/Instagram-lite-copy/server-go/api/route"
 	"github.com/Dustyy47/Instagram-lite-copy/server-go/bootstrap"
 	"github.com/Dustyy47/Instagram-lite-copy/server-go/mongo"
 )
@@ -24,9 +24,9 @@ func main() {
 
 	gin := gin.Default()
 
-	routerV1 := gin.Group("v1")
+	router := gin.Group("")
 
-	routeV1.Setup(env, timeout, db.Database(env.DBName), routerV1)
+	route.Setup(env, timeout, db.Database(env.DBName), router)
 
 	gin.Run(env.ServerAddress)
 }

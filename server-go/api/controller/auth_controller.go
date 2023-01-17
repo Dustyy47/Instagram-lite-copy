@@ -11,12 +11,13 @@ import (
 	"github.com/Dustyy47/Instagram-lite-copy/server-go/domain"
 )
 
-type SignupController struct {
-	SignupUsecase domain.RegisterUsecase
-	Env           *bootstrap.Env
+type AuthController struct {
+	AuthUsecase domain.AuthUsecase
+
+	Env *bootstrap.Env
 }
 
-func (sc *SignupController) Register(c *gin.Context) {
+func (ac *AuthController) Register(c *gin.Context) {
 	var request domain.RegisterRequest
 
 	err := c.ShouldBind(&request)
@@ -25,7 +26,7 @@ func (sc *SignupController) Register(c *gin.Context) {
 		return
 	}
 
-	_, err = sc.SignupUsecase.GetUserByEmail(c, request.Email)
+	_, err = ac.AuthUsecase.GetUserByEmail(c, request.Email)
 	if err == nil {
 		c.JSON(http.StatusConflict, domain.ErrorResponse{Message: "User already exists with the given email"})
 		return
@@ -56,21 +57,54 @@ func (sc *SignupController) Register(c *gin.Context) {
 		AvatarUrl: "Date.now() +\"--\" + avatarImage.name",
 	}
 
-	err = sc.SignupUsecase.Create(c, &user)
+	err = ac.AuthUsecase.Create(c, &user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	accessToken, err := sc.SignupUsecase.CreateAccessToken(&user, sc.Env.AccessTokenSecret, sc.Env.AccessTokenExpiryHour)
+	accessToken, err := ac.AuthUsecase.CreateAccessToken(&user, ac.Env.AccessTokenSecret, ac.Env.AccessTokenExpiryHour)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	signupResponse := domain.RegisterResponse{
+	authResponse := domain.AuthResponse{
 		AccessToken: accessToken,
 	}
 
-	c.JSON(http.StatusOK, signupResponse)
+	c.JSON(http.StatusOK, authResponse)
+}
+
+func (ac *AuthController) Login(c *gin.Context) {
+	var request domain.LoginRequest
+
+	err := c.ShouldBind(&request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	user, err := ac.AuthUsecase.GetUserByEmail(c, request.Email)
+	if err != nil {
+		c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "User not found with the given email"})
+		return
+	}
+
+	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password)) != nil {
+		c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "Invalid credentials"})
+		return
+	}
+
+	accessToken, err := ac.AuthUsecase.CreateAccessToken(&user, ac.Env.AccessTokenSecret, ac.Env.AccessTokenExpiryHour)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	authResponse := domain.AuthResponse{
+		AccessToken: accessToken,
+	}
+
+	c.JSON(http.StatusOK, authResponse)
 }
