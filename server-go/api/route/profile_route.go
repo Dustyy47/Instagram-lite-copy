@@ -13,13 +13,12 @@ import (
 	"github.com/Dustyy47/Instagram-lite-copy/server-go/usecase"
 )
 
-func NewAuthRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Database, group *gin.RouterGroup) {
+func NewProfileRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Database, group *gin.RouterGroup) {
 	ur := repository.NewUserRepository(db, domain.CollectionUser)
-	ac := &controller.AuthController{
+	pc := &controller.ProfileController{
 		UserUsecase: usecase.NewUserUsecase(ur, timeout),
 		Env:         env,
 	}
 
-	group.POST("/registration", ac.Register)
-	group.POST("/login", ac.Login)
+	group.GET("/:nickname", pc.GetProfileData)
 }

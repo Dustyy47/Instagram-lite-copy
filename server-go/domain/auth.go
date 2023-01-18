@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"context"
 	"mime/multipart"
 )
 
@@ -21,10 +20,4 @@ type RegisterRequest struct {
 
 type AuthResponse struct {
 	AccessToken string `json:"accessToken"`
-}
-
-type AuthUsecase interface {
-	Create(c context.Context, user *User) error
-	GetUserByEmail(c context.Context, email string) (User, error)
-	CreateAccessToken(user *User, secret string, expiry int) (accessToken string, err error)
 }

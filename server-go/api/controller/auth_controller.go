@@ -14,11 +14,12 @@ import (
 )
 
 type AuthController struct {
-	AuthUsecase domain.AuthUsecase
+	UserUsecase domain.UserUsecase
 
 	Env *bootstrap.Env
 }
 
+// TODO: validation
 func (ac *AuthController) Register(c *gin.Context) {
 	var request domain.RegisterRequest
 
@@ -28,18 +29,15 @@ func (ac *AuthController) Register(c *gin.Context) {
 		return
 	}
 
-	var millisecondsUTC string = strconv.FormatInt(time.Now().UTC().UnixNano()/1e6, 10)
-	avatarName := millisecondsUTC + "--" + request.AvatarImage.Filename
-
-	err = c.SaveUploadedFile(request.AvatarImage, "images/avatars/"+avatarName)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: "Failed to save the avatarImage on the server"})
+	_, err = ac.UserUsecase.GetUserByEmail(c, request.Email)
+	if err == nil {
+		c.JSON(http.StatusConflict, domain.ErrorResponse{Message: "User already exists with the given email"})
 		return
 	}
 
-	_, err = ac.AuthUsecase.GetUserByEmail(c, request.Email)
+	_, err = ac.UserUsecase.GetUserByNickName(c, request.NickName)
 	if err == nil {
-		c.JSON(http.StatusConflict, domain.ErrorResponse{Message: "User already exists with the given email"})
+		c.JSON(http.StatusConflict, domain.ErrorResponse{Message: "User already exists with the given nickName"})
 		return
 	}
 
@@ -54,6 +52,15 @@ func (ac *AuthController) Register(c *gin.Context) {
 
 	request.Password = string(encryptedPassword)
 
+	var millisecondsUTC string = strconv.FormatInt(time.Now().UTC().UnixNano()/1e6, 10)
+	avatarName := millisecondsUTC + "--" + request.AvatarImage.Filename
+
+	err = c.SaveUploadedFile(request.AvatarImage, "images/avatars/"+avatarName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: "Failed to save the avatarImage on the server"})
+		return
+	}
+
 	user := domain.User{
 		ID:       primitive.NewObjectID(),
 		Email:    request.Email,
@@ -63,18 +70,19 @@ func (ac *AuthController) Register(c *gin.Context) {
 
 		LikedPosts:    make([]primitive.ObjectID, 0),
 		Subscribers:   make([]primitive.ObjectID, 0),
+		Subscribes:    make([]primitive.ObjectID, 0),
 		Conversations: make([]primitive.ObjectID, 0),
 
-		AvatarUrl: avatarName,
+		AvatarURL: avatarName,
 	}
 
-	err = ac.AuthUsecase.Create(c, &user)
+	err = ac.UserUsecase.Create(c, &user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	accessToken, err := ac.AuthUsecase.CreateAccessToken(&user, ac.Env.AccessTokenSecret, ac.Env.AccessTokenExpiryHour)
+	accessToken, err := ac.UserUsecase.CreateAccessToken(&user, ac.Env.AccessTokenSecret, ac.Env.AccessTokenExpiryHour)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return
@@ -96,7 +104,7 @@ func (ac *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	user, err := ac.AuthUsecase.GetUserByEmail(c, request.Email)
+	user, err := ac.UserUsecase.GetUserByEmail(c, request.Email)
 	if err != nil {
 		c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "User not found with the given email"})
 		return
@@ -107,7 +115,7 @@ func (ac *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	accessToken, err := ac.AuthUsecase.CreateAccessToken(&user, ac.Env.AccessTokenSecret, ac.Env.AccessTokenExpiryHour)
+	accessToken, err := ac.UserUsecase.CreateAccessToken(&user, ac.Env.AccessTokenSecret, ac.Env.AccessTokenExpiryHour)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
 		return

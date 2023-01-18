@@ -11,20 +11,31 @@ const (
 )
 
 type User struct {
-	ID            primitive.ObjectID   `bson:"_id"`
-	Email         string               `bson:"email"`
-	FullName      string               `bson:"fullName"`
-	Password      string               `bson:"password"`
-	NickName      string               `bson:"nickName"`
+	ID       primitive.ObjectID `bson:"_id"`
+	Email    string             `bson:"email"`
+	FullName string             `bson:"fullName"`
+	Password string             `bson:"password"`
+	NickName string             `bson:"nickName"`
+
 	LikedPosts    []primitive.ObjectID `bson:"likedPosts"`
 	Subscribers   []primitive.ObjectID `bson:"subscribers"`
+	Subscribes    []primitive.ObjectID `bson:"subscribes"`
 	Conversations []primitive.ObjectID `bson:"conversations"`
-	AvatarUrl     string               `bson:"avatarUrl"`
+
+	AvatarURL string `bson:"avatarUrl"`
+}
+
+type UserUsecase interface {
+	Create(c context.Context, user *User) error
+	GetUserByEmail(c context.Context, email string) (User, error)
+	GetUserByNickName(c context.Context, email string) (User, error)
+
+	CreateAccessToken(user *User, secret string, expiry int) (accessToken string, err error)
 }
 
 type UserRepository interface {
 	Create(c context.Context, user *User) error
-	//Fetch(c context.Context) ([]User, error)
 	GetByEmail(c context.Context, email string) (User, error)
+	GetByNickName(c context.Context, email string) (User, error)
 	GetByID(c context.Context, id string) (User, error)
 }

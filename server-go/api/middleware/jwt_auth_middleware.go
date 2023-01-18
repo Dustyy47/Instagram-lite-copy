@@ -23,14 +23,17 @@ func JwtAuthMiddleware(secret string) gin.HandlerFunc {
 					c.Abort()
 					return
 				}
-				c.Set("x-user-id", userID)
+
+				c.Set("userID", userID)
 				c.Next()
 				return
 			}
+
 			c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: err.Error()})
 			c.Abort()
 			return
 		}
+
 		c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "Not authorized"})
 		c.Abort()
 	}

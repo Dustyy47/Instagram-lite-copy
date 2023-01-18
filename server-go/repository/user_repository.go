@@ -5,7 +5,6 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/Dustyy47/Instagram-lite-copy/server-go/domain"
 	"github.com/Dustyy47/Instagram-lite-copy/server-go/mongo"
@@ -31,30 +30,17 @@ func (ur *userRepository) Create(c context.Context, user *domain.User) error {
 	return err
 }
 
-func (ur *userRepository) Fetch(c context.Context) ([]domain.User, error) {
-	collection := ur.database.Collection(ur.collection)
-
-	opts := options.Find().SetProjection(bson.D{{Key: "password", Value: 0}})
-	cursor, err := collection.Find(c, bson.D{}, opts)
-
-	if err != nil {
-		return nil, err
-	}
-
-	var users []domain.User
-
-	err = cursor.All(c, &users)
-	if users == nil {
-		return []domain.User{}, err
-	}
-
-	return users, err
-}
-
 func (ur *userRepository) GetByEmail(c context.Context, email string) (domain.User, error) {
 	collection := ur.database.Collection(ur.collection)
 	var user domain.User
 	err := collection.FindOne(c, bson.M{"email": email}).Decode(&user)
+	return user, err
+}
+
+func (ur *userRepository) GetByNickName(c context.Context, nickName string) (domain.User, error) {
+	collection := ur.database.Collection(ur.collection)
+	var user domain.User
+	err := collection.FindOne(c, bson.M{"nickName": nickName}).Decode(&user)
 	return user, err
 }
 
