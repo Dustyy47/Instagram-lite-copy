@@ -30,20 +30,6 @@ func (ur *userRepository) Create(c context.Context, user *domain.User) error {
 	return err
 }
 
-func (ur *userRepository) GetByEmail(c context.Context, email string) (domain.User, error) {
-	collection := ur.database.Collection(ur.collection)
-	var user domain.User
-	err := collection.FindOne(c, bson.M{"email": email}).Decode(&user)
-	return user, err
-}
-
-func (ur *userRepository) GetByNickName(c context.Context, nickName string) (domain.User, error) {
-	collection := ur.database.Collection(ur.collection)
-	var user domain.User
-	err := collection.FindOne(c, bson.M{"nickName": nickName}).Decode(&user)
-	return user, err
-}
-
 func (ur *userRepository) GetByID(c context.Context, id string) (domain.User, error) {
 	collection := ur.database.Collection(ur.collection)
 
@@ -55,5 +41,19 @@ func (ur *userRepository) GetByID(c context.Context, id string) (domain.User, er
 	}
 
 	err = collection.FindOne(c, bson.M{"_id": idHex}).Decode(&user)
+	return user, err
+}
+
+func (ur *userRepository) GetByEmail(c context.Context, email string) (domain.User, error) {
+	collection := ur.database.Collection(ur.collection)
+	var user domain.User
+	err := collection.FindOne(c, bson.M{"email": email}).Decode(&user)
+	return user, err
+}
+
+func (ur *userRepository) GetByNickName(c context.Context, nickName string) (domain.User, error) {
+	collection := ur.database.Collection(ur.collection)
+	var user domain.User
+	err := collection.FindOne(c, bson.M{"nickName": nickName}).Decode(&user)
 	return user, err
 }

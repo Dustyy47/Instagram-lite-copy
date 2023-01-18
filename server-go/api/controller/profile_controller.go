@@ -35,7 +35,7 @@ func (pc *ProfileController) GetProfileData(c *gin.Context) {
 	isUserProfile := c.Keys["userID"] == user.ID.Hex()
 
 	getProfileDataResponse := domain.GetProfileDataResponse{
-		ID:       user.ID,
+		UserID:   user.ID,
 		Email:    user.Email,
 		NickName: user.NickName,
 
@@ -48,4 +48,36 @@ func (pc *ProfileController) GetProfileData(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, getProfileDataResponse)
+}
+
+func (pc *ProfileController) GetUserData(c *gin.Context) {
+	var request domain.GetUserDataRequest
+
+	err := c.ShouldBind(&request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	userID := c.GetString("userID")
+
+	user, err := pc.UserUsecase.GetByID(c, userID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "User not found with id: " + userID})
+		return
+	}
+
+	getUserDataResponse := domain.GetUserDataResponse{
+		UserID:   user.ID,
+		Email:    user.Email,
+		NickName: user.NickName,
+		FullName: user.FullName,
+
+		AvatarURL: user.AvatarURL,
+
+		LikedPosts: user.LikedPosts,
+		Subscribes: user.Subscribes,
+	}
+
+	c.JSON(http.StatusOK, getUserDataResponse)
 }

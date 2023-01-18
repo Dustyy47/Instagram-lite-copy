@@ -21,4 +21,5 @@ func NewProfileRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Databa
 	}
 
 	group.GET("/:nickname", pc.GetProfileData)
+	group.GET("/me", pc.GetUserData)
 }

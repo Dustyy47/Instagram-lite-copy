@@ -26,6 +26,12 @@ func (uu *userUsecase) Create(c context.Context, user *domain.User) error {
 	return uu.userRepository.Create(ctx, user)
 }
 
+func (uu *userUsecase) GetByID(c context.Context, id string) (domain.User, error) {
+	ctx, cancel := context.WithTimeout(c, uu.contextTimeout)
+	defer cancel()
+	return uu.userRepository.GetByID(ctx, id)
+}
+
 func (uu *userUsecase) GetUserByEmail(c context.Context, email string) (domain.User, error) {
 	ctx, cancel := context.WithTimeout(c, uu.contextTimeout)
 	defer cancel()

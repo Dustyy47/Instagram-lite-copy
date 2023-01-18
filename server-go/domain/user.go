@@ -27,6 +27,8 @@ type User struct {
 
 type UserUsecase interface {
 	Create(c context.Context, user *User) error
+
+	GetByID(c context.Context, id string) (User, error)
 	GetUserByEmail(c context.Context, email string) (User, error)
 	GetUserByNickName(c context.Context, email string) (User, error)
 
@@ -35,7 +37,8 @@ type UserUsecase interface {
 
 type UserRepository interface {
 	Create(c context.Context, user *User) error
+
+	GetByID(c context.Context, id string) (User, error)
 	GetByEmail(c context.Context, email string) (User, error)
 	GetByNickName(c context.Context, email string) (User, error)
-	GetByID(c context.Context, id string) (User, error)
 }
