@@ -22,11 +22,16 @@ type Collection interface {
 	Find(context.Context, interface{}, ...*options.FindOptions) (Cursor, error)
 	CountDocuments(context.Context, interface{}, ...*options.CountOptions) (int64, error)
 	Aggregate(context.Context, interface{}) (Cursor, error)
+	//UpdateByID(context.Context, interface{}, interface{}, ...*options.UpdateOptions) (*mongo.UpdateResult, error)
 	UpdateOne(context.Context, interface{}, interface{}, ...*options.UpdateOptions) (*mongo.UpdateResult, error)
 	UpdateMany(context.Context, interface{}, interface{}, ...*options.UpdateOptions) (*mongo.UpdateResult, error)
 }
 
 type SingleResult interface {
+	Decode(interface{}) error
+}
+
+type UpdateResult interface {
 	Decode(interface{}) error
 }
 
@@ -60,6 +65,10 @@ type mongoCollection struct {
 
 type mongoSingleResult struct {
 	sr *mongo.SingleResult
+}
+
+type mongoUpdateResult struct {
+	ur *mongo.UpdateResult
 }
 
 type mongoCursor struct {
@@ -140,7 +149,8 @@ func (mc *mongoCollection) FindOne(ctx context.Context, filter interface{}) Sing
 }
 
 func (mc *mongoCollection) UpdateOne(ctx context.Context, filter interface{}, update interface{}, opts ...*options.UpdateOptions) (*mongo.UpdateResult, error) {
-	return mc.coll.UpdateOne(ctx, filter, update, opts[:]...)
+	updateResult, err := mc.coll.UpdateOne(ctx, filter, update, opts[:]...)
+	return updateResult, err
 }
 
 func (mc *mongoCollection) InsertOne(ctx context.Context, document interface{}) (interface{}, error) {

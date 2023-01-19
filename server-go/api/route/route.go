@@ -20,4 +20,10 @@ func Setup(env *bootstrap.Env, timeout time.Duration, db mongo.Database, router 
 	profileRouter.Use(middleware.JwtAuthMiddleware(env.AccessTokenSecret))
 	// All Private APIs
 	NewProfileRouter(env, timeout, db, profileRouter)
+
+	postRouter := router.Group("profile-post")
+	// Middleware to verify AccessToken
+	postRouter.Use(middleware.JwtAuthMiddleware(env.AccessTokenSecret))
+	// All Private APIs
+	NewPostRouter(env, timeout, db, postRouter)
 }
