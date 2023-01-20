@@ -14,6 +14,7 @@ import (
 
 type PostController struct {
 	PostUsecase domain.PostUsecase
+	UserUsecase domain.UserUsecase
 
 	Env *bootstrap.Env
 }
@@ -98,4 +99,35 @@ func (pc *PostController) Remove(c *gin.Context) {
 	successResponce := domain.SuccessResponse{Message: "Post was removed"}
 
 	c.JSON(http.StatusOK, successResponce)
+}
+
+func (pc *PostController) GetPostsByUser(c *gin.Context) {
+	var request domain.GetPostsByUserRequest
+
+	err := c.ShouldBind(&request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	var userID string
+	user, err := pc.UserUsecase.GetByID(c, request.UserID)
+	if err != nil {
+		user, err = pc.UserUsecase.GetUserByNickName(c, request.NickName)
+		if err != nil {
+			c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "User not found with the given userID or nickName"})
+			return
+		}
+		userID = user.ID.Hex()
+	} else {
+		userID = user.ID.Hex()
+	}
+
+	posts, err := pc.PostUsecase.GetAllPostedByUser(c, userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, posts)
 }

@@ -31,6 +31,7 @@ type PostUsecase interface {
 
 	GetByID(c context.Context, id string) (Post, error)
 	GetByIDAndUpdate(c context.Context, id string, opts ...*options.UpdateOptions) (Post, error)
+	GetAllPostedByUser(c context.Context, userID string) ([]Post, error)
 }
 
 type PostRepository interface {
@@ -39,6 +40,7 @@ type PostRepository interface {
 
 	GetByID(c context.Context, id string) (Post, error)
 	GetByIDAndUpdate(c context.Context, id string, opts ...*options.UpdateOptions) (Post, error)
+	GetAllPostedByUser(c context.Context, userID string) ([]Post, error)
 }
 
 type AddPostRequest struct {
@@ -50,7 +52,15 @@ type AddPostRequest struct {
 
 type AddPostResponce Post
 
-type DeletePostRequest struct {
-}
+type DeletePostRequest struct{}
 
 type DeletePostResponce SuccessResponse
+
+type GetPostsByUserRequest struct {
+	UserID   string `form:"userID" binding:"required"`
+	NickName string `form:"nickName" binding:"required"`
+}
+
+type GetPostsByUserResponce struct {
+	Posts []Post `bson:"posts"`
+}

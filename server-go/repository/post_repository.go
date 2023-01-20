@@ -64,3 +64,25 @@ func (pr *postRepository) GetByID(c context.Context, id string) (domain.Post, er
 	err = collection.FindOne(c, bson.M{"_id": idHex}).Decode(&post)
 	return post, err
 }
+
+func (pr *postRepository) GetAllPostedByUser(c context.Context, userID string) ([]domain.Post, error) {
+	collection := pr.database.Collection(pr.collection)
+
+	userIDHex, err := primitive.ObjectIDFromHex(userID)
+	if err != nil {
+		return make([]domain.Post, 0), err
+	}
+
+	cursor, err := collection.Find(c, userIDHex)
+	if err != nil {
+		return make([]domain.Post, 0), err
+	}
+
+	var posts []domain.Post
+	err = cursor.Decode(&posts)
+	if err != nil {
+		return make([]domain.Post, 0), err
+	}
+
+	return posts, err
+}

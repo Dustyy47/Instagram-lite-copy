@@ -43,3 +43,9 @@ func (pu *postUsecase) GetByIDAndUpdate(c context.Context, id string, opts ...*o
 	defer cancel()
 	return pu.postRepository.GetByIDAndUpdate(ctx, id, opts...)
 }
+
+func (pu *postUsecase) GetAllPostedByUser(c context.Context, userID string) ([]domain.Post, error) {
+	ctx, cancel := context.WithTimeout(c, pu.contextTimeout)
+	defer cancel()
+	return pu.postRepository.GetAllPostedByUser(ctx, userID)
+}
