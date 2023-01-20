@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/Dustyy47/Instagram-lite-copy/server-go/bootstrap"
@@ -130,4 +131,48 @@ func (pc *PostController) GetPostsByUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, posts)
+}
+
+func (pc *PostController) Like(c *gin.Context) {
+	postID := c.Params.ByName("postID")
+
+	_, err := primitive.ObjectIDFromHex(postID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	post, err := pc.PostUsecase.GetByID(c, postID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	userID := c.GetString("userID")
+	userIDHex, err := primitive.ObjectIDFromHex(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	for _, id := range post.Likes {
+		if userIDHex == id {
+			post, err = pc.PostUsecase.GetByIDAndUpdate(c, bson.M{"_id": post.ID}, bson.D{{"$pull", bson.D{{"likes", userIDHex}}}})
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+				return
+			}
+
+			c.JSON(http.StatusOK, post.Likes)
+			return
+		}
+	}
+
+	post, err = pc.PostUsecase.GetByIDAndUpdate(c, bson.M{"_id": post.ID}, bson.D{{"$push", bson.D{{"likes", userIDHex}}}})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, post.Likes)
 }

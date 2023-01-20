@@ -5,7 +5,6 @@ import (
 	"mime/multipart"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const (
@@ -30,7 +29,8 @@ type PostUsecase interface {
 	Remove(c context.Context, post *Post) error
 
 	GetByID(c context.Context, id string) (Post, error)
-	GetByIDAndUpdate(c context.Context, id string, opts ...*options.UpdateOptions) (Post, error)
+	//GetByIDAndUpdate(c context.Context, id string, opts ...*options.UpdateOptions) (Post, error)
+	GetByIDAndUpdate(c context.Context, filter primitive.M, update primitive.D) (Post, error)
 	GetAllPostedByUser(c context.Context, userID string) ([]Post, error)
 }
 
@@ -39,7 +39,9 @@ type PostRepository interface {
 	Remove(c context.Context, post *Post) error
 
 	GetByID(c context.Context, id string) (Post, error)
-	GetByIDAndUpdate(c context.Context, id string, opts ...*options.UpdateOptions) (Post, error)
+	//GetByIDAndUpdate(c context.Context, id string, opts ...*options.UpdateOptions) (Post, error)
+	GetByIDAndUpdate(c context.Context, filter primitive.M, update primitive.D) (Post, error)
+
 	GetAllPostedByUser(c context.Context, userID string) ([]Post, error)
 }
 

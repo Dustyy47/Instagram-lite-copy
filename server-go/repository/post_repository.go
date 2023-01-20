@@ -7,6 +7,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
+	//"go.mongodb.org/mongo-driver/mongo/options"
+
 	"github.com/Dustyy47/Instagram-lite-copy/server-go/domain"
 	"github.com/Dustyy47/Instagram-lite-copy/server-go/mongo"
 )
@@ -39,16 +41,15 @@ func (pr *postRepository) Remove(c context.Context, post *domain.Post) error {
 	return err
 }
 
-func (pr *postRepository) GetByIDAndUpdate(c context.Context, id string, opts ...*options.UpdateOptions) (domain.Post, error) {
+func (pr *postRepository) GetByIDAndUpdate(c context.Context, filter primitive.M, update primitive.D) (domain.Post, error) {
 	collection := pr.database.Collection(pr.collection)
 
-	_, err := collection.UpdateOne(c, id, opts)
+	opts := options.FindOneAndUpdate().SetReturnDocument(options.After)
 
-	if err != nil {
-		return domain.Post{}, err
-	}
+	var post domain.Post
+	err := collection.FindOneAndUpdate(c, filter, update, opts).Decode(&post)
 
-	return pr.GetByID(c, id)
+	return post, err
 }
 
 func (pr *postRepository) GetByID(c context.Context, id string) (domain.Post, error) {

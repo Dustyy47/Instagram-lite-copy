@@ -13,22 +13,18 @@ import (
 	"github.com/Dustyy47/Instagram-lite-copy/server-go/usecase"
 )
 
-func NewPostRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Database, group *gin.RouterGroup) {
+func NewCommentRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Database, group *gin.RouterGroup) {
+	cr := repository.NewCommentRepository(db, domain.CollectionComments)
 	pr := repository.NewPostRepository(db, domain.CollectionPosts)
 	ur := repository.NewUserRepository(db, domain.CollectionUser)
 
-	pc := &controller.PostController{
-		PostUsecase: usecase.NewPostUsecase(pr, timeout),
-		UserUsecase: usecase.NewUserUsecase(ur, timeout),
+	cc := &controller.CommentController{
+		CommentUsecase: usecase.NewCommentUsecase(cr, timeout),
+		PostUsecase:    usecase.NewPostUsecase(pr, timeout),
+		UserUsecase:    usecase.NewUserUsecase(ur, timeout),
 
 		Env: env,
 	}
 
-	group.POST("/create", pc.Add)
-	group.GET("", pc.GetPostsByUser)
-	group.PUT("/:postID", pc.Like)
-	group.DELETE("/delete/:postID", pc.Remove)
-
-	commentRouter := group.Group("/:postID/comments")
-	NewCommentRouter(env, timeout, db, commentRouter)
+	group.POST("/create", cc.Add)
 }

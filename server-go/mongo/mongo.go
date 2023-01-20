@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -16,14 +17,14 @@ type Database interface {
 
 type Collection interface {
 	FindOne(context.Context, interface{}) SingleResult
-	InsertOne(context.Context, interface{}) (interface{}, error)
+	FindOneAndUpdate(ctx context.Context, filter interface{}, update interface{}, opts ...*options.FindOneAndUpdateOptions) SingleResult
+	InsertOne(context.Context, interface{}) (primitive.ObjectID, error)
 	InsertMany(context.Context, []interface{}) ([]interface{}, error)
 	DeleteOne(context.Context, interface{}) (int64, error)
 	Find(context.Context, interface{}, ...*options.FindOptions) (Cursor, error)
 	CountDocuments(context.Context, interface{}, ...*options.CountOptions) (int64, error)
 	Aggregate(context.Context, interface{}) (Cursor, error)
 	//UpdateByID(context.Context, interface{}, interface{}, ...*options.UpdateOptions) (*mongo.UpdateResult, error)
-	UpdateOne(context.Context, interface{}, interface{}, ...*options.UpdateOptions) (*mongo.UpdateResult, error)
 	UpdateMany(context.Context, interface{}, interface{}, ...*options.UpdateOptions) (*mongo.UpdateResult, error)
 }
 
@@ -148,14 +149,14 @@ func (mc *mongoCollection) FindOne(ctx context.Context, filter interface{}) Sing
 	return &mongoSingleResult{sr: singleResult}
 }
 
-func (mc *mongoCollection) UpdateOne(ctx context.Context, filter interface{}, update interface{}, opts ...*options.UpdateOptions) (*mongo.UpdateResult, error) {
-	updateResult, err := mc.coll.UpdateOne(ctx, filter, update, opts[:]...)
-	return updateResult, err
+func (mc *mongoCollection) FindOneAndUpdate(ctx context.Context, filter interface{}, update interface{}, opts ...*options.FindOneAndUpdateOptions) SingleResult {
+	singleResult := mc.coll.FindOneAndUpdate(ctx, filter, update, opts...)
+	return &mongoSingleResult{sr: singleResult}
 }
 
-func (mc *mongoCollection) InsertOne(ctx context.Context, document interface{}) (interface{}, error) {
-	id, err := mc.coll.InsertOne(ctx, document)
-	return id.InsertedID, err
+func (mc *mongoCollection) InsertOne(ctx context.Context, document interface{}) (primitive.ObjectID, error) {
+	insertOneResult, err := mc.coll.InsertOne(ctx, document)
+	return insertOneResult.InsertedID.(primitive.ObjectID), err
 }
 
 func (mc *mongoCollection) InsertMany(ctx context.Context, document []interface{}) ([]interface{}, error) {
