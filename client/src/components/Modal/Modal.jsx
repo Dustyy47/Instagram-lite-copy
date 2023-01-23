@@ -12,7 +12,6 @@ export function Modal({ isActive, setActive, ...props }) {
         } else {
             document.body.classList.remove(styles.fixed)
             window.scrollTo(0, scrollBeforeOpen.current)
-            console.log(scrollBeforeOpen.current)
         }
     }, [isActive])
 

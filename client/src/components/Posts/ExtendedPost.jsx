@@ -1,13 +1,8 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { getCorrectImageUrl } from '../../helpers/getCorrectAvatarUrl'
 import { LoadingStatuses } from '../../models/LoadingStatuses'
-import {
-    fetchGetComments,
-    fetchSendComment,
-    open,
-    setCommentText,
-} from '../../store/slices/extendedPostSlice'
-import { getCorrectImageUrl } from '../../utils/getCorrectAvatarUrl'
+import { extendedPostActions } from '../../store/actions'
 import { Avatar } from '../Avatar/Avatar'
 import { Button } from '../Button/Button'
 import { Comments } from '../Comments/Comments'
@@ -35,11 +30,11 @@ export function ExtendedPost({
     }
 
     function handleInputComment(value) {
-        dispatch(setCommentText(value))
+        dispatch(extendedPostActions.setCommentText(value))
     }
 
     function handleSendComment() {
-        dispatch(fetchSendComment())
+        dispatch(extendedPostActions.fetchSendComment())
     }
 
     function renderComments() {
@@ -54,8 +49,8 @@ export function ExtendedPost({
 
     useEffect(() => {
         if (!_id) return
-        dispatch(fetchGetComments(_id))
-        dispatch(open(_id))
+        dispatch(extendedPostActions.fetchGetComments(_id))
+        dispatch(extendedPostActions.open(_id))
     }, [postData])
 
     return (

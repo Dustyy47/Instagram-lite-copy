@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { useLogout } from '../../utils/useLogout'
+import { useLogout } from '../../hooks/useLogout'
 import { Button } from '../Button/Button'
 import { Search } from '../Search/Search'
 import { AccountLabel } from './AccountLabel'

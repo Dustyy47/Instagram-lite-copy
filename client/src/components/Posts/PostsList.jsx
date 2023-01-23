@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { isPostLiked } from '../../utils/isLikedPost'
+import { isPostLiked } from '../../helpers/isLikedPost'
 import { Post } from './Post'
 
 export function PostsList({ onLike, likedPosts, onClickPost }) {

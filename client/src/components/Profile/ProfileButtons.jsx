@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { getIsUserSubscribed } from '../../utils/getUserSubscribed'
+import { getIsUserSubscribed } from '../../helpers/getUserSubscribed'
 import { Button } from '../Button/Button'
 
 //TODO Добавить Loader при подписке

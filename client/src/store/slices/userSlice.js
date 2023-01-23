@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { resetState } from '../../helpers/resetState'
 import { getUserInfo, likePost, subscribe } from '../../http/userApi'
 import { LoadingStatuses } from '../../models/LoadingStatuses'
-import { resetState } from '../../utils/resetState'
 
 export const fetchUserData = createAsyncThunk('user/getData', async () => {
     console.log('get user info')
@@ -84,4 +84,4 @@ const userSlice = createSlice({
 })
 
 export const userSliceReducer = userSlice.reducer
-export const { setInfo, logout } = userSlice.actions
+export const userActions = { ...userSlice.actions }

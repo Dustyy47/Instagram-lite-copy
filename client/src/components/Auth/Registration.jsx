@@ -2,16 +2,8 @@ import { useState } from 'react'
 import { AiOutlineMail, AiOutlineUser } from 'react-icons/ai'
 import { BsChatLeftText } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
-import { getCorrectAvatarUrl } from '../../utils/getCorrectAvatarUrl'
-import {
-    checkEmail,
-    checkEqual,
-    checkLength,
-    checkName,
-    useFormValidator,
-    useValidator,
-    Validation,
-} from '../../utils/Validation'
+import { getCorrectAvatarUrl } from '../../helpers/getCorrectAvatarUrl'
+import { checks, useFormValidator, useValidator, Validation } from '../../hooks/validators'
 import { Button } from '../Button/Button'
 import { HideIcon } from '../HideIcon/HideIcon'
 import { FileInput } from '../Input/FileInput'
@@ -34,6 +26,7 @@ export function Registration({
     resetFields,
     error,
 }) {
+    const { checkLength, checkEqual, checkName, checkEmail } = checks
     const [passwordConfirm, setPasswordConfirm] = useState()
 
     const userNameValidator = useValidator([

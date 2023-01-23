@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { checks, useFormValidator, useValidator, Validation } from '../../hooks/validators'
 import { fetchAddPost } from '../../store/slices/profileSlice'
-import { checkLength, useFormValidator, useValidator, Validation } from '../../utils/Validation'
 import { Button } from '../Button/Button'
 import { FileInput } from '../Input/FileInput'
 import { Input } from '../Input/Input'
@@ -13,6 +13,7 @@ export function CreatingPost({ isActive, setActive, onPostAdded }) {
     const [newPostImage, setNewPostImage] = useState(null)
     const [newPostTitle, setNewPostTitle] = useState('')
     const [newPostDescription, setNewPostDescription] = useState('')
+    const { checkLength } = checks
 
     const titleValidator = useValidator([
         new Validation(checkLength(1, 30), 'Длина заголовка должна быть от 1 до 30 символов'),

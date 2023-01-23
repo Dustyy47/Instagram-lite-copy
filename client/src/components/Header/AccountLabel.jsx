@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useCombinedSelector } from '../../hooks/useCombinedSelector'
 import { LoadingStatuses } from '../../models/LoadingStatuses'
-import { useCombinedSelector } from '../../selectors/selectors'
 import { placeholderUrl } from '../Auth/Registration'
 import { Avatar } from '../Avatar/Avatar'
 import styles from './AccountLabel.module.scss'

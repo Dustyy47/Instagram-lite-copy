@@ -4,9 +4,9 @@ import './App.css'
 import { Header } from './components/Header/Header'
 import { Loading } from './components/Loading/Loading'
 import { RoutesManager } from './components/Navigate/RoutesManager'
+import { useLogout } from './hooks/useLogout'
 import { LoadingStatuses } from './models/LoadingStatuses'
 import { fetchUserData } from './store/slices/userSlice'
-import { useLogout } from './utils/useLogout'
 
 //TODO Вынести селекторы в отдельные файлы
 //TODO Отрефакторить scss

@@ -1,19 +1,14 @@
 import { useState } from 'react'
 import { AiOutlineMail } from 'react-icons/ai'
 import { Link } from 'react-router-dom'
-import {
-    checkEmail,
-    checkLength,
-    useFormValidator,
-    useValidator,
-    Validation,
-} from '../../utils/Validation'
+import { checks, useFormValidator, useValidator, Validation } from '../../hooks/validators'
 import { Button } from '../Button/Button'
 import { HideIcon } from '../HideIcon/HideIcon'
 import { Input } from '../Input/Input'
 import styles from './Auth.module.scss'
 
 export function Login({ email, setEmail, password, setPassword, onLogin, resetFields, error }) {
+    const { checkLength, checkEmail } = checks
     const emailValidator = useValidator([new Validation(checkEmail, 'Неверный формат почты')])
     const passwordValidator = useValidator([
         new Validation(checkLength(6, 25), 'Пароль должен быть длиной от 6 до 25 символов'),

@@ -1,6 +1,6 @@
 import { useState } from 'react'
+import { getLabel } from '../../helpers/getCorrectLabel'
 import { getProfileOwnerInfo } from '../../http/userApi'
-import { getLabel } from '../../utils/getCorrectLabel'
 import { Modal } from '../Modal/Modal'
 import { UsersList } from '../UsersList/UsersList'
 

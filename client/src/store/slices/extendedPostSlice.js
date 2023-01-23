@@ -58,4 +58,8 @@ const extendedPostSlice = createSlice({
 })
 
 export const extendedPostSliceReducer = extendedPostSlice.reducer
-export const { setCommentText, open } = extendedPostSlice.actions
+export const extendedPostActions = {
+    ...extendedPostSlice.actions,
+    fetchGetComments,
+    fetchSendComment,
+}
