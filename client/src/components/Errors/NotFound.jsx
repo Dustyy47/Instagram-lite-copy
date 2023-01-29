@@ -1,8 +1,10 @@
+import styles from './NotFound.module.scss'
+
 export function NotFound() {
     return (
-        <div className="not-found">
-            <h1 className="not-found__title">404</h1>
-            <p className="not-found__text">Данный пользователь не найден</p>
+        <div className={styles.wrapper}>
+            <h1 className={styles.title}>404</h1>
+            <p className={styles.text}>Данный пользователь не найден</p>
         </div>
     )
 }
