@@ -2,7 +2,7 @@ import path from "path";
 import CommentModel from "../Models/CommentModel.js";
 import PostModel from "../Models/PostModel.js";
 import UserModel from "../Models/UserModel.js";
-import { __dirname } from "../utils/directoryVariables.js";
+import { __dirname } from "../start.js";
 
 const DEFAULT_LIMIT = 10;
 const DEFAULT_SKIP = 0;
@@ -237,6 +237,40 @@ class ProfileController {
     const comment = await CommentModel.create({ text, author: user, post });
     await post.updateOne({ $push: { comments: comment } });
     res.json(comment);
+  }
+
+  async updateProfile(req, res) {
+    try {
+      const { fullName, email, nickName } = req.body;
+      let avatarImage = null;
+      if (req.files) avatarImage = req.files.avatarImage;
+      const userId = req.userId;
+      const user = await UserModel.findById(userId);
+      let avatarUrl = null;
+      if (avatarImage) {
+        avatarUrl = Date.now() + "--" + avatarImage.name;
+        await avatarImage.mv(
+          path.resolve(__dirname, "images/avatars", avatarUrl)
+        );
+      }
+      if (!user) {
+        res
+          .status(404)
+          .json("Ошибка получения пользователя. Пользователя с таким id нет");
+        return;
+      }
+      if (fullName != null) user.fullName = fullName;
+      if (nickName != null) user.nickName = nickName;
+      if (email != null) user.email = email;
+      if (avatarUrl != null) user.avatarUrl = avatarUrl;
+      user.save();
+      res.json({ message: "successfuly updated!" });
+    } catch (e) {
+      console.log(e);
+      res
+        .status(500)
+        .json({ message: "Что-то пошло не так, попробуйте позже..." });
+    }
   }
 }
 
