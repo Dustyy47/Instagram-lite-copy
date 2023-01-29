@@ -3,3 +3,4 @@
 <b>\*BUGFIX\*</b> - Bugfixes </br>
 <b>\*TEST\*</b> - Adding tests </br>
 <b>\*GRAND\*</b> - Major update </br>
+<b>\*ADAPTIVE\*</b> - Solving adaptive design issues </br>
