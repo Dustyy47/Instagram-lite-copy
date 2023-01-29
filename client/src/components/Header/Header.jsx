@@ -1,3 +1,4 @@
+import { BiExit } from 'react-icons/bi'
 import { useSelector } from 'react-redux'
 import { useLogout } from '../../hooks/useLogout'
 import { Button } from '../Button/Button'
@@ -15,9 +16,7 @@ export function Header() {
     return (
         <header className={styles.header}>
             <div className={styles.wrapper}>
-                <div>
-                    <AccountLabel />
-                </div>
+                <AccountLabel />
                 <nav>
                     <ul className={styles.list}>
                         <li>
@@ -25,8 +24,9 @@ export function Header() {
                         </li>
                         <li>
                             {userId && (
-                                <Button style={{ width: 100, height: 50 }} onClick={logout}>
-                                    Выйти
+                                <Button className={styles.exitButton} onClick={logout}>
+                                    <p className={styles.exitText}>Выйти</p>
+                                    <BiExit className={styles.exitIcon}></BiExit>
                                 </Button>
                             )}
                         </li>

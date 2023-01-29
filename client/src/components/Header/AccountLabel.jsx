@@ -16,8 +16,6 @@ export function AccountLabel() {
     const location = useLocation()
     const navigate = useNavigate()
 
-    console.log('rendered account label')
-
     function generateData() {
         if (loadingStatus === LoadingStatuses.loading) {
             return {

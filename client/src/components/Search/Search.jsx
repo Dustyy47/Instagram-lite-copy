@@ -74,7 +74,7 @@ export function Search() {
                 onFocus={focusSearch}
                 value={value}
                 onChange={typing}
-                styleInput={{ width: 250, height: 40, color: '#363636' }}
+                styleInput={{ width: '100%', maxWidth: 250, height: 40, color: '#363636' }}
                 styleWrapper={{ margin: '0 30px' }}
             >
                 <BiSearchAlt2 style={{ fontSize: 32, fill: '#ededed', margin: '0 15px' }} />

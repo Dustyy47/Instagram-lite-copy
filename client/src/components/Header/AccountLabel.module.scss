@@ -7,3 +7,9 @@
 .userName {
     font-size: 20px;
 }
+
+@media screen and (max-width: 1000px) {
+    .userName {
+        font-size: 16px;
+    }
+}

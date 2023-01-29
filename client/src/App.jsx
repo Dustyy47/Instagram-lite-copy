@@ -8,10 +8,6 @@ import { LoadingStatuses } from './models/LoadingStatuses'
 import { RoutesManager } from './RoutesManager'
 import { fetchUserData } from './store/slices/userSlice'
 
-//TODO Вынести селекторы в отдельные файлы
-//TODO Отрефакторить scss
-//TODO Мемоизировать селекторы
-//TODO Убирать расширенный пост при переходе на другую страницу
 //TODO Написать useDebounce и отрефакторить вцелом Search
 //TODO Добавить Loader в модальное окно подписок и подписчиков
 
