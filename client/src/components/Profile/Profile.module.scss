@@ -1,0 +1,18 @@
+.page {
+    width: 100%;
+    min-height: 80vh;
+    max-width: 1185px;
+    border-radius: 30px;
+    background: white;
+    box-shadow: 0px 2px 38px 1px rgba(0, 0, 0, 0.06);
+    margin: 45px auto;
+}
+
+.wrapper {
+    padding: 35px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}

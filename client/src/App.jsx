@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import './App.css'
 import { Header } from './components/Header/Header'
 import { Loading } from './components/Loading/Loading'
-import { RoutesManager } from './components/Navigate/RoutesManager'
 import { useLogout } from './hooks/useLogout'
 import { LoadingStatuses } from './models/LoadingStatuses'
+import { RoutesManager } from './RoutesManager'
 import { fetchUserData } from './store/slices/userSlice'
 
 //TODO Вынести селекторы в отдельные файлы
@@ -24,7 +24,6 @@ export function App() {
     console.log('render APP', entranceLoadingStatus)
 
     useEffect(() => {
-        console.log('dispatch user data in app')
         dispatch(fetchUserData())
     }, [])
 

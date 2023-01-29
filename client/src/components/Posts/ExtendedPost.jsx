@@ -10,7 +10,7 @@ import { Input } from '../Input/Input'
 import { LikeBtn } from '../LikeBtn/LikeBtn'
 import { Loading } from '../Loading/Loading'
 import { Modal } from '../Modal/Modal'
-import styles from './Post.module.scss'
+import styles from './ExtendedPost.module.scss'
 
 export function ExtendedPost({
     isActive,
@@ -25,7 +25,6 @@ export function ExtendedPost({
     const { commentText, comments, postLoadingStatus } = useSelector((state) => state.extendedPost)
     const dispatch = useDispatch()
     const like = (e) => {
-        console.log(e)
         onLike(_id)
     }
 
@@ -59,7 +58,7 @@ export function ExtendedPost({
             setActive={() => setActive()}
             modalStyles={{ width: '70%', maxWidth: 'auto', height: '90%' }}
         >
-            <div className={styles.extended}>
+            <div className={styles.wrapper}>
                 <img className={styles.photo} src={getCorrectImageUrl(imageUrl)} alt="" />
                 <div className={styles.info}>
                     <div className={styles.header}>

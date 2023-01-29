@@ -1,0 +1,82 @@
+.wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+
+    .photo {
+        width: 60%;
+        height: 100%;
+        object-fit: contain;
+        background: black;
+    }
+
+    .likeBtn {
+        cursor: pointer;
+        left: 0;
+        bottom: 0;
+        p {
+            color: black;
+        }
+    }
+
+    .header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        * {
+            position: relative;
+        }
+        margin-bottom: 20px;
+    }
+
+    .profileInfo {
+        display: flex;
+        align-items: center;
+    }
+
+    .nickName {
+        font-size: 20px;
+    }
+
+    .info {
+        padding: 15px;
+        width: 40%;
+        position: relative;
+    }
+
+    .content {
+        width: 97%;
+        height: 15%;
+        margin: 0 auto 10px;
+        p {
+            width: 90%;
+            height: 60%;
+            overflow: auto;
+        }
+    }
+
+    .commentInput {
+        position: absolute;
+        left: 30px;
+        bottom: 15px;
+
+        * {
+            margin: 0;
+        }
+    }
+
+    .sendCommentBtn {
+        position: absolute;
+        right: 30px;
+        bottom: 10px;
+    }
+}
+
+@media screen and (max-width: 1400px) {
+}

@@ -1,20 +1,10 @@
 import { useSelector } from 'react-redux'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { authRoutes, publicRoutes } from '../../routes'
+import { getRoutes } from './helpers/getRoutes'
+import { authRoutes, publicRoutes } from './routes'
 
 export function RoutesManager() {
     const nickName = useSelector((state) => state.user.nickName)
-
-    function getRoutes(routes) {
-        return routes.map((route) => (
-            <Route
-                key={route.path}
-                path={route.path}
-                exact={route.exact}
-                element={<route.element />}
-            />
-        ))
-    }
 
     return (
         <Routes>

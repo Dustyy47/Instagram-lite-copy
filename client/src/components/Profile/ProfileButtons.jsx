@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux'
 import { getIsUserSubscribed } from '../../helpers/getUserSubscribed'
 import { Button } from '../Button/Button'
+import styles from './ProfileButtons.module.scss'
 
 //TODO Добавить Loader при подписке
 export function ProfileButtons({ setCreatingPost, toggleSubscribe }) {
@@ -15,8 +16,8 @@ export function ProfileButtons({ setCreatingPost, toggleSubscribe }) {
     return isUserProfile ? (
         <Button onClick={() => setCreatingPost(true)}>Создать пост</Button>
     ) : (
-        <div style={{ display: 'flex', alignItems: 'top' }}>
-            <Button style={{ margin: '0 20px' }}>Чат</Button>
+        <div className={styles.communicateButtons}>
+            <Button>Чат</Button>
             {isUserSubscribedOnProfile ? (
                 <Button onClick={toggleSubscribe}>Отписаться</Button>
             ) : (

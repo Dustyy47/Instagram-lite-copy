@@ -9,10 +9,10 @@ import { fetchProfileData } from '../../store/slices/profileSlice'
 import { fetchLikePost, fetchSubscribe } from '../../store/slices/userSlice'
 import { NotFound } from '../Errors/NotFound'
 import { Loading } from '../Loading/Loading'
+import { CreatingPost } from '../Posts/CreatingPost'
 import { ExtendedPost } from '../Posts/ExtendedPost'
 import { PostsList } from '../Posts/PostsList'
-import { CreatingPost } from './CreatingPost'
-import './Profile.scss'
+import styles from './Profile.module.scss'
 import { ProfileButtons } from './ProfileButtons'
 import { ProfileInfo } from './ProfileInfo'
 
@@ -59,9 +59,9 @@ export function Profile() {
 
     //TODO Изменить пропсы для дочерних компонентов, получать данные из стора
     return (
-        <section className="page">
-            <div className="page-wrapper">
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <section className={styles.page}>
+            <div className={styles.wrapper}>
+                <div className={styles.header}>
                     <ProfileInfo
                         fullName={profileOwnerInfo.fullName || ''}
                         email={profileOwnerInfo.email || ''}

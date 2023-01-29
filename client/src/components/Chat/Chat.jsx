@@ -12,7 +12,6 @@ export function Chat() {
     const fetchConversations = async () => {
         const fetchedConversations = await getConversations()
         dispatch(setConversations(fetchedConversations))
-        console.log(conversations)
     }
 
     useEffect(() => {
@@ -22,12 +21,7 @@ export function Chat() {
     return (
         <div className={styles.root}>
             <div className={styles.chatsList}>
-                <UsersList
-                    users={[]}
-                    title={''}
-                    absenceText={''}
-                    onClick={() => console.log('click')}
-                ></UsersList>
+                <UsersList users={[]} title={''} absenceText={''}></UsersList>
             </div>
             <div className={styles.chat}></div>
         </div>

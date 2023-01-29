@@ -1,0 +1,8 @@
+.communicateButtons {
+    display: flex;
+    align-items: top;
+
+    button + button {
+        margin-left: 20px;
+    }
+}

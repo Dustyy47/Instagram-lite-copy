@@ -1,0 +1,48 @@
+@import '../../styles/variables.scss';
+
+.wrapper {
+    display: flex;
+    margin-bottom: 60px;
+}
+
+.avatar {
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    background: #f5f5f5;
+    text-align: center;
+    display: block;
+    object-fit: cover;
+    margin-right: 35px;
+}
+
+.content {
+    text-align: left;
+    * {
+        font-weight: 400;
+    }
+}
+
+.name {
+    font-size: 24px;
+    color: $text;
+}
+
+.email {
+    font-size: 20px;
+    color: $subText;
+}
+
+.subscribesWrapper {
+    display: flex;
+}
+
+.subscribes,
+.subscribers {
+    font-size: 16px;
+    text-decoration: underline;
+    color: #363636;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-right: 10px;
+}

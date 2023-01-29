@@ -6,7 +6,7 @@ import { Button } from '../Button/Button'
 import { FileInput } from '../Input/FileInput'
 import { Input } from '../Input/Input'
 import { Modal } from '../Modal/Modal'
-import './Profile.scss'
+import styles from './CreatingPost.module.scss'
 
 export function CreatingPost({ isActive, setActive, onPostAdded }) {
     const [newPostImageUrl, setNewPostImageUrl] = useState('')
@@ -82,8 +82,8 @@ export function CreatingPost({ isActive, setActive, onPostAdded }) {
                 needToValidate={isActive}
                 setSelectedFile={loadFile}
             />
-            {newPostImageUrl && <img className="preview" src={newPostImageUrl} alt="" />}
-            <div className="buttons">
+            {newPostImageUrl && <img className={styles.preview} src={newPostImageUrl} alt="" />}
+            <div className={styles.buttons}>
                 <Button disabled={formValidator.hasErrors()} onClick={createPost}>
                     Создать
                 </Button>

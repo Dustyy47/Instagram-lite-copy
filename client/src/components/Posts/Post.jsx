@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { LikeBtn } from '../LikeBtn/LikeBtn'
-import '../Profile/Profile.scss'
+import styles from './Post.module.scss'
 
 export function Post({ data, onLike, isLiked, onClick }) {
     const { likes, _id, imageUrl, title } = data
@@ -11,19 +11,21 @@ export function Post({ data, onLike, isLiked, onClick }) {
         onLike(_id)
     }
 
-    console.log('render post')
-
     useEffect(() => {
         setLikesCountWithoutUser(likes.length - +isLiked)
     }, [])
 
     return (
-        <div className="post" onClick={() => onClick({ ...data, likesCountWithoutUser })}>
-            <img src={`${process.env.REACT_APP_API_URL}/${imageUrl}`} alt="" className="post-img" />
-            <div className="post-info">
-                <h5 className="post-info__title">{title}</h5>
+        <div className={styles.wrapper} onClick={() => onClick({ ...data, likesCountWithoutUser })}>
+            <img
+                src={`${process.env.REACT_APP_API_URL}/${imageUrl}`}
+                alt=""
+                className={styles.preview}
+            />
+            <div className={styles.info}>
+                <h5 className={styles.title}>{title}</h5>
                 <LikeBtn
-                    className="post-info-likes"
+                    className={styles.likes}
                     onLike={like}
                     likesCount={likesCountWithoutUser + +isLiked}
                     isLiked={isLiked}

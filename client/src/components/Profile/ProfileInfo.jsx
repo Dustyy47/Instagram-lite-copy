@@ -3,6 +3,7 @@ import { getLabel } from '../../helpers/getCorrectLabel'
 import { getProfileOwnerInfo } from '../../http/userApi'
 import { Modal } from '../Modal/Modal'
 import { UsersList } from '../UsersList/UsersList'
+import styles from './ProfileInfo.module.scss'
 
 export function ProfileInfo({ fullName, email, avatarUrl, subscribesId, subscribersId }) {
     const [users, setUsers] = useState([])
@@ -23,21 +24,21 @@ export function ProfileInfo({ fullName, email, avatarUrl, subscribesId, subscrib
     }
 
     return (
-        <div className="page-header">
-            <img className="page-avatar" src={avatarUrl} alt="avatar" />
-            <div className="page-header__content">
-                <h3 className="page-header__name">{fullName}</h3>
-                <p className="page-header__email">{email}</p>
-                <div className="page-header__subscribesBlock">
+        <div className={styles.wrapper}>
+            <img className={styles.avatar} src={avatarUrl} alt="avatar" />
+            <div className={styles.content}>
+                <h3 className={styles.name}>{fullName}</h3>
+                <p className={styles.email}>{email}</p>
+                <div className={styles.subscribesWrapper}>
                     <p
                         onClick={() => openModal(subscribersId, 'Подписчики', 'Нет подписчиков')}
-                        className="page-header__subscribers"
+                        className={styles.subscribers}
                     >
                         {getLabel(subscribersId.length, 'subscribers')}
                     </p>
                     <p
                         onClick={() => openModal(subscribesId, 'Подписки', 'Нет подписок')}
-                        className="page-header__subscribes"
+                        className={styles.subscribes}
                     >
                         {getLabel(subscribesId.length, 'subscribes')}
                     </p>
