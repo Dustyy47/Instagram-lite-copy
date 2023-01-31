@@ -85,7 +85,7 @@ export function Profile() {
             </div>
             <ExtendedPost
                 authorInfo={profileOwnerInfo}
-                postData={extendedPostData}
+                postInfo={extendedPostData}
                 isActive={isExtendedPostOpen}
                 setActive={() => setExtendedPostOpen(false)}
                 likeInfo={{

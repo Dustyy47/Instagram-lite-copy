@@ -12,16 +12,10 @@ import { Loading } from '../Loading/Loading'
 import { Modal } from '../Modal/Modal'
 import styles from './ExtendedPost.module.scss'
 
-export function ExtendedPost({
-    isActive,
-    setActive,
-    postData = {},
-    authorInfo = {},
-    likeInfo = {},
-}) {
+export function ExtendedPost({ setActive, postInfo = {}, authorInfo = {}, likeInfo = {} }) {
     const { onLike, isLiked } = likeInfo
     const { avatarUrl, nickName } = authorInfo
-    const { _id, title, description, likesCountWithoutUser, imageUrl } = postData
+    const { _id, title, description, likesCountWithoutUser, imageUrl, isActive } = postInfo
     const { commentText, comments, postLoadingStatus } = useSelector((state) => state.extendedPost)
     const dispatch = useDispatch()
     const like = (e) => {
@@ -50,7 +44,7 @@ export function ExtendedPost({
         if (!_id) return
         dispatch(extendedPostActions.fetchGetComments(_id))
         dispatch(extendedPostActions.open(_id))
-    }, [postData])
+    }, [postInfo])
 
     return (
         <Modal

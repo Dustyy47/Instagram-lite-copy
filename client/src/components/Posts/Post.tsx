@@ -1,12 +1,22 @@
-import { useEffect, useState } from 'react'
+import { MouseEvent, useEffect, useState } from 'react'
+import { PostModel } from '../../models/PostModel'
 import { LikeBtn } from '../LikeBtn/LikeBtn'
 import styles from './Post.module.scss'
 
-export function Post({ data, onLike, isLiked, onClick }) {
-    const { likes, _id, imageUrl, title } = data
-    const [likesCountWithoutUser, setLikesCountWithoutUser] = useState()
+interface PostProps {
+    data: PostModel
+    onLike: (_id: number) => {}
+    isLiked: boolean
+    onClick: (data: PostModel, likesCountWithoutUser: number) => {}
+}
 
-    const like = (e) => {
+export function Post(props: PostProps) {
+    const { data, onLike, isLiked, onClick } = props
+    const { likes, _id, imageUrl, title } = data
+
+    const [likesCountWithoutUser, setLikesCountWithoutUser] = useState<number>(0)
+
+    const like = (e: MouseEvent<Element, MouseEvent>) => {
         e.stopPropagation()
         onLike(_id)
     }
@@ -16,7 +26,7 @@ export function Post({ data, onLike, isLiked, onClick }) {
     }, [])
 
     return (
-        <div className={styles.wrapper} onClick={() => onClick({ ...data, likesCountWithoutUser })}>
+        <div className={styles.wrapper} onClick={() => onClick(data, likesCountWithoutUser)}>
             <img
                 src={`${process.env.REACT_APP_API_URL}/${imageUrl}`}
                 alt=""
