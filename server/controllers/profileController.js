@@ -160,7 +160,7 @@ class ProfileController {
       if (types.indexOf(fileName.split(".").pop()) === -1) {
         return res.status(400).json({ message: "Неверный формат файла" });
       }
-      await img.mv(path.resolve(__dirname, "..", "images", fileName));
+      await img.mv(path.resolve(__dirname, "images", fileName));
       const post = await PostModel.create({
         title,
         description,
