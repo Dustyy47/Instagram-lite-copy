@@ -19,7 +19,6 @@ import { ProfileInfo } from './ProfileInfo'
 export function Profile() {
     const [isCreatingPost, setCreatingPost] = useState(false)
     const [extendedPostData, setExtendedPostData] = useState(undefined)
-    const [isExtendedPostOpen, setExtendedPostOpen] = useState(false)
 
     const { likedPosts, isGuest } = useCombinedSelector('user', ['likedPosts', 'isGuest'])
     const { posts, profileOwnerInfo, loadingStatus } = useCombinedSelector('profile', [
@@ -36,17 +35,23 @@ export function Profile() {
         dispatch(fetchProfileData(pathProfileId))
     }, [pathProfileId])
 
-    const toggleSubscribe = async () => {
+    async function toggleSubscribe() {
         dispatch(fetchSubscribe(profileOwnerInfo.id))
     }
 
-    const handlePostClick = async (data) => {
+    async function handlePostClick(data) {
         setExtendedPostData(data)
-        setExtendedPostOpen(true)
     }
 
-    const like = async (postId) => {
+    async function like(postId) {
         await dispatch(fetchLikePost(postId))
+    }
+
+    function closeExtendedPost() {
+        setExtendedPostData({
+            ...extendedPostData,
+            isActive: false,
+        })
     }
 
     if (loadingStatus === LoadingStatuses.loading) {
@@ -86,8 +91,7 @@ export function Profile() {
             <ExtendedPost
                 authorInfo={profileOwnerInfo}
                 postInfo={extendedPostData}
-                isActive={isExtendedPostOpen}
-                setActive={() => setExtendedPostOpen(false)}
+                setActive={closeExtendedPost}
                 likeInfo={{
                     onLike: like,
                     isLiked: isPostLiked(extendedPostData?._id, likedPosts),

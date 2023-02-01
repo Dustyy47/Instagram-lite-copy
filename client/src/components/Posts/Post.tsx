@@ -1,5 +1,5 @@
 import { MouseEvent, useEffect, useState } from 'react'
-import { PostModel } from '../../models/PostModel'
+import { ExtendedPostModel, PostModel } from '../../models/PostModel'
 import { LikeBtn } from '../LikeBtn/LikeBtn'
 import styles from './Post.module.scss'
 
@@ -7,7 +7,7 @@ interface PostProps {
     data: PostModel
     onLike: (_id: number) => {}
     isLiked: boolean
-    onClick: (data: PostModel, likesCountWithoutUser: number) => {}
+    onClick: (data: ExtendedPostModel) => {}
 }
 
 export function Post(props: PostProps) {
@@ -21,12 +21,16 @@ export function Post(props: PostProps) {
         onLike(_id)
     }
 
+    function handleClick() {
+        onClick({ postData: data, likesCountWithoutUser, isActive: true })
+    }
+
     useEffect(() => {
         setLikesCountWithoutUser(likes.length - +isLiked)
     }, [])
 
     return (
-        <div className={styles.wrapper} onClick={() => onClick(data, likesCountWithoutUser)}>
+        <div className={styles.wrapper} onClick={handleClick}>
             <img
                 src={`${process.env.REACT_APP_API_URL}/${imageUrl}`}
                 alt=""
