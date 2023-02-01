@@ -1,13 +1,14 @@
 import { MouseEvent, useEffect, useState } from 'react'
-import { ExtendedPostModel, PostModel } from '../../models/PostModel'
+import { ClickPostCallback, LikePostCallback } from '../../models/CallbacksTypes'
+import { PostModel } from '../../models/PostModel'
 import { LikeBtn } from '../LikeBtn/LikeBtn'
 import styles from './Post.module.scss'
 
 interface PostProps {
     data: PostModel
-    onLike: (_id: number) => {}
+    onLike: LikePostCallback
     isLiked: boolean
-    onClick: (data: ExtendedPostModel) => {}
+    onClick: ClickPostCallback
 }
 
 export function Post(props: PostProps) {

@@ -1,6 +1,6 @@
 export interface PostModel {
     likes: string[]
-    _id: number
+    _id: string
     imageUrl: string
     title: string
 }

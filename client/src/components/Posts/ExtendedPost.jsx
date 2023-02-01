@@ -15,7 +15,8 @@ import styles from './ExtendedPost.module.scss'
 export function ExtendedPost({ setActive, postInfo = {}, authorInfo = {}, likeInfo = {} }) {
     const { onLike, isLiked } = likeInfo
     const { avatarUrl, nickName } = authorInfo
-    const { _id, title, description, likesCountWithoutUser, imageUrl, isActive } = postInfo
+    const { postData, likesCountWithoutUser, isActive } = postInfo
+    const { _id, title, description, imageUrl } = postData
     const { commentText, comments, postLoadingStatus } = useSelector((state) => state.extendedPost)
     const dispatch = useDispatch()
     const like = (e) => {

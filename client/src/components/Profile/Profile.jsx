@@ -18,7 +18,7 @@ import { ProfileInfo } from './ProfileInfo'
 
 export function Profile() {
     const [isCreatingPost, setCreatingPost] = useState(false)
-    const [extendedPostData, setExtendedPostData] = useState(undefined)
+    const [extendedPostData, setExtendedPostData] = useState({ postData: {} })
 
     const { likedPosts, isGuest } = useCombinedSelector('user', ['likedPosts', 'isGuest'])
     const { posts, profileOwnerInfo, loadingStatus } = useCombinedSelector('profile', [
