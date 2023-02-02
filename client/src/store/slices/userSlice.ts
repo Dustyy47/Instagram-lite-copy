@@ -1,19 +1,20 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { resetState } from '../../helpers/resetState'
-import { getUserInfo, likePost, subscribe } from '../../http/userApi'
-import { LoadingStatuses } from '../../models/LoadingStatuses'
+import { likePost } from '../../http/postsApi'
+import { getUserInfo, subscribe } from '../../http/profileApi'
+import { LoadingStatus } from '../../models/LoadingStatus'
 
 export const fetchUserData = createAsyncThunk('user/getData', async () => {
     console.log('get user info')
     return await getUserInfo()
 })
 
-export const fetchLikePost = createAsyncThunk('user/likePost', async (postId) => {
+export const fetchLikePost = createAsyncThunk('user/likePost', async (postId: string) => {
     await likePost(postId)
     return postId
 })
 
-export const fetchSubscribe = createAsyncThunk('user/subscribe', async (profileId) => {
+export const fetchSubscribe = createAsyncThunk('user/subscribe', async (profileId: string) => {
     const wasSubscribed = await subscribe(profileId)
     return {
         wasSubscribed,
@@ -21,15 +22,26 @@ export const fetchSubscribe = createAsyncThunk('user/subscribe', async (profileI
     }
 })
 
-const initialState = {
+interface UserState {
+    isGuest: boolean
+    userId: string
+    entranceLoadingStatus: LoadingStatus
+    likedPosts: string[]
+    subscribes: string[]
+    avatarUrl: string
+    nickName: string
+    fullName: string
+}
+
+const initialState: UserState = {
     isGuest: true,
-    userId: null,
-    entranceLoadingStatus: LoadingStatuses.loading,
+    userId: '',
+    entranceLoadingStatus: LoadingStatus.loading,
     likedPosts: [],
     subscribes: [],
     avatarUrl: '',
     nickName: '',
-    fulName: '',
+    fullName: '',
 }
 
 const userSlice = createSlice({
@@ -38,19 +50,19 @@ const userSlice = createSlice({
     reducers: {
         logout(state) {
             resetState(state, initialState)
-            state.entranceLoadingStatus = LoadingStatuses.idle
+            state.entranceLoadingStatus = LoadingStatus.idle
         },
     },
     extraReducers: {
-        [fetchUserData.fulfilled]: (state, action) => {
+        [fetchUserData.fulfilled.type]: (state, action) => {
             try {
                 // jwt expired or user deleted
                 if (!action.payload) {
                     resetState(state, initialState)
-                    state.entranceLoadingStatus = 'error'
+                    state.entranceLoadingStatus = LoadingStatus.error
                     return
                 }
-                state.entranceLoadingStatus = LoadingStatuses.idle
+                state.entranceLoadingStatus = LoadingStatus.idle
                 const { likedPosts, nickName, subscribes, avatarUrl, fullName, userId } =
                     action.payload
                 state.likedPosts = likedPosts
@@ -61,10 +73,10 @@ const userSlice = createSlice({
                 state.fullName = fullName
                 state.isGuest = false
             } catch (e) {
-                state.entranceLoadingStatus = 'error'
+                state.entranceLoadingStatus = LoadingStatus.error
             }
         },
-        [fetchLikePost.fulfilled]: (state, action) => {
+        [fetchLikePost.fulfilled.type]: (state, action) => {
             let postIndex = state.likedPosts.indexOf(action.payload)
             if (postIndex === -1) {
                 state.likedPosts.push(action.payload)
@@ -72,7 +84,7 @@ const userSlice = createSlice({
                 state.likedPosts.splice(postIndex, 1)
             }
         },
-        [fetchSubscribe.fulfilled]: (state, action) => {
+        [fetchSubscribe.fulfilled.type]: (state, action) => {
             const { wasSubscribed, profileId } = action.payload
             if (wasSubscribed) {
                 state.subscribes = state.subscribes.filter((id) => id !== profileId)

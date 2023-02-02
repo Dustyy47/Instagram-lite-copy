@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { getLabel } from '../../helpers/getCorrectLabel'
-import { getProfileOwnerInfo } from '../../http/userApi'
+import { getProfileOwnerInfo } from '../../http/profileApi'
 import { Modal } from '../Modal/Modal'
 import { UsersList } from '../UsersList/UsersList'
 import styles from './ProfileInfo.module.scss'

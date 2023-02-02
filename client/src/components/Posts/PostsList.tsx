@@ -32,7 +32,7 @@ export function PostsList(props: PostsListProps) {
         let rows = []
         for (let i = 0; i < posts.length; i += 3) {
             let row = (
-                <div className={styles.row}>
+                <div className={styles.row} key={i}>
                     {[0, 1, 2].map((offset) => generatePost(posts[i + offset]))}
                 </div>
             )

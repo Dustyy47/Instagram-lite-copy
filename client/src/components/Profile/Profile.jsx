@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { getCorrectAvatarUrl } from '../../helpers/getCorrectAvatarUrl'
 import { isPostLiked } from '../../helpers/isLikedPost'
 import { useCombinedSelector } from '../../hooks/useCombinedSelector'
-import { LoadingStatuses } from '../../models/LoadingStatuses'
+import { LoadingStatus } from '../../models/LoadingStatus'
 import { fetchProfileData } from '../../store/slices/profileSlice'
 import { fetchLikePost, fetchSubscribe } from '../../store/slices/userSlice'
 import { NotFound } from '../Errors/NotFound'
@@ -54,11 +54,11 @@ export function Profile() {
         })
     }
 
-    if (loadingStatus === LoadingStatuses.loading) {
+    if (loadingStatus === LoadingStatus.loading) {
         return <Loading />
     }
 
-    if (loadingStatus === LoadingStatuses.error) {
+    if (loadingStatus === LoadingStatus.error) {
         return <NotFound />
     }
 
@@ -94,7 +94,7 @@ export function Profile() {
                 setActive={closeExtendedPost}
                 likeInfo={{
                     onLike: like,
-                    isLiked: isPostLiked(extendedPostData?._id, likedPosts),
+                    isLiked: isPostLiked(extendedPostData?.postData._id, likedPosts),
                 }}
             />
             <CreatingPost isActive={isCreatingPost} setActive={setCreatingPost} />

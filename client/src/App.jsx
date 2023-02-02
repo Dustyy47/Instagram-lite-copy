@@ -4,7 +4,7 @@ import './App.css'
 import { Header } from './components/Header/Header'
 import { Loading } from './components/Loading/Loading'
 import { useLogout } from './hooks/useLogout'
-import { LoadingStatuses } from './models/LoadingStatuses'
+import { LoadingStatus } from './models/LoadingStatus'
 import { RoutesManager } from './RoutesManager'
 import { fetchUserData } from './store/slices/userSlice'
 
@@ -24,14 +24,14 @@ export function App() {
     }, [])
 
     function renderApplication() {
-        if (entranceLoadingStatus === LoadingStatuses.loading) {
+        if (entranceLoadingStatus === LoadingStatus.loading) {
             return (
                 <div className="App">
                     <Header />
                     <Loading />
                 </div>
             )
-        } else if (entranceLoadingStatus === LoadingStatuses.error) {
+        } else if (entranceLoadingStatus === LoadingStatus.error) {
             logout()
             return <p>Some error</p>
         }

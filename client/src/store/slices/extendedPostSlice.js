@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getComments, sendComment } from '../../http/userApi'
-import { LoadingStatuses } from '../../models/LoadingStatuses'
+import { getComments, sendComment } from '../../http/postsApi'
+import { LoadingStatus } from '../../models/LoadingStatus'
 
 export const fetchSendComment = createAsyncThunk(
     'comments/sendComment',
@@ -22,7 +22,7 @@ const initialState = {
     comments: [],
     commentText: '',
     postId: '',
-    loadingStatus: LoadingStatuses.loading,
+    loadingStatus: LoadingStatus.loading,
 }
 
 const extendedPostSlice = createSlice({
@@ -40,19 +40,19 @@ const extendedPostSlice = createSlice({
         [fetchSendComment.fulfilled]: (state, action) => {
             state.commentText = ''
             state.comments.push(action.payload)
-            state.postLoadingStatus = LoadingStatuses.idle
+            state.postLoadingStatus = LoadingStatus.idle
         },
         [fetchSendComment.pending]: (state) => {
-            state.postLoadingStatus = LoadingStatuses.loading
+            state.postLoadingStatus = LoadingStatus.loading
         },
         [fetchGetComments.fulfilled]: (state, action) => {
             const { comments, postId } = action.payload
             state.comments = comments
             state.postId = postId
-            state.postLoadingStatus = LoadingStatuses.idle
+            state.postLoadingStatus = LoadingStatus.idle
         },
         [fetchGetComments.pending]: (state) => {
-            state.postLoadingStatus = LoadingStatuses.loading
+            state.postLoadingStatus = LoadingStatus.loading
         },
     },
 })

@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ClickPostCallback, LikePostCallback } from '../../models/CallbacksTypes'
 import { PostModel } from '../../models/PostModel'
 import { LikeBtn } from '../LikeBtn/LikeBtn'
@@ -17,7 +17,7 @@ export function Post(props: PostProps) {
 
     const [likesCountWithoutUser, setLikesCountWithoutUser] = useState<number>(0)
 
-    const like = (e: MouseEvent<Element, MouseEvent>) => {
+    const like = (e: React.MouseEvent) => {
         e.stopPropagation()
         onLike(_id)
     }

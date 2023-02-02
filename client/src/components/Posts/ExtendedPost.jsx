@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCorrectImageUrl } from '../../helpers/getCorrectAvatarUrl'
-import { LoadingStatuses } from '../../models/LoadingStatuses'
+import { LoadingStatus } from '../../models/LoadingStatus'
 import { extendedPostActions } from '../../store/actions'
 import { Avatar } from '../Avatar/Avatar'
 import { Button } from '../Button/Button'
@@ -35,7 +35,7 @@ export function ExtendedPost({ setActive, postInfo = {}, authorInfo = {}, likeIn
         if (!comments || comments.length === 0) {
             return <h5>Нет комментариев :\ </h5>
         }
-        if (postLoadingStatus === LoadingStatuses.loading) {
+        if (postLoadingStatus === LoadingStatus.loading) {
             return <Loading />
         }
         return <Comments onCommentAvatarClicked={() => setActive(false)} comments={comments} />
