@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { getIsUserSubscribed } from '../../helpers/getUserSubscribed'
 import { Button } from '../Button/Button'
@@ -9,9 +10,13 @@ export function ProfileButtons({ setCreatingPost, toggleSubscribe }) {
     const { profileOwnerInfo } = useSelector((state) => state.profile)
     const { id: profileOwnerId, isUserProfile } = profileOwnerInfo
 
+    let isUserSubscribedOnProfile
+
     console.log('rendered profile buttons', subscribes)
 
-    const isUserSubscribedOnProfile = getIsUserSubscribed(subscribes, isGuest, profileOwnerId)
+    isUserSubscribedOnProfile = useMemo(() => {
+        return getIsUserSubscribed(subscribes, isGuest, profileOwnerId)
+    }, [subscribes, isGuest, profileOwnerId])
 
     return isUserProfile ? (
         <Button onClick={() => setCreatingPost(true)}>Создать пост</Button>

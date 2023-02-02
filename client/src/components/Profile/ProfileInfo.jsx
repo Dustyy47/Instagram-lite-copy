@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { getLabel } from '../../helpers/getCorrectLabel'
+import { getLabel, LabelsType } from '../../helpers/getCorrectLabel'
 import { getProfileOwnerInfo } from '../../http/profileApi'
 import { Modal } from '../Modal/Modal'
 import { UsersList } from '../UsersList/UsersList'
@@ -34,13 +34,13 @@ export function ProfileInfo({ fullName, email, avatarUrl, subscribesId, subscrib
                         onClick={() => openModal(subscribersId, 'Подписчики', 'Нет подписчиков')}
                         className={styles.subscribers}
                     >
-                        {getLabel(subscribersId.length, 'subscribers')}
+                        {getLabel(subscribersId.length, LabelsType.subscribers)}
                     </p>
                     <p
                         onClick={() => openModal(subscribesId, 'Подписки', 'Нет подписок')}
                         className={styles.subscribes}
                     >
-                        {getLabel(subscribesId.length, 'subscribes')}
+                        {getLabel(subscribesId.length, LabelsType.subscribes)}
                     </p>
                 </div>
             </div>
