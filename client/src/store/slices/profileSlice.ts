@@ -1,14 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { addPost } from '../../http/postsApi'
 import { getPosts, getProfileOwnerInfo } from '../../http/profileApi'
+import { FetchProfileReturn } from '../../models/Http'
 import { LoadingStatus } from '../../models/LoadingStatus'
 import { PostModel } from './../../models/PostModel'
 import { ProfileOwnerModel } from './../../models/ProfileOwnerModel'
-
-interface FetchProfileReturn {
-    profileOwnerInfo: ProfileOwnerModel
-    posts: PostModel[]
-}
 
 export const fetchProfileData = createAsyncThunk<
     FetchProfileReturn,

@@ -1,17 +1,17 @@
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { getConversations } from '../../http/chatApi'
-import { setConversations } from '../../store/slices/chatSlice'
+// import { setConversations } from '../../store/slices/chatSlice'
 import { UsersList } from '../UsersList/UsersList'
 import styles from './Chat.module.scss'
 
 export function Chat() {
-    const { messages, messageText, conversations } = useSelector((state) => state.chat)
+    // const { messages, messageText, conversations } = useSelector((state) => state.chat)
     const dispatch = useDispatch()
 
     const fetchConversations = async () => {
         const fetchedConversations = await getConversations()
-        dispatch(setConversations(fetchedConversations))
+        // dispatch(setConversations(fetchedConversations))
     }
 
     useEffect(() => {

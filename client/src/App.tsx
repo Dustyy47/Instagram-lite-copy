@@ -1,20 +1,20 @@
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import './App.css'
 import { Header } from './components/Header/Header'
 import { Loading } from './components/Loading/Loading'
 import { useLogout } from './hooks/useLogout'
 import { LoadingStatus } from './models/LoadingStatus'
 import { RoutesManager } from './RoutesManager'
+import { useAppDispatch, useAppSelector } from './store/hooks'
 import { fetchUserData } from './store/slices/userSlice'
 
 //TODO Написать useDebounce и отрефакторить вцелом Search
 //TODO Добавить Loader в модальное окно подписок и подписчиков
 
 export function App() {
-    const entranceLoadingStatus = useSelector((state) => state.user.entranceLoadingStatus)
+    const entranceLoadingStatus = useAppSelector((state) => state.user.entranceLoadingStatus)
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const logout = useLogout()
 
     console.log('render APP', entranceLoadingStatus)

@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios'
 import { $authHost } from '.'
+import { CommentModel } from '../models/CommentModel'
 
 export const addPost = async (formData: FormData) => {
     try {
@@ -21,7 +22,9 @@ export const likePost = async (postId: string) => {
 
 export const sendComment = async (text: string, postId: string) => {
     try {
-        const { data } = await $authHost.put(`/profile/posts/${postId}/comment`, { text })
+        const { data } = await $authHost.put<CommentModel>(`/profile/posts/${postId}/comment`, {
+            text,
+        })
         return data
     } catch (e) {
         console.log((e as AxiosError).request.response)
