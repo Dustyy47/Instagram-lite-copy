@@ -3,6 +3,7 @@ import { addPost } from '../../http/postsApi'
 import { getPosts, getProfileOwnerInfo } from '../../http/profileApi'
 import { FetchProfileReturn } from '../../models/Http'
 import { LoadingStatus } from '../../models/LoadingStatus'
+import { State } from '../../models/State'
 import { PostModel } from './../../models/PostModel'
 import { ProfileOwnerModel } from './../../models/ProfileOwnerModel'
 
@@ -27,7 +28,7 @@ export const fetchAddPost = createAsyncThunk('profile/addPost', async (postData:
     return await addPost(postData)
 })
 
-interface ProfileState {
+interface ProfileState extends State {
     loadingStatus: LoadingStatus
     profileOwnerInfo: ProfileOwnerModel | {}
     posts: PostModel[]

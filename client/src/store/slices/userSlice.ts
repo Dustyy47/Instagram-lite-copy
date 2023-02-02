@@ -3,6 +3,7 @@ import { resetState } from '../../helpers/resetState'
 import { likePost } from '../../http/postsApi'
 import { getUserInfo, subscribe } from '../../http/profileApi'
 import { LoadingStatus } from '../../models/LoadingStatus'
+import { State } from '../../models/State'
 
 export const fetchUserData = createAsyncThunk('user/getData', async () => {
     console.log('get user info')
@@ -22,7 +23,7 @@ export const fetchSubscribe = createAsyncThunk('user/subscribe', async (profileI
     }
 })
 
-interface UserState {
+interface UserState extends State {
     isGuest: boolean
     userId: string
     entranceLoadingStatus: LoadingStatus

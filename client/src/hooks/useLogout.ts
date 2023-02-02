@@ -1,10 +1,10 @@
-import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { useAppDispatch } from '../store/hooks'
 import { userActions } from '../store/slices/userSlice'
 
-//remove token from localstorage, reset user state and navigate user to login form
-export function useLogout() {
-    const dispatch = useDispatch()
+/**Remove token from localstorage, reset user state and navigate user to login form*/
+export function useLogout(): Function {
+    const dispatch = useAppDispatch()
     const navigate = useNavigate()
     return () => {
         localStorage.removeItem('token')

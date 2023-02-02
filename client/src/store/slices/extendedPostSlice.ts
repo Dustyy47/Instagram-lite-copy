@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { getComments, sendComment } from '../../http/postsApi'
 import { CommentModel } from '../../models/CommentModel'
 import { LoadingStatus } from '../../models/LoadingStatus'
+import { State } from '../../models/State'
 import { RootState } from './../index'
 
 export const fetchSendComment = createAsyncThunk<
@@ -22,7 +23,7 @@ export const fetchGetComments = createAsyncThunk('comments/getComments', async (
     }
 })
 
-interface ExtendedPostState {
+interface ExtendedPostState extends State {
     comments: CommentModel[]
     commentText: string
     postId: string

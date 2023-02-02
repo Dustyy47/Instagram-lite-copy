@@ -7,7 +7,13 @@ export const LOGIN_ROUTE = '/auth/login'
 export const REGISTER_ROUTE = '/auth/register'
 export const CHAT_ROUTE = '/chat'
 
-export const publicRoutes = [
+interface Route {
+    path: string
+    element: React.ReactElement
+    exact: boolean
+}
+
+export const publicRoutes: Route[] = [
     {
         path: PROFILE_ROUTE,
         element: Profile,
@@ -25,7 +31,7 @@ export const publicRoutes = [
     },
 ]
 
-export const authRoutes = [
+export const authRoutes: Route[] = [
     ...publicRoutes,
     {
         path: CHAT_ROUTE,
