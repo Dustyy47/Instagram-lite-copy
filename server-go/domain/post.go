@@ -3,8 +3,6 @@ package domain
 import (
 	"context"
 	"mime/multipart"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -12,14 +10,14 @@ const (
 )
 
 type Post struct {
-	ID          primitive.ObjectID `bson:"_id"`
-	Title       string             `bson:"title"`
-	Discription string             `bson:"discription"`
+	ID          int64  `bson:"_id"`
+	Title       string `bson:"title"`
+	Discription string `bson:"discription"`
 
-	Likes    []primitive.ObjectID `bson:"likes"`
-	PostedBy primitive.ObjectID   `bson:"postedBy"`
+	Likes    []int64 `bson:"likes"`
+	PostedBy int64   `bson:"postedBy"`
 
-	Comments []primitive.ObjectID `bson:"comments"`
+	Comments []int64 `bson:"comments"`
 
 	ImageURL string `bson:"imageUrl"`
 }
@@ -29,8 +27,7 @@ type PostUsecase interface {
 	Remove(c context.Context, post *Post) error
 
 	GetByID(c context.Context, id string) (Post, error)
-	//GetByIDAndUpdate(c context.Context, id string, opts ...*options.UpdateOptions) (Post, error)
-	GetByIDAndUpdate(c context.Context, filter primitive.M, update primitive.D) (Post, error)
+	//GetByIDAndUpdate(c context.Context, filter primitive.M, update primitive.D) (Post, error)
 	GetAllPostedByUser(c context.Context, userID string) ([]Post, error)
 }
 
@@ -40,7 +37,7 @@ type PostRepository interface {
 
 	GetByID(c context.Context, id string) (Post, error)
 	//GetByIDAndUpdate(c context.Context, id string, opts ...*options.UpdateOptions) (Post, error)
-	GetByIDAndUpdate(c context.Context, filter primitive.M, update primitive.D) (Post, error)
+	//GetByIDAndUpdate(c context.Context, filter primitive.M, update primitive.D) (Post, error)
 
 	GetAllPostedByUser(c context.Context, userID string) ([]Post, error)
 }

@@ -4,8 +4,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Dustyy47/Instagram-lite-copy/server-go/domain"
-	"github.com/Dustyy47/Instagram-lite-copy/server-go/internal/tokenutil"
+	"app/domain"
+	"app/internal/tokenutil"
+
 	"github.com/gin-gonic/gin"
 )
 

@@ -5,15 +5,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/Dustyy47/Instagram-lite-copy/server-go/api/controller"
-	"github.com/Dustyy47/Instagram-lite-copy/server-go/bootstrap"
-	"github.com/Dustyy47/Instagram-lite-copy/server-go/domain"
-	"github.com/Dustyy47/Instagram-lite-copy/server-go/mongo"
-	"github.com/Dustyy47/Instagram-lite-copy/server-go/repository"
-	"github.com/Dustyy47/Instagram-lite-copy/server-go/usecase"
+	"app/api/controller"
+	"app/bootstrap"
+	"app/domain"
+	"app/driverdb"
+	"app/repository"
+	"app/usecase"
 )
 
-func NewCommentRouter(env *bootstrap.Env, timeout time.Duration, db mongo.Database, group *gin.RouterGroup) {
+func NewCommentRouter(env *bootstrap.Env, timeout time.Duration, db *driverdb.DB, group *gin.RouterGroup) {
 	cr := repository.NewCommentRepository(db, domain.CollectionComments)
 	pr := repository.NewPostRepository(db, domain.CollectionPosts)
 	ur := repository.NewUserRepository(db, domain.CollectionUser)

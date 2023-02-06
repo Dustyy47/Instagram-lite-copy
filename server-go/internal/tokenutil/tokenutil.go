@@ -2,17 +2,18 @@ package tokenutil
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	jwt "github.com/golang-jwt/jwt/v4"
 
-	"github.com/Dustyy47/Instagram-lite-copy/server-go/domain"
+	"app/domain"
 )
 
 func CreateAccessToken(user *domain.User, secret string, expiry int) (accessToken string, err error) {
 	exp := time.Now().Add(time.Hour * time.Duration(expiry)).Unix()
 	claims := &domain.JwtCustomClaims{
-		UserID:   user.ID.Hex(),
+		UserID:   strconv.FormatInt(user.ID, 10),
 		NickName: user.FullName,
 
 		StandardClaims: jwt.StandardClaims{

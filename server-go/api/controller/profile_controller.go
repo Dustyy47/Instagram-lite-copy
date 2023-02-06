@@ -1,12 +1,10 @@
 package controller
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 
-	"github.com/Dustyy47/Instagram-lite-copy/server-go/bootstrap"
-	"github.com/Dustyy47/Instagram-lite-copy/server-go/domain"
+	"app/bootstrap"
+	"app/domain"
 )
 
 type ProfileController struct {
@@ -16,68 +14,68 @@ type ProfileController struct {
 }
 
 func (pc *ProfileController) GetProfileData(c *gin.Context) {
-	var request domain.GetProfileDataRequest
+	// var request domain.GetProfileDataRequest
 
-	err := c.ShouldBind(&request)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
-		return
-	}
+	// err := c.ShouldBind(&request)
+	// if err != nil {
+	// 	c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+	// 	return
+	// }
 
-	nickName := c.Params.ByName("nickname")
+	// nickName := c.Params.ByName("nickname")
 
-	user, err := pc.UserUsecase.GetUserByNickName(c, nickName)
-	if err != nil {
-		c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "Profile not found with nickname: " + nickName})
-		return
-	}
+	// user, err := pc.UserUsecase.GetUserByNickName(c, nickName)
+	// if err != nil {
+	// 	c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "Profile not found with nickname: " + nickName})
+	// 	return
+	// }
 
-	isUserProfile := c.Keys["userID"] == user.ID.Hex()
+	// isUserProfile := c.Keys["userID"] == user.ID.Hex()
 
-	getProfileDataResponse := domain.GetProfileDataResponse{
-		UserID:   user.ID,
-		Email:    user.Email,
-		NickName: user.NickName,
+	// getProfileDataResponse := domain.GetProfileDataResponse{
+	// 	UserID:   user.ID,
+	// 	Email:    user.Email,
+	// 	NickName: user.NickName,
 
-		AvatarURL: user.AvatarURL,
+	// 	AvatarURL: user.AvatarURL,
 
-		Subscribes:  user.Subscribes,
-		Subscribers: user.Subscribers,
+	// 	Subscribes:  user.Subscribes,
+	// 	Subscribers: user.Subscribers,
 
-		IsUserProfile: isUserProfile,
-	}
+	// 	IsUserProfile: isUserProfile,
+	// }
 
-	c.JSON(http.StatusOK, getProfileDataResponse)
+	// c.JSON(http.StatusOK, getProfileDataResponse)
 }
 
 func (pc *ProfileController) GetUserData(c *gin.Context) {
-	var request domain.GetUserDataRequest
+	// var request domain.GetUserDataRequest
 
-	err := c.ShouldBind(&request)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
-		return
-	}
+	// err := c.ShouldBind(&request)
+	// if err != nil {
+	// 	c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+	// 	return
+	// }
 
-	userID := c.GetString("userID")
+	// userID := c.GetString("userID")
 
-	user, err := pc.UserUsecase.GetByID(c, userID)
-	if err != nil {
-		c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "User not found with id: " + userID})
-		return
-	}
+	// user, err := pc.UserUsecase.GetByID(c, userID)
+	// if err != nil {
+	// 	c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "User not found with id: " + userID})
+	// 	return
+	// }
 
-	getUserDataResponse := domain.GetUserDataResponse{
-		UserID:   user.ID,
-		Email:    user.Email,
-		NickName: user.NickName,
-		FullName: user.FullName,
+	// getUserDataResponse := domain.GetUserDataResponse{
+	// 	UserID:   user.ID,
+	// 	Email:    user.Email,
+	// 	NickName: user.NickName,
+	// 	FullName: user.FullName,
 
-		AvatarURL: user.AvatarURL,
+	// 	AvatarURL: user.AvatarURL,
 
-		LikedPosts: user.LikedPosts,
-		Subscribes: user.Subscribes,
-	}
+	// 	LikedPosts: user.LikedPosts,
+	// 	Subscribes: user.Subscribes,
+	// }
 
-	c.JSON(http.StatusOK, getUserDataResponse)
+	// c.JSON(http.StatusOK, getUserDataResponse)
 }

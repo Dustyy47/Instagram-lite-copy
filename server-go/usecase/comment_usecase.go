@@ -4,8 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/Dustyy47/Instagram-lite-copy/server-go/domain"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"app/domain"
 )
 
 type commentUsecase struct {
@@ -20,14 +19,15 @@ func NewCommentUsecase(commentRepository domain.CommentRepository, timeout time.
 	}
 }
 
-func (cu *commentUsecase) Create(c context.Context, comment *domain.Comment) (primitive.ObjectID, error) {
+func (cu *commentUsecase) Create(c context.Context, comment *domain.Comment) error {
 	ctx, cancel := context.WithTimeout(c, cu.contextTimeout)
 	defer cancel()
 	return cu.commentRepository.Create(ctx, comment)
 }
 
 func (cu *commentUsecase) GetAllPostedOnPostID(c context.Context, postID string) ([]domain.Comment, error) {
-	ctx, cancel := context.WithTimeout(c, cu.contextTimeout)
-	defer cancel()
-	return cu.commentRepository.GetAllPostedOnPostID(ctx, postID)
+	// ctx, cancel := context.WithTimeout(c, cu.contextTimeout)
+	// defer cancel()
+	// return cu.commentRepository.GetAllPostedOnPostID(ctx, postID)
+	return []domain.Comment{}, nil
 }

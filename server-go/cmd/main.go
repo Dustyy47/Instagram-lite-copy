@@ -6,9 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
-	route "github.com/Dustyy47/Instagram-lite-copy/server-go/api/route"
-	"github.com/Dustyy47/Instagram-lite-copy/server-go/bootstrap"
-	"github.com/Dustyy47/Instagram-lite-copy/server-go/mongo"
+	"app/api/route"
+	"app/bootstrap"
+
+	"app/driverdb"
+	//route "github.com/Dustyy47/Instagram-lite-copy/server-go/api/route"
 )
 
 func main() {
@@ -16,9 +18,12 @@ func main() {
 
 	env := bootstrap.NewEnv()
 
-	db := mongo.NewMongoDatabase(env.DB_URL)
-	defer mongo.CloseMongoDBConnection(db)
-	logrus.Printf("Connected to MongoDB")
+	db := driverdb.Connect(env.DbHost, env.DbPort, env.DbUser, env.DbPassword, env.DbName)
+	err := db.SQL.Ping()
+	if err != nil {
+		panic(err)
+	}
+	logrus.Printf("Connected to Postgresql")
 
 	timeout := time.Duration(env.ContextTimeout) * time.Second
 
@@ -26,7 +31,7 @@ func main() {
 
 	router := gin.Group("")
 
-	route.Setup(env, timeout, db.Database(env.DBName), router)
+	route.Setup(env, timeout, db, router)
 
 	gin.Run(env.ServerAddress)
 }

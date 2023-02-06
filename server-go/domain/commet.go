@@ -2,8 +2,7 @@ package domain
 
 import (
 	"context"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
 const (
@@ -11,22 +10,22 @@ const (
 )
 
 type Comment struct {
-	ID     primitive.ObjectID `bson:"_id"`
-	Text   string             `bson:"text"`
-	Author primitive.ObjectID `bson:"author"`
-	PostID primitive.ObjectID `bson:"post"`
+	ID     int64  `bson:"_id"`
+	Text   string `bson:"text"`
+	Author int64  `bson:"author"`
+	PostID int64  `bson:"post"`
 
-	CreatedAt primitive.Timestamp `bson:"createdAt"`
-	UpdatedAt primitive.Timestamp `bson:"updatedAt"`
+	CreatedAt time.Time `bson:"createdAt"`
+	UpdatedAt time.Time `bson:"updatedAt"`
 }
 
 type CommentUsecase interface {
-	Create(c context.Context, comment *Comment) (primitive.ObjectID, error)
+	Create(c context.Context, comment *Comment) error
 	GetAllPostedOnPostID(c context.Context, postID string) ([]Comment, error)
 }
 
 type CommentRepository interface {
-	Create(c context.Context, comment *Comment) (primitive.ObjectID, error)
+	Create(c context.Context, comment *Comment) error
 	GetAllPostedOnPostID(c context.Context, postID string) ([]Comment, error)
 }
 

@@ -6,15 +6,17 @@ import (
 )
 
 type Env struct {
-	AppEnv                 string `mapstructure:"APP_ENV"`
-	ServerAddress          string `mapstructure:"SERVER_ADDRESS"`
-	ContextTimeout         int    `mapstructure:"CONTEXT_TIMEOUT"`
-	DB_URL                 string `mapstructure:"DB_URL"`
-	DBName                 string `mapstructure:"DB_NAME"`
-	AccessTokenExpiryHour  int    `mapstructure:"ACCESS_TOKEN_EXPIRY_HOUR"`
-	RefreshTokenExpiryHour int    `mapstructure:"REFRESH_TOKEN_EXPIRY_HOUR"`
-	AccessTokenSecret      string `mapstructure:"ACCESS_TOKEN_SECRET"`
-	RefreshTokenSecret     string `mapstructure:"REFRESH_TOKEN_SECRET"`
+	DbHost     string `mapstructure:"DB_HOST"`
+	DbPort     string `mapstructure:"DB_PORT"`
+	DbUser     string `mapstructure:"DB_USER"`
+	DbPassword string `mapstructure:"DB_PASSWORD"`
+	DbName     string `mapstructure:"DB_NAME"`
+
+	AppEnv                string `mapstructure:"APP_ENV"`
+	ServerAddress         string `mapstructure:"SERVER_ADDRESS"`
+	ContextTimeout        int    `mapstructure:"CONTEXT_TIMEOUT"`
+	AccessTokenExpiryHour int    `mapstructure:"ACCESS_TOKEN_EXPIRY_HOUR"`
+	AccessTokenSecret     string `mapstructure:"ACCESS_TOKEN_SECRET"`
 }
 
 func NewEnv() *Env {
