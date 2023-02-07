@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useCombinedSelector } from '../../hooks/useCombinedSelector'
-import { LoadingStatus } from '../../models/LoadingStatus'
+import { Status } from '../../models/LoadingStatus'
 import { Avatar } from '../Avatar/Avatar'
 import styles from './AccountLabel.module.scss'
 
@@ -16,7 +16,7 @@ export function AccountLabel() {
     const navigate = useNavigate()
 
     function generateData() {
-        if (loadingStatus === LoadingStatus.loading) {
+        if (loadingStatus === Status.loading) {
             return {
                 avatarUrl: '#',
                 userName: '',

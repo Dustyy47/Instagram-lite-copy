@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { Validator } from '../../hooks/validators/useValidator'
 import { AnyFunction } from '../../models/CallbacksTypes'
 import { ValidationMessage } from '../ValidationMessage/ValidationMessage'
@@ -24,7 +24,7 @@ interface InputProps {
     onFocus?: AnyFunction
 }
 
-export function Input(props: InputProps) {
+export const Input = memo(function Input(props: InputProps) {
     const { name, onChange, value, type, placeholder, validator, forwardRef } = props
     const [showValidation, setShowValidation] = useState(false)
 
@@ -73,4 +73,4 @@ export function Input(props: InputProps) {
             </div>
         </div>
     )
-}
+})

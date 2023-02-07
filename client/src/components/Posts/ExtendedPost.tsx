@@ -1,12 +1,11 @@
-import { memo, useEffect } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { getCorrectImageUrl } from '../../helpers/getCorrectAvatarUrl'
-import { useCombinedSelector } from '../../hooks/useCombinedSelector'
+import { getComments, sendComment } from '../../http/postsApi'
 import { AnyFunction } from '../../models/CallbacksTypes'
-import { LoadingStatus } from '../../models/LoadingStatus'
+import { CommentModel } from '../../models/CommentModel'
+import { Status } from '../../models/LoadingStatus'
 import { ExtendedPostModel } from '../../models/PostModel'
 import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
-import { useAppDispatch } from '../../store/hooks'
-import { extendedPostActions } from '../../store/slices/extendedPostSlice'
 import { Avatar } from '../Avatar/Avatar'
 import { Button } from '../Button/Button'
 import { Comments } from '../Comments/Comments'
@@ -15,7 +14,6 @@ import { LikeBtn } from '../LikeBtn/LikeBtn'
 import { Loading } from '../Loading/Loading'
 import { Modal } from '../Modal/Modal'
 import styles from './ExtendedPost.module.scss'
-
 interface ExtendedPostProps {
     setActive: (value: boolean) => any
     onLike: AnyFunction
@@ -26,44 +24,57 @@ interface ExtendedPostProps {
 
 export const ExtendedPost = memo(function ExtendedPost(props: ExtendedPostProps) {
     const { setActive, postInfo, authorInfo, onLike, isLiked } = props
-    const { commentText, comments, postLoadingStatus } = useCombinedSelector('extendedPost', [
-        'commentText',
-        'comments',
-        'postLoadingStatus',
-    ])
-
     const { avatarUrl, nickName } = authorInfo
     const { postData, likesCountWithoutUser, isActive } = postInfo
     const { _id, title, description, imageUrl } = postData
 
-    const dispatch = useAppDispatch()
+    const [commentText, setCommentText] = useState('')
+    const [comments, setComments] = useState<CommentModel[]>([])
+    const [commentsStatus, setCommentsStatus] = useState<Status>(Status.loading)
+
     const like = (e: React.MouseEvent) => {
         onLike(_id)
     }
 
-    function handleInputComment(value: string) {
-        dispatch(extendedPostActions.setCommentText(value))
-    }
+    const handleInputComment = useCallback(function (value: string) {
+        setCommentText(value)
+    }, [])
 
-    function handleSendComment() {
-        dispatch(extendedPostActions.fetchSendComment())
-    }
+    const handleSendComment = useCallback(
+        async function () {
+            try {
+                setCommentsStatus(() => Status.loading)
+                const newComment = await sendComment(commentText, _id)
+                if (newComment) {
+                    setComments((prev) => [...prev, newComment])
+                }
+                setCommentsStatus(() => Status.idle)
+            } catch (e) {
+                console.log(e)
+            }
+        },
+        [_id, commentText]
+    )
+
+    useEffect(() => {
+        async function fetchGetComments() {
+            if (!_id) return
+            setComments([...(await getComments(_id))])
+            setCommentsStatus(() => Status.idle)
+        }
+        setCommentsStatus(() => Status.loading)
+        fetchGetComments()
+    }, [_id])
 
     function renderComments() {
         if (!comments || comments.length === 0) {
             return <h5>Нет комментариев :\ </h5>
         }
-        if (postLoadingStatus === LoadingStatus.loading) {
+        if (commentsStatus === Status.loading) {
             return <Loading />
         }
         return <Comments onCommentAvatarClicked={() => setActive(false)} comments={comments} />
     }
-
-    useEffect(() => {
-        if (!_id) return
-        dispatch(extendedPostActions.fetchGetComments(_id))
-        dispatch(extendedPostActions.open(_id))
-    }, [postInfo])
 
     return (
         <Modal

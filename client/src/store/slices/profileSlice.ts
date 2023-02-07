@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { addPost } from '../../http/postsApi'
 import { getPosts, getProfileOwnerInfo } from '../../http/profileApi'
 import { FetchProfileReturn } from '../../models/Http'
-import { LoadingStatus } from '../../models/LoadingStatus'
+import { Status } from '../../models/LoadingStatus'
 import { State } from '../../models/State'
 import { PostModel } from './../../models/PostModel'
 import { ProfileOwnerModel } from './../../models/ProfileOwnerModel'
@@ -28,13 +28,13 @@ export const fetchAddPost = createAsyncThunk('profile/addPost', async (postData:
 })
 
 interface ProfileState extends State {
-    loadingStatus: LoadingStatus
+    loadingStatus: Status
     profileOwnerInfo: ProfileOwnerModel | {}
     posts: PostModel[]
 }
 
 const initialState: ProfileState = {
-    loadingStatus: LoadingStatus.loading,
+    loadingStatus: Status.loading,
     profileOwnerInfo: {},
     posts: [],
 }
@@ -46,15 +46,15 @@ const profileSlice = createSlice({
     extraReducers: {
         [fetchProfileData.fulfilled.type]: (state, action) => {
             const { profileOwnerInfo, posts } = action.payload
-            state.loadingStatus = LoadingStatus.idle
+            state.loadingStatus = Status.idle
             state.profileOwnerInfo = profileOwnerInfo
             state.posts = posts
         },
         [fetchProfileData.rejected.type]: (state) => {
-            state.loadingStatus = LoadingStatus.error
+            state.loadingStatus = Status.error
         },
         [fetchProfileData.pending.type]: (state) => {
-            state.loadingStatus = LoadingStatus.loading
+            state.loadingStatus = Status.loading
         },
         [fetchAddPost.fulfilled.type]: (state, action) => {
             const post = action.payload

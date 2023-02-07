@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Header } from './components/Header/Header'
 import { Loading } from './components/Loading/Loading'
 import { useLogout } from './hooks/useLogout'
-import { LoadingStatus } from './models/LoadingStatus'
+import { Status } from './models/LoadingStatus'
 import { RoutesManager } from './RoutesManager'
 import { useAppDispatch, useAppSelector } from './store/hooks'
 import { fetchUserData } from './store/slices/userSlice'
@@ -21,14 +21,14 @@ export function App() {
     }, [])
 
     function renderApplication() {
-        if (entranceLoadingStatus === LoadingStatus.loading) {
+        if (entranceLoadingStatus === Status.loading) {
             return (
                 <div className="App">
                     <Header />
                     <Loading />
                 </div>
             )
-        } else if (entranceLoadingStatus === LoadingStatus.error) {
+        } else if (entranceLoadingStatus === Status.error) {
             logout()
             return <p>Some error</p>
         }

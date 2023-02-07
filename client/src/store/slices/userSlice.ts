@@ -2,11 +2,10 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { resetState } from '../../helpers/resetState'
 import { likePost } from '../../http/postsApi'
 import { getUserInfo, subscribe } from '../../http/profileApi'
-import { LoadingStatus } from '../../models/LoadingStatus'
+import { Status } from '../../models/LoadingStatus'
 import { State } from '../../models/State'
 
 export const fetchUserData = createAsyncThunk('user/getData', async () => {
-    console.log('get user info')
     return await getUserInfo()
 })
 
@@ -26,7 +25,7 @@ export const fetchSubscribe = createAsyncThunk('user/subscribe', async (profileI
 interface UserState extends State {
     isGuest: boolean
     userId: string
-    entranceLoadingStatus: LoadingStatus
+    entranceLoadingStatus: Status
     likedPosts: string[]
     subscribes: string[]
     avatarUrl: string
@@ -37,7 +36,7 @@ interface UserState extends State {
 const initialState: UserState = {
     isGuest: true,
     userId: '',
-    entranceLoadingStatus: LoadingStatus.loading,
+    entranceLoadingStatus: Status.loading,
     likedPosts: [],
     subscribes: [],
     avatarUrl: '',
@@ -51,7 +50,7 @@ const userSlice = createSlice({
     reducers: {
         logout(state) {
             resetState(state, initialState)
-            state.entranceLoadingStatus = LoadingStatus.idle
+            state.entranceLoadingStatus = Status.idle
         },
     },
     extraReducers: {
@@ -60,10 +59,10 @@ const userSlice = createSlice({
                 // jwt expired or user deleted
                 if (!action.payload) {
                     resetState(state, initialState)
-                    state.entranceLoadingStatus = LoadingStatus.error
+                    state.entranceLoadingStatus = Status.error
                     return
                 }
-                state.entranceLoadingStatus = LoadingStatus.idle
+                state.entranceLoadingStatus = Status.idle
                 const { likedPosts, nickName, subscribes, avatarUrl, fullName, userId } = action.payload
                 state.likedPosts = likedPosts
                 state.nickName = nickName
@@ -73,7 +72,7 @@ const userSlice = createSlice({
                 state.fullName = fullName
                 state.isGuest = false
             } catch (e) {
-                state.entranceLoadingStatus = LoadingStatus.error
+                state.entranceLoadingStatus = Status.error
             }
         },
         [fetchLikePost.fulfilled.type]: (state, action) => {

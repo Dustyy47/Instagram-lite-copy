@@ -8,6 +8,8 @@ interface CommentsProps {
     onCommentAvatarClicked: AnyFunction
 }
 
+//TODO AUTO SCROLL TO NEW COMMENT
+
 export function Comments(props: CommentsProps) {
     const { comments, onCommentAvatarClicked } = props
     return (
@@ -15,9 +17,10 @@ export function Comments(props: CommentsProps) {
             {comments?.map((comment) => (
                 <Comment
                     onAvatarClicked={onCommentAvatarClicked}
-                    key={comment.id}
+                    key={comment._id}
                     authorInfo={{ ...comment.author }}
                     commentInfo={{
+                        _id: comment._id,
                         text: comment.text,
                         createdAt: comment.createdAt,
                         updatedAt: comment.updatedAt,

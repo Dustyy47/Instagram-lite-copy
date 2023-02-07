@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { getCorrectAvatarUrl } from '../../helpers/getCorrectAvatarUrl'
 import { isPostLiked } from '../../helpers/isLikedPost'
 import { useCombinedSelector } from '../../hooks/useCombinedSelector'
-import { LoadingStatus } from '../../models/LoadingStatus'
+import { Status } from '../../models/LoadingStatus'
 import { ExtendedPostModel } from '../../models/PostModel'
 import { useAppDispatch } from '../../store/hooks'
 import { fetchProfileData } from '../../store/slices/profileSlice'
@@ -65,11 +65,11 @@ export function Profile() {
         [extendedPostData]
     )
 
-    if (loadingStatus === LoadingStatus.loading) {
+    if (loadingStatus === Status.loading) {
         return <Loading />
     }
 
-    if (loadingStatus === LoadingStatus.error) {
+    if (loadingStatus === Status.error) {
         return <NotFound />
     }
 

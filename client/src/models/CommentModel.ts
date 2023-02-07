@@ -3,7 +3,7 @@ export interface CommentModel {
     text: string
     author?: ProfileOwnerModel
     post?: string
-    id?: string
+    _id?: string
     createdAt?: string
     updatedAt?: string
 }
