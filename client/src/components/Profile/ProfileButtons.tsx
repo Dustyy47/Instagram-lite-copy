@@ -1,14 +1,23 @@
 import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
 import { getIsUserSubscribed } from '../../helpers/getUserSubscribed'
+import { useCombinedSelector } from '../../hooks/useCombinedSelector'
+import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
+import { useAppSelector } from '../../store/hooks'
 import { Button } from '../Button/Button'
 import styles from './ProfileButtons.module.scss'
 
 //TODO Добавить Loader при подписке
-export function ProfileButtons({ setCreatingPost, toggleSubscribe }) {
-    const { subscribes, isGuest } = useSelector((state) => state.user)
-    const { profileOwnerInfo } = useSelector((state) => state.profile)
-    const { id: profileOwnerId, isUserProfile } = profileOwnerInfo
+
+interface ProfileButtonsProps {
+    setCreatingPost: (value: boolean) => any
+    toggleSubscribe: () => any
+}
+
+export function ProfileButtons(props: ProfileButtonsProps) {
+    const { setCreatingPost, toggleSubscribe } = props
+    const { subscribes, isGuest } = useCombinedSelector('user', ['subscribes', 'isGuest'])
+    let { profileOwnerInfo } = useAppSelector((state) => state.profile)
+    const { _id: profileOwnerId = '', isUserProfile = false } = profileOwnerInfo as ProfileOwnerModel
 
     let isUserSubscribedOnProfile
 
@@ -22,7 +31,7 @@ export function ProfileButtons({ setCreatingPost, toggleSubscribe }) {
         <Button onClick={() => setCreatingPost(true)}>Создать пост</Button>
     ) : (
         <div className={styles.communicateButtons}>
-            <Button>Чат</Button>
+            <Button onClick={() => {}}>Чат</Button>
             {isUserSubscribedOnProfile ? (
                 <Button onClick={toggleSubscribe}>Отписаться</Button>
             ) : (

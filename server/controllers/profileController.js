@@ -20,7 +20,7 @@ class ProfileController {
       const { email, nickName, fullName, avatarUrl, subscribes, subscribers } =
         user;
       res.json({
-        id,
+        _id: id,
         email,
         nickName,
         fullName,

@@ -1,18 +1,31 @@
 import { useEffect, useState } from 'react'
+import { Validator } from '../../hooks/validators/useValidator'
+import { AnyFunction } from '../../models/CallbacksTypes'
 import { ValidationMessage } from '../ValidationMessage/ValidationMessage'
 import styles from './Input.module.scss'
 
-export function Input({
-    name,
-    onChange,
-    value,
-    type,
-    placeholder,
-    isColumn,
-    validator,
-    forwardRef,
-    ...props
-}) {
+interface InputProps {
+    onChange: (value: string) => any
+    value?: string
+    name?: string
+    type?: string
+    placeholder?: string
+    isColumn?: boolean
+    validator?: Validator
+    forwardRef?: React.MutableRefObject<HTMLInputElement>
+    onBlur?: AnyFunction
+    needToValidate?: boolean
+    className?: string
+    styleWrapper?: React.CSSProperties
+    styleLabel?: React.CSSProperties
+    styleInput?: React.CSSProperties
+    children?: React.ReactElement
+    id?: string
+    onFocus?: AnyFunction
+}
+
+export function Input(props: InputProps) {
+    const { name, onChange, value, type, placeholder, validator, forwardRef } = props
     const [showValidation, setShowValidation] = useState(false)
 
     function blur() {
@@ -20,12 +33,13 @@ export function Input({
         if (props.onBlur) props.onBlur()
     }
 
-    const change = (e) => {
+    const change = (e: React.ChangeEvent<HTMLInputElement>) => {
         validator?.validate(e.target.value)
         onChange(e.target.value)
     }
 
     useEffect(() => {
+        //TODO replace to !validator
         if (!props.needToValidate) {
             setShowValidation(false)
             return
@@ -37,7 +51,7 @@ export function Input({
 
     return (
         <div style={props.styleWrapper} className={wrapperClassName}>
-            <ValidationMessage show={showValidation} errorsString={validator?.errors} />
+            <ValidationMessage show={showValidation} errorsString={validator?.errors || ''} />
             <div className={styles.group}>
                 <label style={props.styleLabel} className={styles.label}>
                     {props.children}

@@ -64,8 +64,7 @@ const userSlice = createSlice({
                     return
                 }
                 state.entranceLoadingStatus = LoadingStatus.idle
-                const { likedPosts, nickName, subscribes, avatarUrl, fullName, userId } =
-                    action.payload
+                const { likedPosts, nickName, subscribes, avatarUrl, fullName, userId } = action.payload
                 state.likedPosts = likedPosts
                 state.nickName = nickName
                 state.userId = userId

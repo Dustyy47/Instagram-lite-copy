@@ -20,7 +20,10 @@ export const likePost = async (postId: string) => {
     }
 }
 
-export const sendComment = async (text: string, postId: string) => {
+export const sendComment = async (
+    text: string,
+    postId: string
+): Promise<CommentModel | undefined> => {
     try {
         const { data } = await $authHost.put<CommentModel>(`/profile/posts/${postId}/comment`, {
             text,
@@ -28,6 +31,7 @@ export const sendComment = async (text: string, postId: string) => {
         return data
     } catch (e) {
         console.log((e as AxiosError).request.response)
+        return undefined
     }
 }
 

@@ -3,10 +3,11 @@ export interface PostModel {
     _id: string
     imageUrl: string
     title: string
+    description: string
 }
 
 export interface ExtendedPostModel {
-    postData: PostModel
+    postData: Omit<PostModel, 'likes'>
     likesCountWithoutUser: number
     isActive: boolean
 }

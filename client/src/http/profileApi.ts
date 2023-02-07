@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios'
 import { $authHost, $host } from '.'
+import { ProfileOwnerModel } from './../models/ProfileOwnerModel'
 
 export const subscribe = async (id: string) => {
     try {
@@ -12,10 +13,11 @@ export const subscribe = async (id: string) => {
 
 export const getProfileOwnerInfo = async (id: string) => {
     try {
-        const { data } = await $authHost.get(`/profile/${id}`)
+        const { data } = await $authHost.get<ProfileOwnerModel>(`/profile/${id}`)
         return data
     } catch (e) {
         console.log((e as AxiosError).request.response)
+        return undefined
     }
 }
 
@@ -40,9 +42,7 @@ export const getUserInfo = async () => {
 export const searchUsers = async (nickname: string, limit: number, skip: number) => {
     try {
         const { data } = await $host.get(
-            `/profile/find/${nickname}` +
-                (limit ? `?limit=${limit}` : '') +
-                (skip ? `&skip=${skip}` : '')
+            `/profile/find/${nickname}` + (limit ? `?limit=${limit}` : '') + (skip ? `&skip=${skip}` : '')
         )
         return data
     } catch (e) {

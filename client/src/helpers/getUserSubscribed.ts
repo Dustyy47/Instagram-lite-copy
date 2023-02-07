@@ -1,8 +1,4 @@
-export function getIsUserSubscribed(
-    userSubscribes: string[],
-    isGuest: boolean,
-    profileId: string
-): boolean {
+export function getIsUserSubscribed(userSubscribes: string[], isGuest: boolean, profileId: string): boolean {
     if (isGuest || userSubscribes === null) {
         return false
     }

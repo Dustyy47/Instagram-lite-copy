@@ -1,6 +1,6 @@
 import { BiExit } from 'react-icons/bi'
-import { useSelector } from 'react-redux'
 import { useLogout } from '../../hooks/useLogout'
+import { useAppSelector } from '../../store/hooks'
 import { Button } from '../Button/Button'
 import { Search } from '../Search/Search'
 import { AccountLabel } from './AccountLabel'
@@ -9,7 +9,7 @@ import styles from './Header.module.scss'
 export function Header() {
     const logout = useLogout()
 
-    const userId = useSelector((state) => state.user.userId)
+    const userId = useAppSelector((state) => state.user.userId)
 
     console.log('render header')
 

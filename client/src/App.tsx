@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import './App.css'
 import { Header } from './components/Header/Header'
 import { Loading } from './components/Loading/Loading'
 import { useLogout } from './hooks/useLogout'

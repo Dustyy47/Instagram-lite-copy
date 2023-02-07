@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import { searchUsers } from '../../http/profileApi'
 import { Input } from '../Input/Input'
@@ -9,31 +9,25 @@ const SEARCH_TIME = 333
 const USERS_PER_PAGE = 7
 
 export function Search() {
-    const [value, setValue] = useState('')
     const [areUsersHidden, setUsersHidden] = useState(true)
     const [users, setUsers] = useState([])
     const [isLoading, setLoading] = useState(false)
     let page = useRef(0)
-    let timer = useRef()
-    let input = useRef()
-    let usersList = useRef()
+    let timer = useRef<NodeJS.Timeout>()
+    let input = useRef<HTMLInputElement>()
 
-    function handleScroll(e) {
-        if (e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight) === 0) {
+    function handleScroll(e: React.WheelEvent<HTMLDivElement>) {
+        if (e.currentTarget.scrollHeight - (e.currentTarget.scrollTop + e.currentTarget.clientHeight) === 0) {
             fetchUsers(USERS_PER_PAGE, page.current * USERS_PER_PAGE)
         }
     }
 
-    useEffect(() => {
-        usersList.current.addEventListener('scroll', handleScroll)
-    }, [])
-
     const focusSearch = () => {
-        if (value) setUsersHidden(false)
+        if (input.current?.value) setUsersHidden(false)
     }
 
-    const fetchUsers = async (limit, skip) => {
-        const foundUsers = await searchUsers(input.current.value, limit, skip)
+    const fetchUsers = async (limit: number, skip: number) => {
+        const foundUsers = await searchUsers(input.current?.value || '', limit, skip)
         if (foundUsers?.length > 0) {
             setUsers((prevState) => {
                 return (prevState = prevState.concat(foundUsers))
@@ -45,10 +39,9 @@ export function Search() {
         return foundUsers
     }
 
-    const typing = async (value) => {
+    const typing = async (value: string) => {
         page.current = 0
         value = value.trim()
-        setValue(value)
         if (!value) {
             setUsers([])
             setUsersHidden(true)
@@ -69,20 +62,21 @@ export function Search() {
     return (
         <div className={style.wrapper}>
             <Input
-                forwardRef={input}
+                forwardRef={input as React.MutableRefObject<HTMLInputElement>}
                 onBlur={unFocusSearch}
                 onFocus={focusSearch}
-                value={value}
                 onChange={typing}
                 styleInput={{ width: '100%', maxWidth: 250, height: 40, color: '#363636' }}
                 styleWrapper={{ margin: '0 30px' }}
             >
                 <BiSearchAlt2 style={{ fontSize: 32, fill: '#ededed', margin: '0 15px' }} />
             </Input>
-            <div ref={usersList} className={`${style.users} ${areUsersHidden ? style.hidden : ''}`}>
+            <div onScroll={handleScroll} className={`${style.users} ${areUsersHidden ? style.hidden : ''}`}>
                 <UsersList isLoading={isLoading} users={users} title={''}>
-                    <p>Пользователей с таким именем не существует</p>
-                    <p>🙁</p>
+                    <>
+                        <p>Пользователей с таким именем не существует</p>
+                        <p>🙁</p>
+                    </>
                 </UsersList>
             </div>
         </div>

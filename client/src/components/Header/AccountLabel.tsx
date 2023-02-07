@@ -1,7 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useCombinedSelector } from '../../hooks/useCombinedSelector'
 import { LoadingStatus } from '../../models/LoadingStatus'
-import { placeholderUrl } from '../Auth/Registration'
 import { Avatar } from '../Avatar/Avatar'
 import styles from './AccountLabel.module.scss'
 
@@ -31,7 +30,7 @@ export function AccountLabel() {
                 link: `/profile/${nickName}`,
             }
         return {
-            avatarUrl: placeholderUrl,
+            avatarUrl: '',
             userName: 'Гость',
             link: '/auth/login',
         }

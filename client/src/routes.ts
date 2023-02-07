@@ -1,4 +1,5 @@
-import { Auth } from './components/Auth/Auth'
+import { Login } from './components/Auth/Login'
+import { Registration } from './components/Auth/Registration'
 import { Chat } from './components/Chat/Chat'
 import { Profile } from './components/Profile/Profile'
 
@@ -7,35 +8,30 @@ export const LOGIN_ROUTE = '/auth/login'
 export const REGISTER_ROUTE = '/auth/register'
 export const CHAT_ROUTE = '/chat'
 
-interface Route {
+export interface RouteModel {
     path: string
-    element: React.ReactElement
-    exact: boolean
+    element: () => JSX.Element
 }
 
-export const publicRoutes: Route[] = [
+export const publicRoutes: RouteModel[] = [
     {
         path: PROFILE_ROUTE,
         element: Profile,
-        exact: false,
     },
     {
         path: LOGIN_ROUTE,
-        element: Auth,
-        exact: false,
+        element: Login,
     },
     {
         path: REGISTER_ROUTE,
-        element: Auth,
-        exact: true,
+        element: Registration,
     },
 ]
 
-export const authRoutes: Route[] = [
+export const authRoutes: RouteModel[] = [
     ...publicRoutes,
     {
         path: CHAT_ROUTE,
         element: Chat,
-        exact: true,
     },
 ]

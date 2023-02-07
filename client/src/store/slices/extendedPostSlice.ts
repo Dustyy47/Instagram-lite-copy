@@ -5,15 +5,14 @@ import { LoadingStatus } from '../../models/LoadingStatus'
 import { State } from '../../models/State'
 import { RootState } from './../index'
 
-export const fetchSendComment = createAsyncThunk<
-    CommentModel | undefined,
-    undefined,
-    { state: RootState }
->('comments/test', async (_, { getState }) => {
-    const { commentText, postId } = getState().extendedPost
-    const newComment = await sendComment(commentText, postId)
-    return newComment
-})
+export const fetchSendComment = createAsyncThunk<CommentModel | undefined, undefined, { state: RootState }>(
+    'comments/test',
+    async (_, { getState }) => {
+        const { commentText, postId } = getState().extendedPost
+        const newComment = await sendComment(commentText, postId)
+        return newComment
+    }
+)
 
 export const fetchGetComments = createAsyncThunk('comments/getComments', async (postId: string) => {
     const comments = await getComments(postId)

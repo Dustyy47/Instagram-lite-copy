@@ -1,7 +1,11 @@
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { getCorrectImageUrl } from '../../helpers/getCorrectAvatarUrl'
+import { useCombinedSelector } from '../../hooks/useCombinedSelector'
+import { AnyFunction } from '../../models/CallbacksTypes'
 import { LoadingStatus } from '../../models/LoadingStatus'
+import { ExtendedPostModel } from '../../models/PostModel'
+import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
+import { useAppDispatch } from '../../store/hooks'
 import { extendedPostActions } from '../../store/slices/extendedPostSlice'
 import { Avatar } from '../Avatar/Avatar'
 import { Button } from '../Button/Button'
@@ -12,18 +16,32 @@ import { Loading } from '../Loading/Loading'
 import { Modal } from '../Modal/Modal'
 import styles from './ExtendedPost.module.scss'
 
-export function ExtendedPost({ setActive, postInfo = {}, authorInfo = {}, likeInfo = {} }) {
-    const { onLike, isLiked } = likeInfo
+interface ExtendedPostProps {
+    setActive: (value: boolean) => any
+    onLike: AnyFunction
+    postInfo: ExtendedPostModel
+    authorInfo: ProfileOwnerModel
+    isLiked: boolean
+}
+
+export function ExtendedPost(props: ExtendedPostProps) {
+    const { setActive, postInfo, authorInfo, onLike, isLiked } = props
+    const { commentText, comments, postLoadingStatus } = useCombinedSelector('extendedPost', [
+        'commentText',
+        'comments',
+        'postLoadingStatus',
+    ])
+
     const { avatarUrl, nickName } = authorInfo
     const { postData, likesCountWithoutUser, isActive } = postInfo
     const { _id, title, description, imageUrl } = postData
-    const { commentText, comments, postLoadingStatus } = useSelector((state) => state.extendedPost)
-    const dispatch = useDispatch()
-    const like = (e) => {
+
+    const dispatch = useAppDispatch()
+    const like = (e: React.MouseEvent) => {
         onLike(_id)
     }
 
-    function handleInputComment(value) {
+    function handleInputComment(value: string) {
         dispatch(extendedPostActions.setCommentText(value))
     }
 
@@ -50,7 +68,7 @@ export function ExtendedPost({ setActive, postInfo = {}, authorInfo = {}, likeIn
     return (
         <Modal
             isActive={isActive}
-            setActive={() => setActive()}
+            setActive={setActive}
             modalStyles={{ width: '70%', maxWidth: 'auto', height: '90%' }}
         >
             <div className={styles.wrapper}>
@@ -58,7 +76,7 @@ export function ExtendedPost({ setActive, postInfo = {}, authorInfo = {}, likeIn
                 <div className={styles.info}>
                     <div className={styles.header}>
                         <div className={styles.profileInfo}>
-                            <Avatar url={avatarUrl} />
+                            <Avatar url={avatarUrl || ''} />
                             <p className={styles.nickName}>{nickName}</p>
                         </div>
                         <LikeBtn
@@ -76,11 +94,7 @@ export function ExtendedPost({ setActive, postInfo = {}, authorInfo = {}, likeIn
                     {renderComments()}
 
                     <form className={styles.sendForm}>
-                        <Input
-                            className={styles.commentInput}
-                            value={commentText}
-                            onChange={handleInputComment}
-                        />
+                        <Input className={styles.commentInput} value={commentText} onChange={handleInputComment} />
                         <Button className={styles.sendCommentBtn} onClick={handleSendComment}>
                             Отправить
                         </Button>

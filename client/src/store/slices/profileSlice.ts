@@ -7,22 +7,21 @@ import { State } from '../../models/State'
 import { PostModel } from './../../models/PostModel'
 import { ProfileOwnerModel } from './../../models/ProfileOwnerModel'
 
-export const fetchProfileData = createAsyncThunk<
-    FetchProfileReturn,
-    string,
-    { rejectValue: number }
->('profile/getData', async (pathProfileId: string, { rejectWithValue }) => {
-    const profileOwnerInfo = await getProfileOwnerInfo(pathProfileId)
-    if (!profileOwnerInfo) {
-        return rejectWithValue(404)
+export const fetchProfileData = createAsyncThunk<FetchProfileReturn, string, { rejectValue: number }>(
+    'profile/getData',
+    async (pathProfileId: string, { rejectWithValue }) => {
+        const profileOwnerInfo = await getProfileOwnerInfo(pathProfileId)
+        if (!profileOwnerInfo) {
+            return rejectWithValue(404)
+        }
+        const posts = await getPosts(profileOwnerInfo._id || '')
+        document.title = profileOwnerInfo.fullName || ''
+        return {
+            profileOwnerInfo,
+            posts,
+        }
     }
-    const posts = await getPosts(profileOwnerInfo.id)
-    document.title = profileOwnerInfo.fullName
-    return {
-        profileOwnerInfo,
-        posts,
-    }
-})
+)
 
 export const fetchAddPost = createAsyncThunk('profile/addPost', async (postData: FormData) => {
     return await addPost(postData)

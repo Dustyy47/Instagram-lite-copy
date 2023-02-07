@@ -1,10 +1,22 @@
+import { ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
 import { Loading } from '../Loading/Loading'
 import { UsersListItem } from './UsersListItem'
 
-export function UsersList({ users, absenceText, title, onClick, isLoading, ...props }) {
+interface UsersListProps {
+    users: ProfileOwnerModel[]
+    title: string
+    onClick?: (user: ProfileOwnerModel) => any
+    isLoading?: boolean
+    children?: ReactElement | string
+}
+
+export function UsersList(props: UsersListProps) {
+    const { users, title, onClick, isLoading, children } = props
     const navigate = useNavigate()
-    const handleClickToUser = (user) => {
+
+    const handleClickToUser = (user: ProfileOwnerModel) => {
         navigate('/profile/' + user.nickName)
     }
 
@@ -19,7 +31,7 @@ export function UsersList({ users, absenceText, title, onClick, isLoading, ...pr
                 users.map((user) => (
                     <UsersListItem
                         onClick={onClick ? () => onClick(user) : () => handleClickToUser(user)}
-                        key={user.profileId}
+                        key={user._id}
                         user={user}
                     />
                 ))
@@ -37,7 +49,7 @@ export function UsersList({ users, absenceText, title, onClick, isLoading, ...pr
                         textAlign: 'center',
                     }}
                 >
-                    {props.children}
+                    {children}
                 </div>
             )}
         </>

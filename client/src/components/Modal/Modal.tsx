@@ -1,8 +1,18 @@
 import { useEffect, useRef } from 'react'
+import { AnyFunction } from '../../models/CallbacksTypes'
 import styles from './Modal.module.scss'
 
-export function Modal({ isActive, setActive, ...props }) {
+interface ModalProps {
+    isActive: boolean
+    setActive: AnyFunction
+    //TODO REFACTOR NAMINGS FOR STYLES PROPS IN ALL COMPONENTS
+    modalStyles?: React.CSSProperties
+    children: React.ReactElement
+}
+
+export function Modal(props: ModalProps) {
     let scrollBeforeOpen = useRef(0)
+    const { isActive, setActive } = props
 
     useEffect(() => {
         if (isActive) {
@@ -20,11 +30,7 @@ export function Modal({ isActive, setActive, ...props }) {
             onClick={(e) => setActive(false)}
             className={`${styles.modal} ${!isActive ? styles['modal--hidden'] : ''}`}
         >
-            <div
-                onClick={(e) => e.stopPropagation()}
-                className={styles.content}
-                style={props.modalStyles}
-            >
+            <div onClick={(e) => e.stopPropagation()} className={styles.content} style={props.modalStyles}>
                 {props.children}
             </div>
         </div>

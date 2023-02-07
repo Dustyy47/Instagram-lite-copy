@@ -1,13 +1,38 @@
 import { useState } from 'react'
 import { AiOutlineMail } from 'react-icons/ai'
 import { Link } from 'react-router-dom'
+import { useProfileRedirect } from '../../hooks/useProfileRedirect'
 import { checks, useFormValidator, useValidator, Validation } from '../../hooks/validators'
+import { login } from '../../http/authApi'
 import { Button } from '../Button/Button'
 import { HideIcon } from '../HideIcon/HideIcon'
 import { Input } from '../Input/Input'
 import styles from './Auth.module.scss'
 
-export function Login({ email, setEmail, password, setPassword, onLogin, resetFields, error }) {
+export function Login() {
+    const profileRedirect = useProfileRedirect()
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
+
+    function resetFields() {
+        setEmail('')
+        setPassword('')
+        setError('')
+    }
+
+    async function submit() {
+        try {
+            const response = await login(email, password)
+            setError('')
+            profileRedirect(response.nickName || '')
+        } catch (e) {
+            let err = e as Error
+            console.log(err.message)
+            setError(err.message)
+        }
+    }
+
     const { checkLength, checkEmail } = checks
     const emailValidator = useValidator([new Validation(checkEmail, 'Неверный формат почты')])
     const passwordValidator = useValidator([
@@ -47,10 +72,7 @@ export function Login({ email, setEmail, password, setPassword, onLogin, resetFi
                 className={styles.authInput}
                 placeholder="Введите пароль"
             >
-                <HideIcon
-                    toggleValue={isPasswordHidden}
-                    toggleAction={() => setPasswordHidden(!isPasswordHidden)}
-                />
+                <HideIcon isHidden={isPasswordHidden} toggle={() => setPasswordHidden(!isPasswordHidden)} />
             </Input>
             {error}
             <div className={styles.buttons}>
@@ -60,7 +82,7 @@ export function Login({ email, setEmail, password, setPassword, onLogin, resetFi
                         <br /> нет аккаунта ?
                     </p>
                 </Link>
-                <Button disabled={loginFormValidator.hasErrors()} onClick={onLogin}>
+                <Button disabled={loginFormValidator.hasErrors()} onClick={submit}>
                     Войти
                 </Button>
             </div>

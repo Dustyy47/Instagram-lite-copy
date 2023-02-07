@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getCorrectAvatarUrl } from '../../helpers/getCorrectAvatarUrl'
 import { isPostLiked } from '../../helpers/isLikedPost'
 import { useCombinedSelector } from '../../hooks/useCombinedSelector'
 import { LoadingStatus } from '../../models/LoadingStatus'
+import { ExtendedPostModel } from '../../models/PostModel'
+import { useAppDispatch } from '../../store/hooks'
 import { fetchProfileData } from '../../store/slices/profileSlice'
 import { fetchLikePost, fetchSubscribe } from '../../store/slices/userSlice'
 import { NotFound } from '../Errors/NotFound'
@@ -18,32 +19,37 @@ import { ProfileInfo } from './ProfileInfo'
 
 export function Profile() {
     const [isCreatingPost, setCreatingPost] = useState(false)
-    const [extendedPostData, setExtendedPostData] = useState({ postData: {} })
+    const [extendedPostData, setExtendedPostData] = useState<ExtendedPostModel>({
+        postData: {
+            _id: '',
+            title: '',
+            description: '',
+            imageUrl: '',
+        },
+        isActive: false,
+        likesCountWithoutUser: 0,
+    })
 
     const { likedPosts, isGuest } = useCombinedSelector('user', ['likedPosts', 'isGuest'])
-    const { posts, profileOwnerInfo, loadingStatus } = useCombinedSelector('profile', [
-        'posts',
-        'profileOwnerInfo',
-        'loadingStatus',
-    ])
+    const { profileOwnerInfo, loadingStatus } = useCombinedSelector('profile', ['profileOwnerInfo', 'loadingStatus'])
 
-    const dispatch = useDispatch()
-    const { id: pathProfileId } = useParams()
+    const dispatch = useAppDispatch()
+    const { id: pathProfileId = '' } = useParams<string>()
     console.log('render profile')
 
     useEffect(() => {
         dispatch(fetchProfileData(pathProfileId))
-    }, [pathProfileId])
+    }, [pathProfileId, dispatch])
 
     async function toggleSubscribe() {
-        dispatch(fetchSubscribe(profileOwnerInfo.id))
+        dispatch(fetchSubscribe(profileOwnerInfo._id))
     }
 
-    async function handlePostClick(data) {
+    async function handlePostClick(data: ExtendedPostModel) {
         setExtendedPostData(data)
     }
 
-    async function like(postId) {
+    async function like(postId: string) {
         await dispatch(fetchLikePost(postId))
     }
 
@@ -71,31 +77,21 @@ export function Profile() {
                         fullName={profileOwnerInfo.fullName || ''}
                         email={profileOwnerInfo.email || ''}
                         avatarUrl={getCorrectAvatarUrl(profileOwnerInfo.avatarUrl)}
-                        subscribesId={profileOwnerInfo.subscribes}
-                        subscribersId={profileOwnerInfo.subscribers}
+                        subscribes={profileOwnerInfo.subscribes}
+                        subscribers={profileOwnerInfo.subscribers}
                     />
                     {!isGuest && (
-                        <ProfileButtons
-                            setCreatingPost={setCreatingPost}
-                            toggleSubscribe={() => toggleSubscribe()}
-                        />
+                        <ProfileButtons setCreatingPost={setCreatingPost} toggleSubscribe={() => toggleSubscribe()} />
                     )}
                 </div>
-                <PostsList
-                    likedPosts={likedPosts}
-                    posts={posts}
-                    onLike={like}
-                    onClickPost={handlePostClick}
-                />
+                <PostsList likedPosts={likedPosts} onLike={like} onClickPost={handlePostClick} />
             </div>
             <ExtendedPost
                 authorInfo={profileOwnerInfo}
                 postInfo={extendedPostData}
                 setActive={closeExtendedPost}
-                likeInfo={{
-                    onLike: like,
-                    isLiked: isPostLiked(extendedPostData?.postData._id, likedPosts),
-                }}
+                onLike={like}
+                isLiked={isPostLiked(extendedPostData?.postData._id, likedPosts)}
             />
             <CreatingPost isActive={isCreatingPost} setActive={setCreatingPost} />
         </section>

@@ -2,33 +2,72 @@ import { useState } from 'react'
 import { AiOutlineMail, AiOutlineUser } from 'react-icons/ai'
 import { BsChatLeftText } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
-import { getCorrectAvatarUrl } from '../../helpers/getCorrectAvatarUrl'
+import { useProfileRedirect } from '../../hooks/useProfileRedirect'
 import { checks, useFormValidator, useValidator, Validation } from '../../hooks/validators'
+import { registration } from '../../http/authApi'
 import { Button } from '../Button/Button'
 import { HideIcon } from '../HideIcon/HideIcon'
 import { FileInput } from '../Input/FileInput'
 import { Input } from '../Input/Input'
 import styles from './Auth.module.scss'
 
-export const placeholderUrl = 'placeholder.jpg'
+interface RegistrationFormFields {
+    email: string
+    password: string
+    passwordConfirm: string
+    fullName: string
+    nickName: string
+    error: string
+    avatarImage: File | undefined
+    isPasswordHidden: boolean
+    avatarPreviewUrl: string
+}
 
-export function Registration({
-    email,
-    setEmail,
-    password,
-    setPassword,
-    fullName,
-    setFullName,
-    onRegister,
-    setAvatarImage,
-    nickName,
-    setNickName,
-    resetFields,
-    error,
-}) {
+const initialData: RegistrationFormFields = {
+    email: '',
+    password: '',
+    passwordConfirm: '',
+    fullName: '',
+    nickName: '',
+    error: '',
+    avatarImage: undefined,
+    isPasswordHidden: true,
+    avatarPreviewUrl: '',
+}
+
+export function Registration() {
+    const profileRedirect = useProfileRedirect()
+    const [data, setData] = useState<RegistrationFormFields>({ ...initialData })
+    const {
+        email,
+        password,
+        passwordConfirm,
+        fullName,
+        nickName,
+        error,
+        avatarImage,
+        isPasswordHidden,
+        avatarPreviewUrl,
+    } = data
+
     const { checkLength, checkEqual, checkName, checkEmail } = checks
-    const [passwordConfirm, setPasswordConfirm] = useState()
 
+    async function submit() {
+        try {
+            const data = new FormData()
+            data.append('email', email)
+            data.append('password', password)
+            data.append('fullName', fullName)
+            data.append('avatarImage', avatarImage as File)
+            data.append('nickName', nickName)
+            const response = await registration(data)
+            profileRedirect(response.nickName as string)
+        } catch (e) {
+            const err = e as Error
+            console.log(err.message)
+            setData({ ...data, error: err.message })
+        }
+    }
     const userNameValidator = useValidator([
         new Validation(checkName, 'Неверный формат имени. Следуйте шаблону "Имя Фамилия"'),
     ])
@@ -51,16 +90,13 @@ export function Registration({
         passwordConfirmValidator
     )
 
-    const [isPasswordHidden, setPasswordHidden] = useState(true)
-    const [avatarPreviewUrl, setAvatarPreviewUrl] = useState(getCorrectAvatarUrl(placeholderUrl))
-
-    const loadAvatarPreview = (e) => {
+    const loadAvatarPreview = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) return
         const img = e.target.files[0]
         const reader = new FileReader()
         reader.readAsDataURL(img)
         reader.onloadend = () => {
-            setAvatarPreviewUrl(reader.result)
-            setAvatarImage(img)
+            setData({ ...data, avatarPreviewUrl: reader.result as string, avatarImage: img })
         }
     }
 
@@ -83,7 +119,7 @@ export function Registration({
             </div>
             <Input
                 validator={userNameValidator}
-                onChange={(value) => setFullName(value)}
+                onChange={(value) => setData({ ...data, fullName: value })}
                 value={fullName}
                 name="Имя"
                 className={styles.authInput}
@@ -99,7 +135,7 @@ export function Registration({
             </Input>
             <Input
                 validator={nickNameValidator}
-                onChange={(value) => setNickName(value)}
+                onChange={(value) => setData({ ...data, nickName: value })}
                 value={nickName}
                 name="Псевдоним"
                 className={styles.authInput}
@@ -115,7 +151,7 @@ export function Registration({
             </Input>
             <Input
                 validator={emailValidator}
-                onChange={(value) => setEmail(value)}
+                onChange={(value) => setData({ ...data, email: value })}
                 value={email}
                 name="Почта"
                 className={styles.authInput}
@@ -131,7 +167,7 @@ export function Registration({
             </Input>
             <Input
                 validator={passwordValidator}
-                onChange={(value) => setPassword(value)}
+                onChange={(value) => setData({ ...data, password: value })}
                 value={password}
                 type={isPasswordHidden ? 'password' : 'text'}
                 name="Пароль"
@@ -139,13 +175,13 @@ export function Registration({
                 placeholder="Введите пароль"
             >
                 <HideIcon
-                    toggleValue={isPasswordHidden}
-                    toggleAction={() => setPasswordHidden(!isPasswordHidden)}
+                    isHidden={isPasswordHidden}
+                    toggle={() => setData({ ...data, isPasswordHidden: !data.isPasswordHidden })}
                 />
             </Input>
             <Input
                 validator={passwordConfirmValidator}
-                onChange={(value) => setPasswordConfirm(value)}
+                onChange={(value) => setData({ ...data, passwordConfirm: value })}
                 value={passwordConfirm}
                 type={isPasswordHidden ? 'password' : 'text'}
                 name="Подтвердить пароль"
@@ -153,13 +189,13 @@ export function Registration({
                 placeholder="Введите пароль"
             >
                 <HideIcon
-                    toggleValue={isPasswordHidden}
-                    toggleAction={() => setPasswordHidden(!isPasswordHidden)}
+                    isHidden={isPasswordHidden}
+                    toggle={() => setData({ ...data, isPasswordHidden: !data.isPasswordHidden })}
                 />
             </Input>
             {error}
             <div className={styles.buttons}>
-                <Link className={styles.link} onClick={resetFields} to={'/auth/login'}>
+                <Link className={styles.link} onClick={() => setData({ ...initialData })} to={'/auth/login'}>
                     {
                         <p>
                             У вас уже
@@ -167,7 +203,7 @@ export function Registration({
                         </p>
                     }
                 </Link>
-                <Button disabled={registerFormValidator.hasErrors()} onClick={onRegister}>
+                <Button disabled={registerFormValidator.hasErrors()} onClick={submit}>
                     Регистрация
                 </Button>
             </div>

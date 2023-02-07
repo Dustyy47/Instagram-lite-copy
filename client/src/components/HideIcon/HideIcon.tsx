@@ -1,13 +1,20 @@
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
+import { AnyFunction } from '../../models/CallbacksTypes'
 
-export function HideIcon({ toggleValue, toggleAction }) {
-    const toggle = (e) => {
+interface HideIconProps {
+    isHidden: boolean
+    toggle: AnyFunction
+}
+
+export function HideIcon(props: HideIconProps) {
+    const { isHidden, toggle: toggleCb } = props
+    const toggle = (e: React.MouseEvent<SVGElement>) => {
         e.preventDefault()
-        toggleAction()
+        toggleCb()
     }
     return (
         <div>
-            {!toggleValue ? (
+            {!isHidden ? (
                 <AiOutlineEye
                     style={{
                         cursor: 'pointer',

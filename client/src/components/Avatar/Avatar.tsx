@@ -4,26 +4,27 @@ import styles from './Avatar.module.scss'
 
 interface AvatarProps {
     url: string
-    nickName: string
-    className: string
-    onClick: () => {}
+    nickName?: string
+    className?: string
+    onClick?: () => {}
 }
 
 export function Avatar(props: AvatarProps) {
+    const { url, nickName, className, onClick } = props
     const navigate = useNavigate()
 
     function handleClick() {
-        if (props.onClick) props.onClick()
-        if (props.nickName) navigate('/profile/' + props.nickName)
+        if (onClick) onClick()
+        if (nickName) navigate('/profile/' + nickName)
     }
 
-    const imageClassName: string = `${styles.avatar} ${props.className}`
+    const imageClassName: string = `${styles.avatar} ${className}`
 
     return (
         <img
             className={imageClassName}
             onClick={handleClick}
-            src={getCorrectAvatarUrl(props.url)}
+            src={getCorrectAvatarUrl(url)}
             alt="avatar"
         />
     )
