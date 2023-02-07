@@ -12,12 +12,6 @@ const (
 	postgresDSFmt = "host=%s port=%s user=%s password=%s dbname='%s' sslmode=disable"
 )
 
-type DB struct {
-	SQL *sql.DB
-}
-
-var db = &DB{}
-
 func Connect(host, port, user, password, dbname string) *DB {
 	dataSourceName := fmt.Sprintf(postgresDSFmt, host, port, user, password, dbname)
 

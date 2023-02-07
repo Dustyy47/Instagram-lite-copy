@@ -6,11 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
-	"app/api/route"
+	route "app/api/route"
 	"app/bootstrap"
-
 	"app/driverdb"
-	//route "github.com/Dustyy47/Instagram-lite-copy/server-go/api/route"
 )
 
 func main() {
