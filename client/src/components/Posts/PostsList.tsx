@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { useSelector } from 'react-redux'
 import { isPostLiked } from '../../helpers/isLikedPost'
 import { ClickPostCallback, LikePostCallback } from '../../models/CallbacksTypes'
@@ -11,7 +12,7 @@ interface PostsListProps {
     onClickPost: ClickPostCallback
 }
 
-export function PostsList(props: PostsListProps) {
+export const PostsList = memo(function PostsList(props: PostsListProps) {
     const { onLike, likedPosts, onClickPost } = props
     const posts = useSelector((state: any) => state.profile.posts)
 
@@ -42,4 +43,4 @@ export function PostsList(props: PostsListProps) {
     }
 
     return <div className={styles.wrapper}>{posts ? generatePostRows(posts) : 'Нет постов'}</div>
-}
+})

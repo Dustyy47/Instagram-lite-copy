@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import { getCorrectImageUrl } from '../../helpers/getCorrectAvatarUrl'
 import { useCombinedSelector } from '../../hooks/useCombinedSelector'
 import { AnyFunction } from '../../models/CallbacksTypes'
@@ -24,7 +24,7 @@ interface ExtendedPostProps {
     isLiked: boolean
 }
 
-export function ExtendedPost(props: ExtendedPostProps) {
+export const ExtendedPost = memo(function ExtendedPost(props: ExtendedPostProps) {
     const { setActive, postInfo, authorInfo, onLike, isLiked } = props
     const { commentText, comments, postLoadingStatus } = useCombinedSelector('extendedPost', [
         'commentText',
@@ -104,4 +104,4 @@ export function ExtendedPost(props: ExtendedPostProps) {
             </div>
         </Modal>
     )
-}
+})

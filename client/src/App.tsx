@@ -16,8 +16,6 @@ export function App() {
     const dispatch = useAppDispatch()
     const logout = useLogout()
 
-    console.log('render APP', entranceLoadingStatus)
-
     useEffect(() => {
         dispatch(fetchUserData())
     }, [])

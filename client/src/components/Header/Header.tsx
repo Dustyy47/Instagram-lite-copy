@@ -11,8 +11,6 @@ export function Header() {
 
     const userId = useAppSelector((state) => state.user.userId)
 
-    console.log('render header')
-
     return (
         <header className={styles.header}>
             <div className={styles.wrapper}>

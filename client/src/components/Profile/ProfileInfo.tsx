@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { getLabel, LabelsType } from '../../helpers/getCorrectLabel'
 import { getProfileOwnerInfo } from '../../http/profileApi'
 import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
@@ -6,7 +6,7 @@ import { Modal } from '../Modal/Modal'
 import { UsersList } from '../UsersList/UsersList'
 import styles from './ProfileInfo.module.scss'
 
-export function ProfileInfo(props: ProfileOwnerModel) {
+export const ProfileInfo = memo(function ProfileInfo(props: ProfileOwnerModel) {
     const { fullName, avatarUrl, email, subscribes = [], subscribers = [] } = props
     const [users, setUsers] = useState<ProfileOwnerModel[] | []>([])
     const [title, setTitle] = useState('')
@@ -52,4 +52,4 @@ export function ProfileInfo(props: ProfileOwnerModel) {
             </Modal>
         </div>
     )
-}
+})

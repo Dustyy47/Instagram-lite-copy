@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { getIsUserSubscribed } from '../../helpers/getUserSubscribed'
 import { useCombinedSelector } from '../../hooks/useCombinedSelector'
 import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
@@ -13,15 +13,13 @@ interface ProfileButtonsProps {
     toggleSubscribe: () => any
 }
 
-export function ProfileButtons(props: ProfileButtonsProps) {
+export const ProfileButtons = memo(function ProfileButtons(props: ProfileButtonsProps) {
     const { setCreatingPost, toggleSubscribe } = props
     const { subscribes, isGuest } = useCombinedSelector('user', ['subscribes', 'isGuest'])
     let { profileOwnerInfo } = useAppSelector((state) => state.profile)
     const { _id: profileOwnerId = '', isUserProfile = false } = profileOwnerInfo as ProfileOwnerModel
 
     let isUserSubscribedOnProfile
-
-    console.log('rendered profile buttons', subscribes)
 
     isUserSubscribedOnProfile = useMemo(() => {
         return getIsUserSubscribed(subscribes, isGuest, profileOwnerId)
@@ -39,4 +37,4 @@ export function ProfileButtons(props: ProfileButtonsProps) {
             )}
         </div>
     )
-}
+})

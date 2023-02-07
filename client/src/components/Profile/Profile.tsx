@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getCorrectAvatarUrl } from '../../helpers/getCorrectAvatarUrl'
 import { isPostLiked } from '../../helpers/isLikedPost'
@@ -35,30 +35,35 @@ export function Profile() {
 
     const dispatch = useAppDispatch()
     const { id: pathProfileId = '' } = useParams<string>()
-    console.log('render profile')
 
     useEffect(() => {
         dispatch(fetchProfileData(pathProfileId))
     }, [pathProfileId, dispatch])
 
-    async function toggleSubscribe() {
-        dispatch(fetchSubscribe(profileOwnerInfo._id))
-    }
+    const toggleSubscribe = useCallback(
+        async function () {
+            dispatch(fetchSubscribe(profileOwnerInfo._id))
+        },
+        [profileOwnerInfo._id]
+    )
 
-    async function handlePostClick(data: ExtendedPostModel) {
+    const handlePostClick = useCallback(async function (data: ExtendedPostModel) {
         setExtendedPostData(data)
-    }
+    }, [])
 
-    async function like(postId: string) {
+    const like = useCallback(async function (postId: string) {
         await dispatch(fetchLikePost(postId))
-    }
+    }, [])
 
-    function closeExtendedPost() {
-        setExtendedPostData({
-            ...extendedPostData,
-            isActive: false,
-        })
-    }
+    const closeExtendedPost = useCallback(
+        function () {
+            setExtendedPostData({
+                ...extendedPostData,
+                isActive: false,
+            })
+        },
+        [extendedPostData]
+    )
 
     if (loadingStatus === LoadingStatus.loading) {
         return <Loading />
@@ -73,6 +78,7 @@ export function Profile() {
         <section className={styles.page}>
             <div className={styles.wrapper}>
                 <div className={styles.header}>
+                    {}{' '}
                     <ProfileInfo
                         fullName={profileOwnerInfo.fullName || ''}
                         email={profileOwnerInfo.email || ''}
@@ -80,9 +86,7 @@ export function Profile() {
                         subscribes={profileOwnerInfo.subscribes}
                         subscribers={profileOwnerInfo.subscribers}
                     />
-                    {!isGuest && (
-                        <ProfileButtons setCreatingPost={setCreatingPost} toggleSubscribe={() => toggleSubscribe()} />
-                    )}
+                    {!isGuest && <ProfileButtons setCreatingPost={setCreatingPost} toggleSubscribe={toggleSubscribe} />}
                 </div>
                 <PostsList likedPosts={likedPosts} onLike={like} onClickPost={handlePostClick} />
             </div>
