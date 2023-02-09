@@ -7,23 +7,13 @@ import (
 
 	"app/api/controller"
 	"app/bootstrap"
-	"app/domain"
-	"app/driverdb"
-	"app/repository"
-	"app/usecase"
+	db "app/db/sqlc"
 )
 
-func NewCommentRouter(env *bootstrap.Env, timeout time.Duration, db *driverdb.DB, group *gin.RouterGroup) {
-	cr := repository.NewCommentRepository(db, domain.CollectionComments)
-	pr := repository.NewPostRepository(db, domain.CollectionPosts)
-	ur := repository.NewUserRepository(db, domain.CollectionUser)
-
+func NewCommentRouter(env *bootstrap.Env, timeout time.Duration, store db.Store, group *gin.RouterGroup) {
 	cc := &controller.CommentController{
-		CommentUsecase: usecase.NewCommentUsecase(cr, timeout),
-		PostUsecase:    usecase.NewPostUsecase(pr, timeout),
-		UserUsecase:    usecase.NewUserUsecase(ur, timeout),
-
-		Env: env,
+		Store: store,
+		Env:   env,
 	}
 
 	group.POST("/create", cc.Add)

@@ -1,4 +1,4 @@
-package driverdb
+package db
 
 import (
 	"database/sql"
@@ -12,14 +12,14 @@ const (
 	postgresDSFmt = "host=%s port=%s user=%s password=%s dbname='%s' sslmode=disable"
 )
 
-func Connect(host, port, user, password, dbname string) *DB {
+func Connect(host, port, user, password, dbname string) (*sql.DB, error) {
 	dataSourceName := fmt.Sprintf(postgresDSFmt, host, port, user, password, dbname)
 
-	pool, err := sql.Open(dbdriver, dataSourceName)
+	conn, err := sql.Open(dbdriver, dataSourceName)
 	if err != nil {
-		panic(err)
+		return conn, err
 	}
 
-	db.SQL = pool
-	return db
+	err = conn.Ping()
+	return conn, err
 }

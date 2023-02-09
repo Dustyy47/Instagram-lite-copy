@@ -58,11 +58,11 @@ CREATE TABLE post_likes
 
 CREATE TABLE users
 (
-    id bigint NOT NULL DEFAULT nextval('"users_id_seq"'::regclass),
+    id bigint NOT NULL DEFAULT nextval('users_id_seq'::regclass),
     email character varying(255) COLLATE pg_catalog."default" NOT NULL,
     fullname character varying(50) COLLATE pg_catalog."default" NOT NULL,
-    hashed_password character varying(25) COLLATE pg_catalog."default" NOT NULL,
+    hashed_password character varying(50) COLLATE pg_catalog."default" NOT NULL,
     nickname character varying(50) COLLATE pg_catalog."default" NOT NULL,
     avatar_url text COLLATE pg_catalog."default",
-    CONSTRAINT "users_pkey" PRIMARY KEY (id)
+    CONSTRAINT users_pkey PRIMARY KEY (id)
 )

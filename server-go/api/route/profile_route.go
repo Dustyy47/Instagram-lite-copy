@@ -7,17 +7,13 @@ import (
 
 	"app/api/controller"
 	"app/bootstrap"
-	"app/domain"
-	"app/driverdb"
-	"app/repository"
-	"app/usecase"
+	db "app/db/sqlc"
 )
 
-func NewProfileRouter(env *bootstrap.Env, timeout time.Duration, db *driverdb.DB, group *gin.RouterGroup) {
-	ur := repository.NewUserRepository(db, domain.CollectionUser)
+func NewProfileRouter(env *bootstrap.Env, timeout time.Duration, store db.Store, group *gin.RouterGroup) {
 	pc := &controller.ProfileController{
-		UserUsecase: usecase.NewUserUsecase(ur, timeout),
-		Env:         env,
+		Store: store,
+		Env:   env,
 	}
 
 	group.GET("/:nickname", pc.GetProfileData)

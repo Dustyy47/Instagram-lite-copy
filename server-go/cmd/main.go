@@ -8,7 +8,8 @@ import (
 
 	route "app/api/route"
 	"app/bootstrap"
-	"app/driverdb"
+	"app/db"
+	sqlc_db "app/db/sqlc"
 )
 
 func main() {
@@ -16,20 +17,19 @@ func main() {
 
 	env := bootstrap.NewEnv()
 
-	db := driverdb.Connect(env.DbHost, env.DbPort, env.DbUser, env.DbPassword, env.DbName)
-	err := db.SQL.Ping()
+	db, err := db.Connect(env.DbHost, env.DbPort, env.DbUser, env.DbPassword, env.DbName)
 	if err != nil {
-		panic(err)
+		logrus.Fatal("Failed to connect to Postgresql", err)
 	}
 	logrus.Printf("Connected to Postgresql")
+
+	store := sqlc_db.NewStore(db)
 
 	timeout := time.Duration(env.ContextTimeout) * time.Second
 
 	gin := gin.Default()
-
 	router := gin.Group("")
-
-	route.Setup(env, timeout, db, router)
+	route.Setup(env, timeout, store, router)
 
 	gin.Run(env.ServerAddress)
 }

@@ -10,8 +10,3 @@ type JwtCustomClaims struct {
 
 	jwt.StandardClaims
 }
-
-type JwtCustomRefreshClaims struct {
-	UserID string `json:"id"`
-	jwt.StandardClaims
-}

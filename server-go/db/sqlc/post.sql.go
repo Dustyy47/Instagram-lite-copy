@@ -22,10 +22,10 @@ INSERT INTO posts (
 `
 
 type CreatePostParams struct {
-	UserID      int64
-	Title       sql.NullString
-	Description sql.NullString
-	ImageUrl    sql.NullString
+	UserID      int64          `json:"user_id"`
+	Title       sql.NullString `json:"title"`
+	Description sql.NullString `json:"description"`
+	ImageUrl    sql.NullString `json:"image_url"`
 }
 
 func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (Post, error) {
@@ -85,9 +85,9 @@ OFFSET $3
 `
 
 type ListPostOfUserParams struct {
-	UserID int64
-	Limit  int32
-	Offset int32
+	UserID int64 `json:"user_id"`
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
 }
 
 func (q *Queries) ListPostOfUser(ctx context.Context, arg ListPostOfUserParams) ([]Comment, error) {

@@ -4,14 +4,12 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"app/bootstrap"
-	"app/domain"
+	db "app/db/sqlc"
 )
 
 type PostController struct {
-	PostUsecase domain.PostUsecase
-	UserUsecase domain.UserUsecase
-
-	Env *bootstrap.Env
+	Store db.Store
+	Env   *bootstrap.Env
 }
 
 func (pc *PostController) Add(c *gin.Context) {

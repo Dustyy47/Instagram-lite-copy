@@ -7,21 +7,13 @@ import (
 
 	"app/api/controller"
 	"app/bootstrap"
-	"app/domain"
-	"app/driverdb"
-	"app/repository"
-	"app/usecase"
+	db "app/db/sqlc"
 )
 
-func NewPostRouter(env *bootstrap.Env, timeout time.Duration, db *driverdb.DB, group *gin.RouterGroup) {
-	pr := repository.NewPostRepository(db, domain.CollectionPosts)
-	ur := repository.NewUserRepository(db, domain.CollectionUser)
-
+func NewPostRouter(env *bootstrap.Env, timeout time.Duration, store db.Store, group *gin.RouterGroup) {
 	pc := &controller.PostController{
-		PostUsecase: usecase.NewPostUsecase(pr, timeout),
-		UserUsecase: usecase.NewUserUsecase(ur, timeout),
-
-		Env: env,
+		Store: store,
+		Env:   env,
 	}
 
 	group.POST("/create", pc.Add)
@@ -30,5 +22,5 @@ func NewPostRouter(env *bootstrap.Env, timeout time.Duration, db *driverdb.DB, g
 	group.DELETE("/delete/:postID", pc.Remove)
 
 	commentRouter := group.Group("/:postID/comments")
-	NewCommentRouter(env, timeout, db, commentRouter)
+	NewCommentRouter(env, timeout, store, commentRouter)
 }

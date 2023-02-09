@@ -4,15 +4,12 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"app/bootstrap"
-	"app/domain"
+	db "app/db/sqlc"
 )
 
 type CommentController struct {
-	CommentUsecase domain.CommentUsecase
-	PostUsecase    domain.PostUsecase
-	UserUsecase    domain.UserUsecase
-
-	Env *bootstrap.Env
+	Store db.Store
+	Env   *bootstrap.Env
 }
 
 func (cc *CommentController) Add(c *gin.Context) {

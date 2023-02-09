@@ -7,24 +7,33 @@ import (
 
 	jwt "github.com/golang-jwt/jwt/v4"
 
-	"app/domain"
+	db "app/db/sqlc"
 )
 
-func CreateAccessToken(user *domain.User, secret string, expiry int) (accessToken string, err error) {
+type JwtCustomClaims struct {
+	UserID   string `json:"id"`
+	Nickname string `json:"nickname"`
+
+	jwt.StandardClaims
+}
+
+func CreateAccessToken(user *db.User, secret string, expiry int) (accessToken string, err error) {
 	exp := time.Now().Add(time.Hour * time.Duration(expiry)).Unix()
-	claims := &domain.JwtCustomClaims{
+	claims := &JwtCustomClaims{
 		UserID:   strconv.FormatInt(user.ID, 10),
-		NickName: user.FullName,
+		Nickname: user.Nickname,
 
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: exp,
 		},
 	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	t, err := token.SignedString([]byte(secret))
 	if err != nil {
 		return "", err
 	}
+
 	return t, err
 }
 
@@ -38,6 +47,7 @@ func IsAuthorized(requestToken string, secret string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
+
 	return true, nil
 }
 

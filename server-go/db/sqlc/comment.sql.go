@@ -22,10 +22,10 @@ INSERT INTO comments (
 `
 
 type CreateCommentParams struct {
-	PostID    int64
-	UserID    int64
-	Text      string
-	CreatedAt time.Time
+	PostID    int64     `json:"post_id"`
+	UserID    int64     `json:"user_id"`
+	Text      string    `json:"text"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func (q *Queries) CreateComment(ctx context.Context, arg CreateCommentParams) (Comment, error) {
@@ -55,9 +55,9 @@ OFFSET $3
 `
 
 type ListCommentsOfPostParams struct {
-	PostID int64
-	Limit  int32
-	Offset int32
+	PostID int64 `json:"post_id"`
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
 }
 
 func (q *Queries) ListCommentsOfPost(ctx context.Context, arg ListCommentsOfPostParams) ([]Comment, error) {

@@ -4,13 +4,12 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"app/bootstrap"
-	"app/domain"
+	db "app/db/sqlc"
 )
 
 type ProfileController struct {
-	UserUsecase domain.UserUsecase
-
-	Env *bootstrap.Env
+	Store db.Store
+	Env   *bootstrap.Env
 }
 
 func (pc *ProfileController) GetProfileData(c *gin.Context) {
