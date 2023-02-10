@@ -1,8 +1,9 @@
 version: "2"
 sql:
   - engine: "postgresql"
+    path: "sqlc"
     queries: "query/"
-    schema: "schema.sql"
+    schema: "migration/"
     
     gen:
       go:

@@ -6,13 +6,13 @@ import (
 )
 
 type Env struct {
-	DbHost     string `mapstructure:"DB_HOST"`
-	DbPort     string `mapstructure:"DB_PORT"`
-	DbUser     string `mapstructure:"DB_USER"`
-	DbPassword string `mapstructure:"DB_PASSWORD"`
-	DbName     string `mapstructure:"DB_NAME"`
+	AppEnv string `mapstructure:"APP_ENV"`
 
-	AppEnv                string `mapstructure:"APP_ENV"`
+	DBDriver string `mapstructure:"DB_DRIVER"`
+	DBSource string `mapstructure:"DB_SOURCE"`
+
+	MigrationURL string `mapstructure:"MIGRATION_URL"`
+
 	ServerAddress         string `mapstructure:"SERVER_ADDRESS"`
 	ContextTimeout        int    `mapstructure:"CONTEXT_TIMEOUT"`
 	AccessTokenExpiryHour int    `mapstructure:"ACCESS_TOKEN_EXPIRY_HOUR"`
