@@ -28,18 +28,22 @@ export const PostsList = memo(function PostsList({ onLike, likedPosts, onClickPo
         )
     }
 
-    function generatePostRows(posts: PostModel[]) {
-        let rows = []
-        for (let i = 0; i < posts.length; i += 3) {
-            let row = (
-                <div className={styles.row} key={i}>
-                    {[0, 1, 2].map((offset) => generatePost(posts[i + offset]))}
-                </div>
-            )
-            rows.push(row)
-        }
-        return rows
-    }
+    // function generatePostRows(posts: PostModel[]) {
+    //     let rows = []
+    //     for (let i = 0; i < posts.length; i += 3) {
+    //         let row = (
+    //             <div className={styles.row} key={i}>
+    //                 {[0, 1, 2].map((offset) => generatePost(posts[i + offset]))}
+    //             </div>
+    //         )
+    //         rows.push(row)
+    //     }
+    //     return rows
+    // }
 
-    return <div className={styles.wrapper}>{posts ? generatePostRows(posts) : 'Нет постов'}</div>
+    return (
+        <div className={styles.wrapper}>
+            {posts ? posts.map((post: PostModel) => generatePost(post)) : 'Нет постов'}
+        </div>
+    )
 })

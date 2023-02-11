@@ -1,8 +1,9 @@
 @import '../../styles/variables.scss';
 .wrapper {
     cursor: pointer;
-    width: 350px;
-    height: 300px;
+    max-width: 30rem;
+    width: 100%;
+    aspect-ratio: 1;
     border-radius: 15px;
     box-shadow: $shadow;
     outline: none;
@@ -65,8 +66,7 @@
 
 @media screen and (max-width: 1200px) {
     .wrapper {
-        height: 300px;
-        width: 300px;
+        max-width: 300px;
     }
 }
 
@@ -78,32 +78,28 @@
 
 @media screen and (max-width: 800px) {
     .wrapper {
-        height: 280px;
-        width: 280px;
+        max-width: 280px;
         margin: 10px;
     }
 }
 
 @media screen and (max-width: 700px) {
     .wrapper {
-        height: 400px;
-        width: 400px;
+        max-width: 400px;
         margin: 10px;
     }
 }
 
 @media screen and (max-width: 500px) {
     .wrapper {
-        height: 300px;
-        width: 300px;
+        max-width: 300px;
         margin: 10px;
     }
 }
 
 @media screen and (max-width: 400px) {
     .wrapper {
-        height: 250px;
-        width: 250px;
+        max-width: 250px;
         margin: 10px;
     }
 }

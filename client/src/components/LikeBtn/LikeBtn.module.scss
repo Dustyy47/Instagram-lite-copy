@@ -16,8 +16,8 @@
     .image {
         opacity: 0.85;
         width: 40px;
+        transition: filter 0.1s, transform 0.1s;
         filter: brightness(0) invert(100%) brightness(0.3);
-        transition: filter 0.1s, transform 0.3s;
         margin-right: 5px;
 
         &:hover {
@@ -26,16 +26,13 @@
     }
 
     .imageLiked {
-        opacity: 0.85;
-        width: 40px;
         filter: none;
-        margin-right: 5px;
-        transition: filter 0.1s, transform 0.3s;
-        animation: 0.2s like;
+        animation: 0.2s like alternate;
+    }
 
-        &:hover {
-            transform: scale(1.2);
-        }
+    .imageUnliked {
+        filter: brightness(0) invert(100%) brightness(0.3);
+        animation: 0.2s unlike alternate;
     }
 
     .counter {
@@ -48,9 +45,23 @@
     0% {
         transform: scale(1.2);
     }
-    50% {
+    30% {
         transform: scale(1.4);
     }
+
+    100% {
+        transform: scale(1.2);
+    }
+}
+
+@keyframes unlike {
+    0% {
+        transform: scale(1.2);
+    }
+    30% {
+        transform: scale(1.4);
+    }
+
     100% {
         transform: scale(1.2);
     }

@@ -1,11 +1,11 @@
 import { memo, useMemo } from 'react'
+import { RiAddCircleLine, RiChat4Line, RiUserFollowLine, RiUserUnfollowLine } from 'react-icons/ri'
 import { getIsUserSubscribed } from '../../helpers/getUserSubscribed'
 import { useCombinedSelector } from '../../hooks/useCombinedSelector'
 import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
 import { useAppSelector } from '../../store/hooks'
 import { Button } from '../Button/Button'
 import styles from './ProfileButtons.module.scss'
-
 //TODO Добавить Loader при подписке
 
 interface ProfileButtonsProps {
@@ -25,14 +25,26 @@ export const ProfileButtons = memo(function ProfileButtons({ setCreatingPost, to
     }, [subscribes, isGuest, profileOwnerId])
 
     return isUserProfile ? (
-        <Button onClick={() => setCreatingPost(true)}>Создать пост</Button>
+        <Button className={styles.addPostButton} onClick={() => setCreatingPost(true)}>
+            <span className={styles.addPostText}>Создать пост</span>
+            <RiAddCircleLine className={styles.addPostIcon} />
+        </Button>
     ) : (
         <div className={styles.communicateButtons}>
-            <Button onClick={() => {}}>Чат</Button>
+            <Button onClick={() => {}}>
+                <span className={styles.chatText}>Чат</span>
+                <RiChat4Line className={styles.chatIcon} />{' '}
+            </Button>
             {isUserSubscribedOnProfile ? (
-                <Button onClick={toggleSubscribe}>Отписаться</Button>
+                <Button className={styles.unfollowButton} onClick={toggleSubscribe}>
+                    <span className={styles.unfollowText}>Отписаться</span>
+                    <RiUserFollowLine className={styles.unfollowIcon} />
+                </Button>
             ) : (
-                <Button onClick={toggleSubscribe}>Подписаться</Button>
+                <Button className={styles.followButton} onClick={toggleSubscribe}>
+                    <span className={styles.followText}>Подписаться</span>
+                    <RiUserUnfollowLine className={styles.followIcon} />
+                </Button>
             )}
         </div>
     )

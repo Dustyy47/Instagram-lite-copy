@@ -1,22 +1,42 @@
 .wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
+    display: grid;
     justify-content: space-between;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 2%;
 }
 
-.row {
-    display: flex;
-    justify-content: flex-start;
-}
+// @media screen and (max-width: 1200px) {
+//     .wrapper {
+//     }
+// }
 
-@media screen and (max-width: 1200px) {
-    .wrapper {
-    }
-}
+// @media screen and (max-width: 1000px) {
+//     .wrapper {
+//         justify-content: center;
+//     }
+// }
 
-@media screen and (max-width: 1000px) {
-    .wrapper {
-        justify-content: center;
-    }
-}
+// OLD LAYOUT WITH FLEX ROWS
+
+// .wrapper {
+//     display: flex;
+//     flex-wrap: wrap;
+//     flex-direction: column;
+//     justify-content: space-between;
+// }
+
+// .row {
+//     display: flex;
+//     justify-content: flex-start;
+// }
+
+// @media screen and (max-width: 1200px) {
+//     .wrapper {
+//     }
+// }
+
+// @media screen and (max-width: 1000px) {
+//     .wrapper {
+//         justify-content: center;
+//     }
+// }

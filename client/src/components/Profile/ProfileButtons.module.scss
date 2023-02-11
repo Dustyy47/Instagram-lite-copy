@@ -1,8 +1,49 @@
+@import '../../styles/variables.scss';
+
 .communicateButtons {
     display: flex;
     align-items: top;
 
     button + button {
         margin-left: 20px;
+    }
+}
+
+.unfollowIcon,
+.followIcon,
+.chatIcon,
+.addPostIcon {
+    display: none;
+}
+
+.unfollowButton {
+    * {
+        color: white !important;
+    }
+    background-color: $accentColor !important;
+}
+
+@media screen and (max-width: 1000px) {
+    .unfollowIcon,
+    .followIcon,
+    .chatIcon,
+    .addPostIcon {
+        width: 30px;
+        height: 30px;
+        display: inline;
+    }
+    .followText,
+    .unfollowText,
+    .chatText,
+    .addPostText {
+        display: none;
+    }
+
+    .communicateButtons button,
+    .addPostButton {
+        height: 60px;
+        width: 60px;
+        padding: 10px;
+        min-width: 0;
     }
 }

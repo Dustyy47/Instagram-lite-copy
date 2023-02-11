@@ -124,7 +124,7 @@ export const ExtendedPost = memo(function ExtendedPost({
         <Modal
             isActive={isActive}
             setActive={setActive}
-            modalStyles={{ width: '70%', maxWidth: 'auto', height: '90%' }}
+            modalStyles={{ width: '70%', maxWidth: 'auto', aspectRatio: '1.55' }}
         >
             <div className={styles.wrapper}>
                 <img className={styles.photo} src={getCorrectImageUrl(imageUrl)} alt="" />
@@ -158,7 +158,7 @@ export const ExtendedPost = memo(function ExtendedPost({
                                     ></Emojis>
                                     <VscSmiley
                                         tabIndex={0}
-                                        onMouseDown={toggleEmojis}
+                                        onClick={toggleEmojis}
                                         className={styles.emojisBtn}
                                     ></VscSmiley>
                                 </div>
