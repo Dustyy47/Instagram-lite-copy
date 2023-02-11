@@ -10,29 +10,35 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
 
-    .input {
-        background: #fcfcfc;
-        box-shadow: 0 2px 7px -3px rgba(0, 0, 0, 0.25);
-        border-radius: 10px;
-        outline: none;
-        border: none;
-        height: 50px;
-        width: 300px;
-        font-size: 24px;
-        padding: 12px 16px;
-    }
+.label {
+    font-size: 1.4rem;
+    display: flex;
+    font-weight: 500;
 
-    .label {
-        display: flex;
-        font-size: 24px;
-        font-weight: 500;
-    }
-    * {
+    span {
         color: $accentColor;
     }
 }
 
 .input {
+    color: $accentColor;
+    background: #fcfcfc;
+    box-shadow: 0 2px 7px -3px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    height: 3rem;
+    width: 17rem;
+    font-size: 1.4rem;
+    padding: 12px 16px;
     margin-left: 0;
+}
+
+input::-webkit-input-placeholder {
+    color: $accentColor;
+}
+input::placeholder {
+    color: $accentColor;
 }

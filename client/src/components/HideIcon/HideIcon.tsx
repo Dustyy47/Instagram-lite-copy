@@ -6,8 +6,7 @@ interface HideIconProps {
     toggle: AnyFunction
 }
 
-export function HideIcon(props: HideIconProps) {
-    const { isHidden, toggle: toggleCb } = props
+export function HideIcon({ isHidden, toggle: toggleCb }: HideIconProps) {
     const toggle = (e: React.MouseEvent<SVGElement>) => {
         e.preventDefault()
         toggleCb()

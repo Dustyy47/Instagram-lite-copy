@@ -10,8 +10,7 @@ interface CommentsProps {
 
 //TODO AUTO SCROLL TO NEW COMMENT
 
-export function Comments(props: CommentsProps) {
-    const { comments, onCommentAvatarClicked } = props
+export function Comments({ comments, onCommentAvatarClicked }: CommentsProps) {
     return (
         <div className={styles.wrapper}>
             {comments?.map((comment) => (

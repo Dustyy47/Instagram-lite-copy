@@ -1,4 +1,4 @@
-const PLACEHOLDER_FILENAME = 'placeholder.jpg'
+export const PLACEHOLDER_FILENAME = 'placeholder.jpg'
 
 /** Return correct url path for avatar with provided name, if name is undefined, return url of placeholder */
 export function getCorrectAvatarUrl(avatarFileName?: string): string {

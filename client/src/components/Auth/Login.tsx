@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useProfileRedirect } from '../../hooks/useProfileRedirect'
 import { checks, useFormValidator, useValidator, Validation } from '../../hooks/validators'
 import { login } from '../../http/authApi'
+import { REGISTER_ROUTE } from '../../routes'
 import { Button } from '../Button/Button'
 import { HideIcon } from '../HideIcon/HideIcon'
 import { Input } from '../Input/Input'
@@ -76,7 +77,7 @@ export function Login() {
             </Input>
             {error}
             <div className={styles.buttons}>
-                <Link className={styles.link} onClick={resetFields} to="/auth/register">
+                <Link className={styles.link} onClick={resetFields} to={REGISTER_ROUTE}>
                     <p>
                         У вас ещё
                         <br /> нет аккаунта ?

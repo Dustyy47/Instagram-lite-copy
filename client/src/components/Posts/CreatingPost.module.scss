@@ -1,12 +1,15 @@
 .buttons {
     display: flex;
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
+    justify-content: space-between;
+}
 
-    button:first-child {
-        margin-right: 20px;
-    }
+.addFileInputWrapper {
+    margin-bottom: 50px;
+}
+
+.input {
+    height: 2.5rem;
+    margin-left: 0.5rem;
 }
 
 .preview {

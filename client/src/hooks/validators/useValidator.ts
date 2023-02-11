@@ -3,7 +3,9 @@ import { Validation } from '../../helpers/validations'
 
 export interface Validator {
     validate: (value: string) => void
+    reset: () => void
     errors: string
+    isInitial: boolean
 }
 
 export function useValidator(
@@ -13,8 +15,10 @@ export function useValidator(
     }
 ) {
     const [errors, setErrors] = useState<string>('')
+    const [isInitial, setIsInitial] = useState(true)
     const newValidator: Validator = {
         validate(value: string): void {
+            setIsInitial(false)
             let validationsQuery = ''
 
             if (options.checkEmpty && value === '') {
@@ -29,7 +33,11 @@ export function useValidator(
             }
             setErrors(validationsQuery)
         },
+        reset() {
+            setIsInitial(true)
+        },
         errors,
+        isInitial,
     }
     return newValidator
 }

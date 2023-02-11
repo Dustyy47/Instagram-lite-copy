@@ -7,8 +7,7 @@ interface LikeBtnProps {
     className: string
 }
 
-export function LikeBtn(props: LikeBtnProps) {
-    const { isLiked, likesCount, onLike, className } = props
+export function LikeBtn({ isLiked, likesCount, onLike, className }: LikeBtnProps) {
     return (
         <div onClick={(e) => onLike(e)} className={`${styles.like} ${className}`}>
             <img

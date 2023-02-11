@@ -46,3 +46,26 @@
     margin-top: 10px;
     margin-right: 10px;
 }
+
+.modal {
+    width: 20rem;
+    min-height: 20rem;
+    text-align: left;
+
+    // FOR USER LIST ITEM
+    ul {
+    }
+    li {
+        div {
+            height: 3.5rem;
+        }
+        p {
+            font-size: 1rem;
+        }
+        img {
+            width: 2rem;
+            height: 2rem;
+        }
+        margin-bottom: 0.5rem;
+    }
+}

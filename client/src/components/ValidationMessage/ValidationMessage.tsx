@@ -2,14 +2,10 @@ import styles from './ValidationMessage.module.scss'
 
 interface ValidationMessageProps {
     errorsString: string
-    show: boolean
+    isHidden: boolean
 }
 
-export function ValidationMessage(props: ValidationMessageProps) {
-    const { errorsString, show } = props
-    return (
-        <div className={`${styles.wrapper} ${!show || errorsString === '' ? '' : styles.active}`}>
-            {errorsString}
-        </div>
-    )
+export function ValidationMessage({ errorsString, isHidden }: ValidationMessageProps) {
+    const isActive = !isHidden && errorsString !== ''
+    return <div className={`${styles.wrapper} ${isActive && styles.active}`}>{errorsString}</div>
 }

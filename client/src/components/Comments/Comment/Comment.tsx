@@ -10,8 +10,7 @@ interface CommentProps {
     onAvatarClicked: AnyFunction
 }
 
-export function Comment(props: CommentProps) {
-    const { authorInfo, commentInfo, onAvatarClicked } = props
+export function Comment({ authorInfo, commentInfo, onAvatarClicked }: CommentProps) {
     const { nickName, avatarUrl } = authorInfo
     const { text } = commentInfo
     return (

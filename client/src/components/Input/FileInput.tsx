@@ -9,10 +9,12 @@ interface FileInputProps {
     needToValidate?: boolean
     style?: React.CSSProperties
     children?: React.ReactElement | string
+    className?: string
 }
 
-export function FileInput(props: FileInputProps) {
-    const { validator, setSelectedFile, needToValidate } = props
+//TODO to deal with validation message
+
+export function FileInput({ validator, setSelectedFile, needToValidate, style, children, className }: FileInputProps) {
     useEffect(() => {
         if (!needToValidate) return
         validator?.validate('')
@@ -27,10 +29,10 @@ export function FileInput(props: FileInputProps) {
     }
 
     return (
-        <div style={{ position: 'relative' }}>
-            <ValidationMessage show={true} errorsString={validator?.errors || ''} />
-            <label style={props.style} className={styles.label}>
-                {props.children || 'Добавить файл'}
+        <div style={{ position: 'relative' }} className={className}>
+            <ValidationMessage isHidden={true} errorsString={validator?.errors || ''} />
+            <label style={style} className={styles.label}>
+                {children || 'Добавить файл'}
                 <input onChange={load} type="file" className={styles.input} accept=".jpg,.png,.jpeg" />
             </label>
         </div>

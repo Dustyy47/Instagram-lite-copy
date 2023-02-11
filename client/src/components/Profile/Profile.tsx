@@ -51,8 +51,8 @@ export function Profile() {
         setExtendedPostData(data)
     }, [])
 
-    const like = useCallback(async function (postId: string) {
-        await dispatch(fetchLikePost(postId))
+    const like = useCallback(function (postId: string) {
+        dispatch(fetchLikePost(postId))
     }, [])
 
     const closeExtendedPost = useCallback(
@@ -73,7 +73,6 @@ export function Profile() {
         return <NotFound />
     }
 
-    //TODO Изменить пропсы для дочерних компонентов, получать данные из стора
     return (
         <section className={styles.page}>
             <div className={styles.wrapper}>

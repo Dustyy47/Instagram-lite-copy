@@ -9,8 +9,7 @@ interface AvatarProps {
     onClick?: () => {}
 }
 
-export function Avatar(props: AvatarProps) {
-    const { url, nickName, className, onClick } = props
+export function Avatar({ url, nickName, className, onClick }: AvatarProps) {
     const navigate = useNavigate()
 
     function handleClick() {
@@ -20,12 +19,5 @@ export function Avatar(props: AvatarProps) {
 
     const imageClassName: string = `${styles.avatar} ${className}`
 
-    return (
-        <img
-            className={imageClassName}
-            onClick={handleClick}
-            src={getCorrectAvatarUrl(url)}
-            alt="avatar"
-        />
-    )
+    return <img className={imageClassName} onClick={handleClick} src={getCorrectAvatarUrl(url)} alt="avatar" />
 }

@@ -1,19 +1,25 @@
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { VscSmiley } from 'react-icons/vsc'
 import { getCorrectImageUrl } from '../../helpers/getCorrectAvatarUrl'
+import { useOutsideClick } from '../../hooks/useOutsideClick'
+import { useFormValidator, useValidator } from '../../hooks/validators'
 import { getComments, sendComment } from '../../http/postsApi'
 import { AnyFunction } from '../../models/CallbacksTypes'
 import { CommentModel } from '../../models/CommentModel'
 import { Status } from '../../models/LoadingStatus'
 import { ExtendedPostModel } from '../../models/PostModel'
 import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
+import { useAppSelector } from '../../store/hooks'
 import { Avatar } from '../Avatar/Avatar'
 import { Button } from '../Button/Button'
 import { Comments } from '../Comments/Comments'
+import { Emojis } from '../Emojis/Emojis'
 import { Input } from '../Input/Input'
 import { LikeBtn } from '../LikeBtn/LikeBtn'
 import { Loading } from '../Loading/Loading'
 import { Modal } from '../Modal/Modal'
 import styles from './ExtendedPost.module.scss'
+
 interface ExtendedPostProps {
     setActive: (value: boolean) => any
     onLike: AnyFunction
@@ -22,19 +28,35 @@ interface ExtendedPostProps {
     isLiked: boolean
 }
 
-export const ExtendedPost = memo(function ExtendedPost(props: ExtendedPostProps) {
-    const { setActive, postInfo, authorInfo, onLike, isLiked } = props
+export const ExtendedPost = memo(function ExtendedPost({
+    setActive,
+    postInfo,
+    authorInfo,
+    onLike,
+    isLiked,
+}: ExtendedPostProps) {
     const { avatarUrl, nickName } = authorInfo
     const { postData, likesCountWithoutUser, isActive } = postInfo
     const { _id, title, description, imageUrl } = postData
 
+    const isGuest = useAppSelector((state) => state.user.isGuest)
+
     const [commentText, setCommentText] = useState('')
     const [comments, setComments] = useState<CommentModel[]>([])
     const [commentsStatus, setCommentsStatus] = useState<Status>(Status.loading)
+    const [areEmojisVisible, setEmojisVisible] = useState(false)
 
-    const like = (e: React.MouseEvent) => {
-        onLike(_id)
-    }
+    const sendCommentValidator = useValidator([])
+
+    const formValidator = useFormValidator(sendCommentValidator)
+
+    const like = useCallback(
+        (e: React.MouseEvent) => {
+            if (isGuest) return
+            onLike(_id)
+        },
+        [isGuest, _id, onLike]
+    )
 
     const handleInputComment = useCallback(function (value: string) {
         setCommentText(value)
@@ -45,16 +67,35 @@ export const ExtendedPost = memo(function ExtendedPost(props: ExtendedPostProps)
             try {
                 setCommentsStatus(() => Status.loading)
                 const newComment = await sendComment(commentText, _id)
-                if (newComment) {
-                    setComments((prev) => [...prev, newComment])
-                }
+                if (newComment) setComments((prev) => [...prev, newComment])
+                setCommentText('')
                 setCommentsStatus(() => Status.idle)
             } catch (e) {
+                setCommentsStatus(() => Status.error)
                 console.log(e)
             }
         },
         [_id, commentText]
     )
+
+    const emojisRef = useRef(null)
+
+    function closeEmojis() {
+        setEmojisVisible(false)
+    }
+
+    function toggleEmojis() {
+        console.log('toggled')
+
+        setEmojisVisible((prev) => !prev)
+    }
+
+    function chooseEmoji(emoji: string) {
+        setCommentText((prev) => prev + emoji)
+        sendCommentValidator.validate(commentText + emoji)
+    }
+
+    useOutsideClick(emojisRef, closeEmojis)
 
     useEffect(() => {
         async function fetchGetComments() {
@@ -72,6 +113,9 @@ export const ExtendedPost = memo(function ExtendedPost(props: ExtendedPostProps)
         }
         if (commentsStatus === Status.loading) {
             return <Loading />
+        }
+        if (commentsStatus === Status.error) {
+            return <h5>Ошибка, что-то пошло не так...</h5>
         }
         return <Comments onCommentAvatarClicked={() => setActive(false)} comments={comments} />
     }
@@ -97,20 +141,45 @@ export const ExtendedPost = memo(function ExtendedPost(props: ExtendedPostProps)
                             className={styles.likeBtn}
                         />
                     </div>
-                    <div className={styles.content}>
-                        <h3 className={styles.title}>{title}</h3>
-                        <p>{description}</p>
+                    <div className={styles.container}>
+                        <div className={styles.content}>
+                            <h3 className={styles.title}>{title}</h3>
+                            <p>{description}</p>
+                        </div>
+
+                        {renderComments()}
+                        {!isGuest && (
+                            <form className={styles.sendForm}>
+                                <div ref={emojisRef} className={styles.pickEmojiWrapper}>
+                                    <Emojis
+                                        className={styles.emojis}
+                                        isClosed={!areEmojisVisible}
+                                        onChoose={chooseEmoji}
+                                    ></Emojis>
+                                    <VscSmiley
+                                        tabIndex={0}
+                                        onMouseDown={toggleEmojis}
+                                        className={styles.emojisBtn}
+                                    ></VscSmiley>
+                                </div>
+                                <Input
+                                    isHiddenPermanently={true}
+                                    isHiddenBeforeBlur={true}
+                                    validator={sendCommentValidator}
+                                    className={styles.commentInput}
+                                    value={commentText}
+                                    onChange={handleInputComment}
+                                />
+                                <Button
+                                    className={styles.sendCommentBtn}
+                                    onClick={handleSendComment}
+                                    disabled={formValidator.hasErrors()}
+                                >
+                                    Отправить
+                                </Button>
+                            </form>
+                        )}
                     </div>
-
-                    {renderComments()}
-
-                    <form className={styles.sendForm}>
-                        <Input className={styles.commentInput} value={commentText} onChange={handleInputComment} />
-                        <Button className={styles.sendCommentBtn} onClick={handleSendComment}>
-                            Отправить
-                        </Button>
-                    </form>
-                    <div></div>
                 </div>
             </div>
         </Modal>

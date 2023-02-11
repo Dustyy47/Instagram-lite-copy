@@ -12,8 +12,7 @@ interface PostsListProps {
     onClickPost: ClickPostCallback
 }
 
-export const PostsList = memo(function PostsList(props: PostsListProps) {
-    const { onLike, likedPosts, onClickPost } = props
+export const PostsList = memo(function PostsList({ onLike, likedPosts, onClickPost }: PostsListProps) {
     const posts = useSelector((state: any) => state.profile.posts)
 
     function generatePost(post: PostModel) {

@@ -4,6 +4,7 @@ import { AnyFunction } from '../../models/CallbacksTypes'
 import { ValidationMessage } from '../ValidationMessage/ValidationMessage'
 import styles from './Input.module.scss'
 
+//TODO CLEAR STYLES PROPS
 interface InputProps {
     onChange: (value: string) => any
     value?: string
@@ -14,7 +15,8 @@ interface InputProps {
     validator?: Validator
     forwardRef?: React.MutableRefObject<HTMLInputElement>
     onBlur?: AnyFunction
-    needToValidate?: boolean
+    isHiddenBeforeBlur?: boolean
+    isHiddenPermanently?: boolean
     className?: string
     styleWrapper?: React.CSSProperties
     styleLabel?: React.CSSProperties
@@ -22,14 +24,27 @@ interface InputProps {
     children?: React.ReactElement
     id?: string
     onFocus?: AnyFunction
+    inputClassName?: string
 }
 
-export const Input = memo(function Input(props: InputProps) {
-    const { name, onChange, value, type, placeholder, validator, forwardRef } = props
-    const [showValidation, setShowValidation] = useState(false)
+//TODO DESTRUCTURIZE PROPS
+
+export const Input = memo((props: InputProps) => {
+    const {
+        name,
+        onChange,
+        value,
+        type,
+        placeholder,
+        validator,
+        forwardRef,
+        isHiddenBeforeBlur = true,
+        isHiddenPermanently = false,
+    } = props
+    const [isHidden, setIsHidden] = useState(isHiddenPermanently || isHiddenBeforeBlur)
 
     function blur() {
-        setShowValidation(true)
+        setIsHidden(isHiddenPermanently)
         if (props.onBlur) props.onBlur()
     }
 
@@ -39,19 +54,14 @@ export const Input = memo(function Input(props: InputProps) {
     }
 
     useEffect(() => {
-        //TODO replace to !validator
-        if (!props.needToValidate) {
-            setShowValidation(false)
-            return
-        }
         validator?.validate('')
-    }, [props.needToValidate])
+    }, [])
 
     const wrapperClassName = `${styles.wrapper} ${props.className}`
 
     return (
         <div style={props.styleWrapper} className={wrapperClassName}>
-            <ValidationMessage show={showValidation} errorsString={validator?.errors || ''} />
+            <ValidationMessage isHidden={validator?.isInitial || isHidden} errorsString={validator?.errors || ''} />
             <div className={styles.group}>
                 <label style={props.styleLabel} className={styles.label}>
                     {props.children}
@@ -67,7 +77,7 @@ export const Input = memo(function Input(props: InputProps) {
                     type={type === '' ? 'text' : type}
                     id={props.id}
                     autoComplete="on"
-                    className={styles.input}
+                    className={`${styles.input} ${props.inputClassName}`}
                     placeholder={placeholder}
                 />
             </div>

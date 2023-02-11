@@ -12,8 +12,9 @@ interface UsersListProps {
     children?: ReactElement | string
 }
 
-export function UsersList(props: UsersListProps) {
-    const { users, title, onClick, isLoading, children } = props
+//TODO REMOVE INLINE STYLES
+
+export function UsersList({ users, title, onClick, isLoading, children }: UsersListProps) {
     const navigate = useNavigate()
 
     const handleClickToUser = (user: ProfileOwnerModel) => {
@@ -25,33 +26,23 @@ export function UsersList(props: UsersListProps) {
     }
 
     return (
-        <>
+        <div>
             <h3>{title}</h3>
-            {users.length > 0 ? (
-                users.map((user) => (
-                    <UsersListItem
-                        onClick={onClick ? () => onClick(user) : () => handleClickToUser(user)}
-                        key={user._id}
-                        user={user}
-                    />
-                ))
-            ) : (
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        color: 'grey',
-                        fontSize: 20,
-                        flexDirection: 'column',
-                        width: '95%',
-                        height: '95%',
-                        textAlign: 'center',
-                    }}
-                >
-                    {children}
-                </div>
-            )}
-        </>
+            <ul>
+                {users.length > 0 ? (
+                    users.map((user) => (
+                        <li>
+                            <UsersListItem
+                                onClick={onClick ? () => onClick(user) : () => handleClickToUser(user)}
+                                key={user._id}
+                                user={user}
+                            />
+                        </li>
+                    ))
+                ) : (
+                    <>{children}</>
+                )}
+            </ul>
+        </div>
     )
 }

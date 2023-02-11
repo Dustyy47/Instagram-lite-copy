@@ -15,8 +15,7 @@ interface CreatingPostProps {
     setActive: (value: boolean) => any
 }
 
-export function CreatingPost(post: CreatingPostProps) {
-    const { isActive, setActive } = post
+export function CreatingPost({ isActive, setActive }: CreatingPostProps) {
     const { checkLength } = checks
 
     const [newPostTitle, setNewPostTitle] = useState('')
@@ -31,16 +30,17 @@ export function CreatingPost(post: CreatingPostProps) {
         new Validation(checkLength(1, 300), 'Длина описания должна быть от 1 до 300 символов'),
     ])
 
-    const photoValidator = useValidator([new Validation((file) => !!file, 'Загрузите файл!')])
+    //const photoValidator = useValidator([new Validation((file) => !!file, 'Загрузите файл!')])
     const formValidator = useFormValidator(titleValidator, descriptionValidator)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        if (!isActive) {
+        if (isActive) {
             setNewPostImageUrl('')
             setNewPostTitle('')
             setNewPostDescription('')
             setNewPostImage(null)
+            formValidator.reset()
         }
     }, [isActive])
 
@@ -69,8 +69,8 @@ export function CreatingPost(post: CreatingPostProps) {
                 <h3>Создание поста</h3>
                 <hr />
                 <Input
+                    inputClassName={styles.input}
                     validator={titleValidator}
-                    needToValidate={isActive}
                     styleWrapper={{ marginTop: 50 }}
                     value={newPostTitle}
                     onChange={(value) => setNewPostTitle(value)}
@@ -79,7 +79,6 @@ export function CreatingPost(post: CreatingPostProps) {
                 ></Input>
                 <Input
                     validator={descriptionValidator}
-                    needToValidate={isActive}
                     value={newPostDescription}
                     styleWrapper={{ marginTop: 50 }}
                     onChange={(value) => setNewPostDescription(value)}
@@ -87,8 +86,8 @@ export function CreatingPost(post: CreatingPostProps) {
                     name="Описание"
                 ></Input>
                 <FileInput
+                    className={styles.addFileInputWrapper}
                     style={{ marginTop: 50 }}
-                    validator={photoValidator}
                     needToValidate={isActive}
                     setSelectedFile={loadFile}
                 />

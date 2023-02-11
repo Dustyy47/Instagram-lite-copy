@@ -1,3 +1,5 @@
+@import '../../styles/variables.scss';
+
 .wrapper {
     position: absolute;
     top: 0;
@@ -50,10 +52,13 @@
         position: relative;
     }
 
+    .container {
+        width: 95%;
+    }
+
     .content {
-        width: 97%;
         height: 15%;
-        margin: 0 auto 10px;
+        margin-bottom: 2rem;
         p {
             width: 90%;
             height: 60%;
@@ -61,20 +66,54 @@
         }
     }
 
-    .commentInput {
+    .sendForm {
         position: absolute;
-        left: 30px;
-        bottom: 15px;
-
-        * {
-            margin: 0;
-        }
+        bottom: 1rem;
+        width: 95%;
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
     }
 
     .sendCommentBtn {
+        height: 3.5rem;
+        font-size: 1.2rem;
+    }
+
+    .pickEmojiWrapper {
+        position: relative;
+    }
+
+    .commentInput {
+        * {
+            font-size: 1.2rem;
+        }
+    }
+
+    .emojisBtn {
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 2.3rem;
+        border-radius: 50%;
+        svg {
+            pointer-events: none;
+        }
+        path {
+            transition: 0.3s;
+            color: $accentColor;
+        }
+    }
+
+    .emojis {
+        top: -11.5rem;
+        left: 0;
         position: absolute;
-        right: 30px;
-        bottom: 10px;
+    }
+
+    .emojis[data-closed='true'] ~ .emojisBtn {
+        path {
+            color: rgb(198, 198, 198);
+        }
     }
 }
 

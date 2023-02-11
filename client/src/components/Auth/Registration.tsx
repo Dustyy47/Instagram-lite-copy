@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { AiOutlineMail, AiOutlineUser } from 'react-icons/ai'
 import { BsChatLeftText } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
+import { getCorrectAvatarUrl } from '../../helpers/getCorrectAvatarUrl'
 import { useProfileRedirect } from '../../hooks/useProfileRedirect'
 import { checks, useFormValidator, useValidator, Validation } from '../../hooks/validators'
 import { registration } from '../../http/authApi'
+import { LOGIN_ROUTE } from '../../routes'
 import { Button } from '../Button/Button'
 import { HideIcon } from '../HideIcon/HideIcon'
 import { FileInput } from '../Input/FileInput'
@@ -101,7 +103,7 @@ export function Registration() {
     }
 
     return (
-        <form className={styles.auth}>
+        <form className={styles.auth + ' ' + styles.registration}>
             <h1 className={styles.authTitle}>Регистрация</h1>
             <div
                 style={{
@@ -115,7 +117,7 @@ export function Registration() {
                 <FileInput style={{ fontSize: 18 }} setSelectedFile={loadAvatarPreview}>
                     Загрузить аватар
                 </FileInput>
-                <img className={styles.avatarPreview} src={avatarPreviewUrl} alt=" " />
+                <img className={styles.avatarPreview} src={avatarPreviewUrl || getCorrectAvatarUrl('')} alt=" " />
             </div>
             <Input
                 validator={userNameValidator}
@@ -195,7 +197,7 @@ export function Registration() {
             </Input>
             {error}
             <div className={styles.buttons}>
-                <Link className={styles.link} onClick={() => setData({ ...initialData })} to={'/auth/login'}>
+                <Link className={styles.link} onClick={() => setData({ ...initialData })} to={LOGIN_ROUTE}>
                     {
                         <p>
                             У вас уже

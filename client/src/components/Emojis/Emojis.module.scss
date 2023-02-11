@@ -1,0 +1,38 @@
+@import '../../styles/variables.scss';
+
+.wrapper {
+    width: 25rem;
+    height: 10rem;
+    background-color: white;
+    box-shadow: $lightShadow;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 0.5rem;
+    transform: translateY(0);
+    padding: 0.3rem;
+    transition: 0.3s;
+}
+
+.emoji {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2.3rem;
+    height: 2.3rem;
+    margin-bottom: 0.3rem;
+    font-size: 1.5rem;
+    transition: 0.3s;
+    border-radius: 0.2rem;
+    &:hover {
+        background: rgb(246, 249, 255);
+    }
+}
+
+.closed {
+    transform: translateY(0.2rem);
+    opacity: 0;
+    pointer-events: none;
+}

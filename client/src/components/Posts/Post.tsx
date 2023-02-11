@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ClickPostCallback, LikePostCallback } from '../../models/CallbacksTypes'
 import { PostModel } from '../../models/PostModel'
+import { useAppSelector } from '../../store/hooks'
 import { LikeBtn } from '../LikeBtn/LikeBtn'
 import styles from './Post.module.scss'
 
@@ -11,16 +12,20 @@ interface PostProps {
     onClick: ClickPostCallback
 }
 
-export function Post(props: PostProps) {
-    const { data, onLike, isLiked, onClick } = props
+export function Post({ data, onLike, isLiked, onClick }: PostProps) {
     const { likes, _id, imageUrl, title } = data
-
     const [likesCountWithoutUser, setLikesCountWithoutUser] = useState<number>(0)
 
-    const like = (e: React.MouseEvent) => {
-        e.stopPropagation()
-        onLike(_id)
-    }
+    const isGuest = useAppSelector((state) => state.user.isGuest)
+
+    const like = useCallback(
+        (e: React.MouseEvent) => {
+            if (isGuest) return
+            e.stopPropagation()
+            onLike(_id)
+        },
+        [_id, onLike]
+    )
 
     function handleClick() {
         onClick({ postData: data, likesCountWithoutUser, isActive: true })
@@ -32,11 +37,7 @@ export function Post(props: PostProps) {
 
     return (
         <div className={styles.wrapper} onClick={handleClick}>
-            <img
-                src={`${process.env.REACT_APP_API_URL}/${imageUrl}`}
-                alt=""
-                className={styles.preview}
-            />
+            <img src={`${process.env.REACT_APP_API_URL}/${imageUrl}`} alt="Post" className={styles.preview} />
             <div className={styles.info}>
                 <h5 className={styles.title}>{title}</h5>
                 <LikeBtn

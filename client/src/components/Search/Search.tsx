@@ -1,9 +1,9 @@
-import React, { useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import { searchUsers } from '../../http/profileApi'
 import { Input } from '../Input/Input'
 import { UsersList } from '../UsersList/UsersList'
-import style from './Search.module.scss'
+import styles from './Search.module.scss'
 
 const SEARCH_TIME = 333
 const USERS_PER_PAGE = 7
@@ -16,11 +16,14 @@ export function Search() {
     let timer = useRef<NodeJS.Timeout>()
     let input = useRef<HTMLInputElement>()
 
-    function handleScroll(e: React.WheelEvent<HTMLDivElement>) {
-        if (e.currentTarget.scrollHeight - (e.currentTarget.scrollTop + e.currentTarget.clientHeight) === 0) {
-            fetchUsers(USERS_PER_PAGE, page.current * USERS_PER_PAGE)
-        }
-    }
+    const handleScroll = useCallback(
+        (e: React.WheelEvent<HTMLDivElement>) => {
+            if (e.currentTarget.scrollHeight - (e.currentTarget.scrollTop + e.currentTarget.clientHeight) === 0) {
+                fetchUsers(USERS_PER_PAGE, page.current * USERS_PER_PAGE)
+            }
+        },
+        [page]
+    )
 
     const focusSearch = () => {
         if (input.current?.value) setUsersHidden(false)
@@ -42,8 +45,8 @@ export function Search() {
     const typing = async (value: string) => {
         page.current = 0
         value = value.trim()
+        setUsers([])
         if (!value) {
-            setUsers([])
             setUsersHidden(true)
             return
         }
@@ -60,7 +63,7 @@ export function Search() {
     }
 
     return (
-        <div className={style.wrapper}>
+        <div className={styles.wrapper}>
             <Input
                 forwardRef={input as React.MutableRefObject<HTMLInputElement>}
                 onBlur={unFocusSearch}
@@ -71,7 +74,7 @@ export function Search() {
             >
                 <BiSearchAlt2 style={{ fontSize: 32, fill: '#ededed', margin: '0 15px' }} />
             </Input>
-            <div onScroll={handleScroll} className={`${style.users} ${areUsersHidden ? style.hidden : ''}`}>
+            <div onScroll={handleScroll} className={`${styles.users} ${areUsersHidden ? styles.hidden : ''}`}>
                 <UsersList isLoading={isLoading} users={users} title={''}>
                     <>
                         <p>Пользователей с таким именем не существует</p>

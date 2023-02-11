@@ -7,12 +7,12 @@ interface ModalProps {
     setActive: AnyFunction
     //TODO REFACTOR NAMINGS FOR STYLES PROPS IN ALL COMPONENTS
     modalStyles?: React.CSSProperties
+    className?: string
     children: React.ReactElement
 }
 
-export function Modal(props: ModalProps) {
+export function Modal({ isActive, setActive, modalStyles, children, className }: ModalProps) {
     let scrollBeforeOpen = useRef(0)
-    const { isActive, setActive } = props
 
     useEffect(() => {
         if (isActive) {
@@ -26,12 +26,9 @@ export function Modal(props: ModalProps) {
     }, [isActive])
 
     return (
-        <div
-            onClick={(e) => setActive(false)}
-            className={`${styles.modal} ${!isActive ? styles['modal--hidden'] : ''}`}
-        >
-            <div onClick={(e) => e.stopPropagation()} className={styles.content} style={props.modalStyles}>
-                {props.children}
+        <div onClick={(e) => setActive(false)} className={`${styles.modal} ${!isActive && styles['modal--hidden']}`}>
+            <div onClick={(e) => e.stopPropagation()} className={`${styles.content} ${className}`} style={modalStyles}>
+                {children}
             </div>
         </div>
     )

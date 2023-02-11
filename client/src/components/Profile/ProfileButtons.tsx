@@ -13,8 +13,7 @@ interface ProfileButtonsProps {
     toggleSubscribe: () => any
 }
 
-export const ProfileButtons = memo(function ProfileButtons(props: ProfileButtonsProps) {
-    const { setCreatingPost, toggleSubscribe } = props
+export const ProfileButtons = memo(function ProfileButtons({ setCreatingPost, toggleSubscribe }: ProfileButtonsProps) {
     const { subscribes, isGuest } = useCombinedSelector('user', ['subscribes', 'isGuest'])
     let { profileOwnerInfo } = useAppSelector((state) => state.profile)
     const { _id: profileOwnerId = '', isUserProfile = false } = profileOwnerInfo as ProfileOwnerModel
