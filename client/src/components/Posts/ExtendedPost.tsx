@@ -69,6 +69,8 @@ export const ExtendedPost = memo(function ExtendedPost({
                 const newComment = await sendComment(commentText, _id)
                 if (newComment) setComments((prev) => [...prev, newComment])
                 setCommentText('')
+                formValidator.hideAll()
+
                 setCommentsStatus(() => Status.idle)
             } catch (e) {
                 setCommentsStatus(() => Status.error)
@@ -79,6 +81,7 @@ export const ExtendedPost = memo(function ExtendedPost({
     )
 
     const emojisRef = useRef(null)
+    useOutsideClick(emojisRef, closeEmojis)
 
     function closeEmojis() {
         setEmojisVisible(false)
@@ -95,18 +98,6 @@ export const ExtendedPost = memo(function ExtendedPost({
         sendCommentValidator.validate(commentText + emoji)
     }
 
-    useOutsideClick(emojisRef, closeEmojis)
-
-    useEffect(() => {
-        async function fetchGetComments() {
-            if (!_id) return
-            setComments([...(await getComments(_id))])
-            setCommentsStatus(() => Status.idle)
-        }
-        setCommentsStatus(() => Status.loading)
-        fetchGetComments()
-    }, [_id])
-
     function renderComments() {
         if (!comments || comments.length === 0) {
             return <h5>Нет комментариев :\ </h5>
@@ -119,6 +110,16 @@ export const ExtendedPost = memo(function ExtendedPost({
         }
         return <Comments onCommentAvatarClicked={() => setActive(false)} comments={comments} />
     }
+
+    useEffect(() => {
+        async function fetchGetComments() {
+            if (!_id) return
+            setComments([...(await getComments(_id))])
+            setCommentsStatus(() => Status.idle)
+        }
+        setCommentsStatus(() => Status.loading)
+        fetchGetComments()
+    }, [_id])
 
     return (
         <Modal

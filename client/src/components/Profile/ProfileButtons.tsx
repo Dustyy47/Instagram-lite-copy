@@ -37,7 +37,7 @@ export const ProfileButtons = memo(function ProfileButtons({ setCreatingPost, to
             </Button>
             {isUserSubscribedOnProfile ? (
                 <Button className={styles.unfollowButton} onClick={toggleSubscribe}>
-                    <span className={styles.unfollowText}>Отписаться</span>
+                    <span className={styles.unfollowText}>Подписан</span>
                     <RiUserFollowLine className={styles.unfollowIcon} />
                 </Button>
             ) : (

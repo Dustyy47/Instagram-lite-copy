@@ -40,7 +40,7 @@ export function CreatingPost({ isActive, setActive }: CreatingPostProps) {
             setNewPostTitle('')
             setNewPostDescription('')
             setNewPostImage(null)
-            formValidator.reset()
+            formValidator.hideAll()
         }
     }, [isActive])
 

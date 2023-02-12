@@ -3,9 +3,9 @@ import { Validation } from '../../helpers/validations'
 
 export interface Validator {
     validate: (value: string) => void
-    reset: () => void
+    setIsHidden: React.Dispatch<React.SetStateAction<boolean>>
     errors: string
-    isInitial: boolean
+    isHidden: boolean
 }
 
 export function useValidator(
@@ -15,10 +15,9 @@ export function useValidator(
     }
 ) {
     const [errors, setErrors] = useState<string>('')
-    const [isInitial, setIsInitial] = useState(true)
+    const [isHidden, setIsHidden] = useState(true)
     const newValidator: Validator = {
         validate(value: string): void {
-            setIsInitial(false)
             let validationsQuery = ''
 
             if (options.checkEmpty && value === '') {
@@ -33,11 +32,9 @@ export function useValidator(
             }
             setErrors(validationsQuery)
         },
-        reset() {
-            setIsInitial(true)
-        },
+        setIsHidden,
         errors,
-        isInitial,
+        isHidden,
     }
     return newValidator
 }

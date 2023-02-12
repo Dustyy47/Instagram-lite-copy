@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect } from 'react'
 import { Validator } from '../../hooks/validators/useValidator'
 import { AnyFunction } from '../../models/CallbacksTypes'
 import { ValidationMessage } from '../ValidationMessage/ValidationMessage'
@@ -41,27 +41,31 @@ export const Input = memo((props: InputProps) => {
         isHiddenBeforeBlur = true,
         isHiddenPermanently = false,
     } = props
-    const [isHidden, setIsHidden] = useState(isHiddenPermanently || isHiddenBeforeBlur)
+    // const [isHidden, setIsHidden] = useState(isHiddenPermanently || isHiddenBeforeBlur)
 
     function blur() {
-        setIsHidden(isHiddenPermanently)
+        validator?.setIsHidden(isHiddenPermanently)
         if (props.onBlur) props.onBlur()
     }
 
     const change = (e: React.ChangeEvent<HTMLInputElement>) => {
-        validator?.validate(e.target.value)
+        //validator?.validate(e.target.value)
         onChange(e.target.value)
     }
 
     useEffect(() => {
-        validator?.validate('')
+        validator?.setIsHidden(isHiddenPermanently || isHiddenBeforeBlur)
     }, [])
+
+    useEffect(() => {
+        validator?.validate(value || '')
+    }, [value])
 
     const wrapperClassName = `${styles.wrapper} ${props.className}`
 
     return (
         <div style={props.styleWrapper} className={wrapperClassName}>
-            <ValidationMessage isHidden={validator?.isInitial || isHidden} errorsString={validator?.errors || ''} />
+            <ValidationMessage isHidden={!!validator?.isHidden} errorsString={validator?.errors || ''} />
             <div className={styles.group}>
                 <label style={props.styleLabel} className={styles.label}>
                     {props.children}

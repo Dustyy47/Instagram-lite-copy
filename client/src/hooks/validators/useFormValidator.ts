@@ -7,9 +7,9 @@ export function useFormValidator(...validators: Validator[]) {
             }
             return false
         },
-        reset() {
+        hideAll() {
             validators.forEach((validator) => {
-                validator.reset()
+                validator.setIsHidden(true)
             })
         },
         validators,
