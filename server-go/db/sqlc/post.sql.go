@@ -7,7 +7,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createPost = `-- name: CreatePost :one
@@ -22,10 +21,10 @@ INSERT INTO posts (
 `
 
 type CreatePostParams struct {
-	UserID      int64          `json:"user_id"`
-	Title       sql.NullString `json:"title"`
-	Description sql.NullString `json:"description"`
-	ImageUrl    sql.NullString `json:"image_url"`
+	UserID      int64  `json:"user_id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	ImageUrl    string `json:"image_url"`
 }
 
 func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (Post, error) {
@@ -77,7 +76,7 @@ func (q *Queries) GetPostByID(ctx context.Context, id int64) (Post, error) {
 }
 
 const listPostOfUser = `-- name: ListPostOfUser :many
-SELECT id, post_id, user_id, text, created_at FROM comments
+SELECT id, user_id, title, description, image_url, created_at FROM posts
 WHERE user_id = $1
 ORDER BY created_at
 LIMIT $2
@@ -90,20 +89,21 @@ type ListPostOfUserParams struct {
 	Offset int32 `json:"offset"`
 }
 
-func (q *Queries) ListPostOfUser(ctx context.Context, arg ListPostOfUserParams) ([]Comment, error) {
+func (q *Queries) ListPostOfUser(ctx context.Context, arg ListPostOfUserParams) ([]Post, error) {
 	rows, err := q.db.QueryContext(ctx, listPostOfUser, arg.UserID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Comment
+	var items []Post
 	for rows.Next() {
-		var i Comment
+		var i Post
 		if err := rows.Scan(
 			&i.ID,
-			&i.PostID,
 			&i.UserID,
-			&i.Text,
+			&i.Title,
+			&i.Description,
+			&i.ImageUrl,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err

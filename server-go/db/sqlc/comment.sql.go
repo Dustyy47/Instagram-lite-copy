@@ -7,34 +7,55 @@ package db
 
 import (
 	"context"
-	"time"
 )
 
 const createComment = `-- name: CreateComment :one
 INSERT INTO comments (
   post_id,
   user_id,
-  text,
-  created_at
+  text
 ) VALUES (
-  $1, $2, $3, $4
+  $1, $2, $3
 ) RETURNING id, post_id, user_id, text, created_at
 `
 
 type CreateCommentParams struct {
-	PostID    int64     `json:"post_id"`
-	UserID    int64     `json:"user_id"`
-	Text      string    `json:"text"`
-	CreatedAt time.Time `json:"created_at"`
+	PostID int64  `json:"post_id"`
+	UserID int64  `json:"user_id"`
+	Text   string `json:"text"`
 }
 
 func (q *Queries) CreateComment(ctx context.Context, arg CreateCommentParams) (Comment, error) {
-	row := q.db.QueryRowContext(ctx, createComment,
-		arg.PostID,
-		arg.UserID,
-		arg.Text,
-		arg.CreatedAt,
+	row := q.db.QueryRowContext(ctx, createComment, arg.PostID, arg.UserID, arg.Text)
+	var i Comment
+	err := row.Scan(
+		&i.ID,
+		&i.PostID,
+		&i.UserID,
+		&i.Text,
+		&i.CreatedAt,
 	)
+	return i, err
+}
+
+const deleteComment = `-- name: DeleteComment :exec
+DELETE FROM comments
+WHERE id = $1
+`
+
+func (q *Queries) DeleteComment(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, deleteComment, id)
+	return err
+}
+
+const getCommentByID = `-- name: GetCommentByID :one
+SELECT id, post_id, user_id, text, created_at FROM comments
+WHERE id = $1
+LIMIT 1
+`
+
+func (q *Queries) GetCommentByID(ctx context.Context, id int64) (Comment, error) {
+	row := q.db.QueryRowContext(ctx, getCommentByID, id)
 	var i Comment
 	err := row.Scan(
 		&i.ID,

@@ -55,10 +55,7 @@ type DeletePostRequest struct{}
 
 type DeletePostResponce SuccessResponse
 
-type GetPostsByUserRequest struct {
-	UserID   string `form:"userID" binding:"required"`
-	NickName string `form:"nickName" binding:"required"`
-}
+
 
 type GetPostsByUserResponce struct {
 	Posts []Post `bson:"posts"`

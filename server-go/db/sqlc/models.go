@@ -5,7 +5,6 @@
 package db
 
 import (
-	"database/sql"
 	"time"
 )
 
@@ -23,9 +22,9 @@ type CommentLike struct {
 }
 
 type Conversation struct {
-	ID      int64 `json:"id"`
-	User1ID int64 `json:"user1_id"`
-	User2ID int64 `json:"user2_id"`
+	ID           int64 `json:"id"`
+	UserFirstID  int64 `json:"user_first_id"`
+	UserSecondID int64 `json:"user_second_id"`
 }
 
 type Folower struct {
@@ -42,12 +41,12 @@ type Message struct {
 }
 
 type Post struct {
-	ID          int64          `json:"id"`
-	UserID      int64          `json:"user_id"`
-	Title       sql.NullString `json:"title"`
-	Description sql.NullString `json:"description"`
-	ImageUrl    sql.NullString `json:"image_url"`
-	CreatedAt   time.Time      `json:"created_at"`
+	ID          int64     `json:"id"`
+	UserID      int64     `json:"user_id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	ImageUrl    string    `json:"image_url"`
+	CreatedAt   time.Time `json:"created_at"`
 }
 
 type PostLike struct {
@@ -56,10 +55,10 @@ type PostLike struct {
 }
 
 type User struct {
-	ID             int64          `json:"id"`
-	Email          string         `json:"email"`
-	Fullname       string         `json:"fullname"`
-	HashedPassword string         `json:"hashed_password"`
-	Nickname       string         `json:"nickname"`
-	AvatarUrl      sql.NullString `json:"avatar_url"`
+	ID             int64  `json:"id"`
+	Email          string `json:"email"`
+	Fullname       string `json:"fullname"`
+	HashedPassword string `json:"hashed_password"`
+	Nickname       string `json:"nickname"`
+	AvatarUrl      string `json:"avatar_url"`
 }

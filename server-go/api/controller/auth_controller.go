@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"database/sql"
 	"mime/multipart"
 	"net/http"
 	"strconv"
@@ -80,7 +79,7 @@ func (ac *AuthController) Register(c *gin.Context) {
 		HashedPassword: request.Password,
 		Nickname:       request.Nickname,
 
-		AvatarUrl: sql.NullString{String: avatarName, Valid: true},
+		AvatarUrl: avatarName,
 	}
 
 	user, err := ac.Store.CreateUser(c, arg)

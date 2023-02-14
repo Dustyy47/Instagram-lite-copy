@@ -13,7 +13,7 @@ SELECT * FROM posts
 WHERE id = $1 LIMIT 1;
 
 -- name: ListPostOfUser :many
-SELECT * FROM comments
+SELECT * FROM posts
 WHERE user_id = $1
 ORDER BY created_at
 LIMIT $2

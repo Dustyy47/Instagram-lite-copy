@@ -1,6 +1,11 @@
 package controller
 
 import (
+	"mime/multipart"
+	"net/http"
+	"strconv"
+	"time"
+
 	"github.com/gin-gonic/gin"
 
 	"app/bootstrap"
@@ -12,159 +17,183 @@ type PostController struct {
 	Env   *bootstrap.Env
 }
 
+type AddPostRequest struct {
+	Title       string `form:"title" binding:""`
+	Description string `form:"description" binding:""`
+
+	Img *multipart.FileHeader `form:"img" binding:"required"`
+}
+
 func (pc *PostController) Add(c *gin.Context) {
-	// var request domain.AddPostRequest
+	var request AddPostRequest
 
-	// err := c.ShouldBind(&request)
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
-	// 	return
-	// }
+	err := c.ShouldBind(&request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+		return
+	}
 
-	// var millisecondsUTC string = strconv.FormatInt(time.Now().UTC().UnixNano()/1e6, 10)
-	// imgName := millisecondsUTC + "--" + request.Img.Filename
+	var millisecondsUTC string = strconv.FormatInt(time.Now().UTC().UnixNano()/1e6, 10)
+	imgName := millisecondsUTC + "--" + request.Img.Filename
 
-	// err = c.SaveUploadedFile(request.Img, "images/"+imgName)
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: "Failed to save the avatarImage on the server"})
-	// 	return
-	// }
+	err = c.SaveUploadedFile(request.Img, "images/"+imgName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse("Failed to save the avatarImage on the server"))
+		return
+	}
 
-	// userID := c.GetString("userID")
-	// userIDHex, err := primitive.ObjectIDFromHex(userID)
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, err)
-	// 	return
-	// }
+	userID := c.GetInt64("userID")
 
-	// post := domain.Post{
-	// 	ID:          primitive.NewObjectID(),
-	// 	Title:       request.Title,
-	// 	Discription: request.Description,
+	createPostArg := db.CreatePostParams{
+		UserID:      userID,
+		Title:       request.Title,
+		Description: request.Description,
+		ImageUrl:    imgName,
+	}
 
-	// 	Likes:    make([]primitive.ObjectID, 0),
-	// 	PostedBy: userIDHex,
+	createdPost, err := pc.Store.CreatePost(c, createPostArg)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		return
+	}
 
-	// 	Comments: make([]primitive.ObjectID, 0),
-
-	// 	ImageURL: imgName,
-	// }
-
-	// err = pc.PostUsecase.Create(c, &post)
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
-	// 	return
-	// }
-
-	// addPostResponce := domain.AddPostResponce(post)
-
-	// c.JSON(http.StatusOK, addPostResponce)
+	c.JSON(http.StatusOK, createdPost)
 }
 
 func (pc *PostController) Remove(c *gin.Context) {
-	// var request domain.DeletePostRequest
+	var request struct{}
 
-	// err := c.ShouldBind(&request)
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
-	// 	return
-	// }
+	err := c.ShouldBind(&request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+		return
+	}
 
-	// postID := c.Params.ByName("postID")
-	// post, err := pc.PostUsecase.GetByID(c, postID)
-	// if err != nil {
-	// 	c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "Post not found"})
-	// 	return
-	// }
+	postID, err := strconv.ParseInt(c.Params.ByName("postID"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusNotFound, errorResponse("Post not found"))
+		return
+	}
 
-	// userID := c.GetString("userID")
-	// if postedBy := post.PostedBy.Hex(); userID != postedBy {
-	// 	c.JSON(http.StatusForbidden, domain.ErrorResponse{Message: "You don't have access"})
-	// 	return
-	// }
+	post, err := pc.Store.GetPostByID(c, postID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, errorResponse("Post not found"))
+		return
+	}
 
-	// err = pc.PostUsecase.Remove(c, &post)
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
-	// 	return
-	// }
+	userID := c.GetInt64("userID")
+	if postedBy := post.UserID; userID != postedBy {
+		c.JSON(http.StatusForbidden, errorResponse("You don't have access"))
+		return
+	}
 
-	// successResponce := domain.SuccessResponse{Message: "Post was removed"}
+	err = pc.Store.DeletePost(c, post.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		return
+	}
 
-	// c.JSON(http.StatusOK, successResponce)
+	c.JSON(http.StatusOK, successResponce("Post was removed"))
+}
+
+type GetPostsByUserRequest struct {
+	UserID   int64  `form:"userID" binding:"required"`
+	Nickname string `form:"nickname" binding:"required"`
+	Limit    int32  `form:"limit" binding:"required"`
+	Offset   int32  `form:"offset" binding:"required"`
 }
 
 func (pc *PostController) GetPostsByUser(c *gin.Context) {
-	// var request domain.GetPostsByUserRequest
+	var request GetPostsByUserRequest
 
-	// err := c.ShouldBind(&request)
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
-	// 	return
-	// }
+	err := c.ShouldBind(&request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+		return
+	}
 
-	// var userID string
-	// user, err := pc.UserUsecase.GetByID(c, request.UserID)
-	// if err != nil {
-	// 	user, err = pc.UserUsecase.GetUserByNickName(c, request.NickName)
-	// 	if err != nil {
-	// 		c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "User not found with the given userID or nickName"})
-	// 		return
-	// 	}
-	// 	userID = user.ID.Hex()
-	// } else {
-	// 	userID = user.ID.Hex()
-	// }
+	user, err := pc.Store.GetUserByID(c, request.UserID)
+	if err != nil {
+		user, err = pc.Store.GetUserByNickname(c, request.Nickname)
+		if err != nil {
+			c.JSON(http.StatusNotFound, errorResponse("User not found with the given userID or nickName"))
+			return
+		}
+	}
 
-	// posts, err := pc.PostUsecase.GetAllPostedByUser(c, userID)
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
-	// 	return
-	// }
+	listPostOfUserArg := db.ListPostOfUserParams{
+		UserID: user.ID,
+		Limit:  request.Limit,
+		Offset: request.Offset,
+	}
 
-	// c.JSON(http.StatusOK, posts)
+	posts, err := pc.Store.ListPostOfUser(c, listPostOfUserArg)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		return
+	}
+
+	c.JSON(http.StatusOK, posts)
 }
 
 func (pc *PostController) Like(c *gin.Context) {
-	// postID := c.Params.ByName("postID")
+	var request struct{}
 
-	// _, err := primitive.ObjectIDFromHex(postID)
-	// if err != nil {
-	// 	c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: err.Error()})
-	// 	return
-	// }
+	err := c.ShouldBind(&request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+		return
+	}
 
-	// post, err := pc.PostUsecase.GetByID(c, postID)
-	// if err != nil {
-	// 	c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: err.Error()})
-	// 	return
-	// }
+	postID, err := strconv.ParseInt(c.Params.ByName("postID"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusNotFound, errorResponse(err.Error()))
+		return
+	}
 
-	// userID := c.GetString("userID")
-	// userIDHex, err := primitive.ObjectIDFromHex(userID)
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
-	// 	return
-	// }
+	post, err := pc.Store.GetPostByID(c, postID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, errorResponse(err.Error()))
+		return
+	}
 
-	// for _, id := range post.Likes {
-	// 	if userIDHex == id {
-	// 		post, err = pc.PostUsecase.GetByIDAndUpdate(c, bson.M{"_id": post.ID}, bson.D{{"$pull", bson.D{{"likes", userIDHex}}}})
-	// 		if err != nil {
-	// 			c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
-	// 			return
-	// 		}
+	userID := c.GetInt64("userID")
 
-	// 		c.JSON(http.StatusOK, post.Likes)
-	// 		return
-	// 	}
-	// }
+	getLikePostArg := db.GetLikedPostParams{
+		PostID: post.ID,
+		UserID: userID,
+	}
 
-	// post, err = pc.PostUsecase.GetByIDAndUpdate(c, bson.M{"_id": post.ID}, bson.D{{"$push", bson.D{{"likes", userIDHex}}}})
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, domain.ErrorResponse{Message: err.Error()})
-	// 	return
-	// }
+	_, err = pc.Store.GetLikedPost(c, getLikePostArg)
+	if err != nil {
+		likePostArg := db.LikePostParams{
+			PostID: post.ID,
+			UserID: userID,
+		}
 
-	// c.JSON(http.StatusOK, post.Likes)
+		err := pc.Store.LikePost(c, likePostArg)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+			return
+		}
+	} else {
+		dislikePostParams := db.DislikePostParams{
+			PostID: post.ID,
+			UserID: userID,
+		}
+
+		err := pc.Store.DislikePost(c, dislikePostParams)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+			return
+		}
+	}
+
+	numberLikes, err := pc.Store.GetNumLikesPost(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		return
+	}
+
+	c.JSON(http.StatusOK, numberLikes)
 }

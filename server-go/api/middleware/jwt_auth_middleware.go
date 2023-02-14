@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"app/domain"
@@ -25,7 +26,14 @@ func JwtAuthMiddleware(secret string) gin.HandlerFunc {
 					return
 				}
 
-				c.Set("userID", userID)
+				userIDInt, err := strconv.ParseInt(userID, 10, 64)
+				if err != nil {
+					c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: err.Error()})
+					c.Abort()
+					return
+				}
+
+				c.Set("userID", userIDInt)
 				c.Next()
 				return
 			}
