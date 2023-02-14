@@ -1,0 +1,24 @@
+package route
+
+import (
+	"time"
+
+	"github.com/gin-gonic/gin"
+
+	"app/api/middleware"
+	"app/bootstrap"
+	db "app/db/sqlc"
+)
+
+func Setup(env *bootstrap.Env, timeout time.Duration, store db.Store, router *gin.RouterGroup) {
+	authRouter := router.Group("auth")
+	NewAuthRouter(env, timeout, store, authRouter)
+
+	profileRouter := router.Group("profile")
+	profileRouter.Use(middleware.JwtAuthMiddleware(env.AccessTokenSecret))
+	NewProfileRouter(env, timeout, store, profileRouter)
+
+	postRouter := router.Group("posts")
+	postRouter.Use(middleware.JwtAuthMiddleware(env.AccessTokenSecret))
+	NewPostRouter(env, timeout, store, postRouter)
+}

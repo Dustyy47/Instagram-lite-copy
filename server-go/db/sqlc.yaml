@@ -1,0 +1,12 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "query/"
+    schema: "migration/"
+    
+    gen:
+      go:
+        package: "db"
+        out: "sqlc"
+        emit_json_tags: true
+        emit_interface: true
