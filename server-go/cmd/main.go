@@ -22,9 +22,10 @@ func main() {
 
 	env := bootstrap.NewEnv()
 
+	logrus.Print(env.DBSource)
 	db, err := db.Connect(env.DBDriver, env.DBSource)
 	if err != nil {
-		logrus.Fatal("Failed to connect to Postgresql", err)
+		logrus.Fatal("Failed to connect to Postgresql. error: ", err)
 	}
 	logrus.Printf("Connected to Postgresql")
 
@@ -36,9 +37,10 @@ func main() {
 	timeout := time.Duration(env.ContextTimeout) * time.Second
 
 	gin := gin.Default()
-	router := gin.Group("")
+	router := gin.Group("/api/") // endpoint naiming
 	route.Setup(env, timeout, store, router)
 
+	logrus.Infof("Server running on address: %s", env.ServerAddress);
 	gin.Run(env.ServerAddress)
 }
 
