@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 
 	"app/bootstrap"
 	db "app/db/sqlc"
 	"app/internal/tokenutil"
+	"app/internal/util"
 )
 
 type AuthController struct {
@@ -53,16 +53,13 @@ func (ac *AuthController) Register(c *gin.Context) {
 		return
 	}
 
-	encryptedPassword, err := bcrypt.GenerateFromPassword(
-		[]byte(request.Password),
-		bcrypt.DefaultCost,
-	)
+	hashedPassword, err := util.HashPassword(request.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		return
 	}
 
-	request.Password = string(encryptedPassword)
+	request.Password = string(hashedPassword)
 
 	var millisecondsUTC string = strconv.FormatInt(time.Now().UTC().UnixNano()/1e6, 10)
 	avatarName := millisecondsUTC + "--" + request.AvatarImage.Filename
@@ -121,8 +118,8 @@ func (ac *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	if bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(request.Password)) != nil {
-		c.JSON(http.StatusUnauthorized, errorResponse("Invalid credentials"))
+	if err := util.CheckPassword(request.Password, user.HashedPassword); err != nil {
+		c.JSON(http.StatusUnauthorized, errorResponse(err.Error()))
 		return
 	}
 

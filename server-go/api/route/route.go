@@ -1,6 +1,7 @@
 package route
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -11,6 +12,12 @@ import (
 )
 
 func Setup(env *bootstrap.Env, timeout time.Duration, store db.Store, router *gin.RouterGroup) {
+	router.GET("/ping", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{
+			"message": "pong",
+		})
+	})
+	
 	authRouter := router.Group("auth")
 	NewAuthRouter(env, timeout, store, authRouter)
 

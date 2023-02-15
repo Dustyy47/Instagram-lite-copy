@@ -1,4 +1,6 @@
 .env
+docker-compose.yml
+Dockerfile
 
 Thumbs.db
 .DS_Store
