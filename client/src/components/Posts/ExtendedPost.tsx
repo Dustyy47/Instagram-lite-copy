@@ -1,7 +1,8 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
-import { VscSmiley } from 'react-icons/vsc'
-import { getCorrectImageUrl } from '../../helpers/getCorrectAvatarUrl'
-import { useOutsideClick } from '../../hooks/useOutsideClick'
+import { memo, useCallback, useEffect, useState } from 'react'
+import { FaRegComment } from 'react-icons/fa'
+import { MdOutlineArrowBack } from 'react-icons/md'
+import { RiSendPlaneLine } from 'react-icons/ri'
+import { useMediaQuery } from 'react-responsive'
 import { useFormValidator, useValidator } from '../../hooks/validators'
 import { getComments, sendComment } from '../../http/postsApi'
 import { AnyFunction } from '../../models/CallbacksTypes'
@@ -13,7 +14,7 @@ import { useAppSelector } from '../../store/hooks'
 import { Avatar } from '../Avatar/Avatar'
 import { Button } from '../Button/Button'
 import { Comments } from '../Comments/Comments'
-import { Emojis } from '../Emojis/Emojis'
+import { EmojiPicker } from '../Emojis/PickEmoji'
 import { Input } from '../Input/Input'
 import { LikeBtn } from '../LikeBtn/LikeBtn'
 import { Loading } from '../Loading/Loading'
@@ -40,23 +41,20 @@ export const ExtendedPost = memo(function ExtendedPost({
     const { _id, title, description, imageUrl } = postData
 
     const isGuest = useAppSelector((state) => state.user.isGuest)
-
-    const [commentText, setCommentText] = useState('')
-    const [comments, setComments] = useState<CommentModel[]>([])
-    const [commentsStatus, setCommentsStatus] = useState<Status>(Status.loading)
-    const [areEmojisVisible, setEmojisVisible] = useState(false)
-
+    const isMobile = useMediaQuery({ query: '(max-width: 600px)' })
     const sendCommentValidator = useValidator([])
-
     const formValidator = useFormValidator(sendCommentValidator)
 
-    const like = useCallback(
-        (e: React.MouseEvent) => {
-            if (isGuest) return
-            onLike(_id)
-        },
-        [isGuest, _id, onLike]
-    )
+    const [commentText, setCommentText] = useState('')
+    const [topOffset, setTopOffset] = useState('0')
+    const [comments, setComments] = useState<CommentModel[]>([])
+    const [commentsStatus, setCommentsStatus] = useState<Status>(Status.loading)
+    const [areCommentsOpen, setCommentsOpen] = useState(false)
+
+    const like = useCallback(() => {
+        if (isGuest) return
+        onLike(_id)
+    }, [isGuest, _id, onLike])
 
     const handleInputComment = useCallback(function (value: string) {
         setCommentText(value)
@@ -80,19 +78,6 @@ export const ExtendedPost = memo(function ExtendedPost({
         [_id, commentText]
     )
 
-    const emojisRef = useRef(null)
-    useOutsideClick(emojisRef, closeEmojis)
-
-    function closeEmojis() {
-        setEmojisVisible(false)
-    }
-
-    function toggleEmojis() {
-        console.log('toggled')
-
-        setEmojisVisible((prev) => !prev)
-    }
-
     function chooseEmoji(emoji: string) {
         setCommentText((prev) => prev + emoji)
         sendCommentValidator.validate(commentText + emoji)
@@ -108,8 +93,19 @@ export const ExtendedPost = memo(function ExtendedPost({
         if (commentsStatus === Status.error) {
             return <h5>Ошибка, что-то пошло не так...</h5>
         }
-        return <Comments onCommentAvatarClicked={() => setActive(false)} comments={comments} />
+        return <Comments onCommentAvatarClicked={() => setActive(false)} comments={comments} isMobile={isMobile} />
     }
+
+    useEffect(() => {
+        if (isMobile) {
+            if (isActive) {
+                document.body.classList.add(styles.fixed)
+                setTopOffset(`${window.scrollY}px`)
+            } else {
+                document.body.classList.remove(styles.fixed)
+            }
+        }
+    }, [isActive])
 
     useEffect(() => {
         async function fetchGetComments() {
@@ -121,14 +117,93 @@ export const ExtendedPost = memo(function ExtendedPost({
         fetchGetComments()
     }, [_id])
 
+    if (isMobile) {
+        return (
+            <Modal
+                style={{ top: topOffset }}
+                isActive={isActive}
+                closeByOutsideClick={false}
+                setActive={setActive}
+                className={styles.mobileModal}
+            >
+                <>
+                    <div className={styles.wrapper}>
+                        <div className={styles.header}>
+                            <div className={styles.profileInfo}>
+                                <Avatar url={avatarUrl || ''} className={styles.avatar} />
+                                <p className={styles.nickName}>{nickName}</p>
+                            </div>
+                            <button onClick={() => setActive(false)} className={styles.closeButton}>
+                                <MdOutlineArrowBack />
+                                Назад
+                            </button>
+                        </div>
+                        <div className={styles.photoWrapper}>
+                            <img className={styles.photo} src={imageUrl} alt="" />
+                        </div>
+                        <div className={styles.bottomWrapper}>
+                            <h3 className={styles.title}>{title}</h3>
+                            <div className={styles.buttons}>
+                                <FaRegComment onClick={() => setCommentsOpen(true)} className={styles.commentsButton} />
+                                <LikeBtn
+                                    isLiked={isLiked}
+                                    onLike={like}
+                                    likesCount={likesCountWithoutUser + +isLiked}
+                                    className={styles.likeBtn}
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <button>Развернуть описание</button>
+                            <div className={styles.descriptionWrapper}>
+                                <p className={styles.description}>{description}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <Modal
+                        className={styles.commentsModal}
+                        isActive={areCommentsOpen}
+                        setActive={setCommentsOpen}
+                        shouldFixBody={false}
+                    >
+                        <>
+                            <button onClick={() => setCommentsOpen(false)} className={styles.closeButton}>
+                                <MdOutlineArrowBack />
+                                Назад
+                            </button>
+                            {renderComments()}
+                            <form className={styles.sendForm}>
+                                <div className={styles.formLeftWrapper}>
+                                    <Input
+                                        isHiddenPermanently={true}
+                                        isHiddenBeforeBlur={true}
+                                        validator={sendCommentValidator}
+                                        className={styles.commentInput}
+                                        value={commentText}
+                                        onChange={handleInputComment}
+                                    />
+                                    <EmojiPicker className={styles.emojiPicker} onChoose={chooseEmoji} />
+                                </div>
+                                <Button
+                                    className={styles.sendCommentBtn}
+                                    onClick={handleSendComment}
+                                    disabled={formValidator.hasErrors()}
+                                >
+                                    <span className={styles.sendCommentBtnText}>Отправить</span>
+                                    <RiSendPlaneLine className={styles.sendCommentBtnIcon} />
+                                </Button>
+                            </form>
+                        </>
+                    </Modal>
+                </>
+            </Modal>
+        )
+    }
+
     return (
-        <Modal
-            isActive={isActive}
-            setActive={setActive}
-            modalStyles={{ width: '70%', maxWidth: 'auto', aspectRatio: '1.55' }}
-        >
+        <Modal isActive={isActive} setActive={setActive} className={styles.modal}>
             <div className={styles.wrapper}>
-                <img className={styles.photo} src={getCorrectImageUrl(imageUrl)} alt="" />
+                <img className={styles.photo} src={imageUrl} alt="" />
                 <div className={styles.info}>
                     <div className={styles.header}>
                         <div className={styles.profileInfo}>
@@ -145,38 +220,30 @@ export const ExtendedPost = memo(function ExtendedPost({
                     <div className={styles.container}>
                         <div className={styles.content}>
                             <h3 className={styles.title}>{title}</h3>
-                            <p>{description}</p>
+                            <p className={styles.description}>{description}</p>
                         </div>
 
                         {renderComments()}
                         {!isGuest && (
                             <form className={styles.sendForm}>
-                                <div ref={emojisRef} className={styles.pickEmojiWrapper}>
-                                    <Emojis
-                                        className={styles.emojis}
-                                        isClosed={!areEmojisVisible}
-                                        onChoose={chooseEmoji}
-                                    ></Emojis>
-                                    <VscSmiley
-                                        tabIndex={0}
-                                        onClick={toggleEmojis}
-                                        className={styles.emojisBtn}
-                                    ></VscSmiley>
+                                <div className={styles.formLeftWrapper}>
+                                    <EmojiPicker className={styles.emojiPicker} onChoose={chooseEmoji} />
+                                    <Input
+                                        isHiddenPermanently={true}
+                                        isHiddenBeforeBlur={true}
+                                        validator={sendCommentValidator}
+                                        className={styles.commentInput}
+                                        value={commentText}
+                                        onChange={handleInputComment}
+                                    />
                                 </div>
-                                <Input
-                                    isHiddenPermanently={true}
-                                    isHiddenBeforeBlur={true}
-                                    validator={sendCommentValidator}
-                                    className={styles.commentInput}
-                                    value={commentText}
-                                    onChange={handleInputComment}
-                                />
                                 <Button
                                     className={styles.sendCommentBtn}
                                     onClick={handleSendComment}
                                     disabled={formValidator.hasErrors()}
                                 >
-                                    Отправить
+                                    <span className={styles.sendCommentBtnText}>Отправить</span>
+                                    <RiSendPlaneLine className={styles.sendCommentBtnIcon} />
                                 </Button>
                             </form>
                         )}

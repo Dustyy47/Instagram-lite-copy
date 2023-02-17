@@ -12,25 +12,28 @@ export function Header() {
     const userId = useAppSelector((state) => state.user.userId)
 
     return (
-        <header className={styles.header}>
-            <div className={styles.wrapper}>
-                <AccountLabel />
-                <nav>
-                    <ul className={styles.list}>
-                        <li>
-                            <Search />
-                        </li>
-                        <li>
-                            {userId && (
-                                <Button className={styles.exitButton} onClick={logout}>
-                                    <p className={styles.exitText}>Выйти</p>
-                                    <BiExit className={styles.exitIcon}></BiExit>
-                                </Button>
-                            )}
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </header>
+        <>
+            <header className={styles.header}>
+                <div className={styles.wrapper}>
+                    <AccountLabel className={styles.label} />
+                    <nav>
+                        <ul className={styles.list}>
+                            <li>
+                                <Search className={styles.search} />
+                            </li>
+                            <li>
+                                {userId && (
+                                    <Button className={styles.exitButton} onClick={logout}>
+                                        <p className={styles.exitText}>Выйти</p>
+                                        <BiExit className={styles.exitIcon}></BiExit>
+                                    </Button>
+                                )}
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <Search className={styles.mobileSearch} />
+            </header>
+        </>
     )
 }

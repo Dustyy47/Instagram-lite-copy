@@ -2,7 +2,14 @@
     display: grid;
     justify-content: space-between;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 2%;
+    grid-gap: 0.8rem;
+}
+
+@media screen and (max-width: 600px) {
+    .wrapper {
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 0.5rem;
+    }
 }
 
 // @media screen and (max-width: 1200px) {

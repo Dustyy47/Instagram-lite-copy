@@ -1,0 +1,158 @@
+Date : 2023-02-13 20:00:27
+Directory : c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src
+Total : 96 files,  4488 codes, 78 comments, 464 blanks, all 5030 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| TypeScript     |         33 |      1,961 |         15 |        103 |      2,079 |
+| TypeScript JSX |         33 |      1,486 |         28 |        192 |      1,706 |
+| SCSS           |         29 |      1,019 |         32 |        164 |      1,215 |
+| JavaScript JSX |          1 |         22 |          3 |          5 |         30 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                            | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                               |         96 |      4,488 |         78 |        464 |      5,030 |
+| . (Files)                                                                                                                       |          5 |        134 |          2 |         23 |        159 |
+| components                                                                                                                      |         58 |      2,420 |         60 |        341 |      2,821 |
+| components\Auth                                                                                                                 |          3 |        336 |          0 |         26 |        362 |
+| components\Avatar                                                                                                               |          2 |         37 |          0 |          8 |         45 |
+| components\Button                                                                                                               |          2 |         63 |          1 |          9 |         73 |
+| components\Chat                                                                                                                 |          2 |         40 |          3 |          8 |         51 |
+| components\Comments                                                                                                             |          4 |        107 |          1 |         15 |        123 |
+| components\Comments (Files)                                                                                                     |          2 |         36 |          1 |          5 |         42 |
+| components\Comments\Comment                                                                                                     |          2 |         71 |          0 |         10 |         81 |
+| components\Emojis                                                                                                               |          3 |         63 |          0 |         10 |         73 |
+| components\Errors                                                                                                               |          2 |         21 |          0 |          5 |         26 |
+| components\Header                                                                                                               |          4 |        172 |          0 |         27 |        199 |
+| components\HideIcon                                                                                                             |          1 |         37 |          0 |          3 |         40 |
+| components\Input                                                                                                                |          4 |        174 |          7 |         27 |        208 |
+| components\LikeBtn                                                                                                              |          2 |         73 |          0 |         13 |         86 |
+| components\Loading                                                                                                              |          2 |         22 |          0 |          4 |         26 |
+| components\Modal                                                                                                                |          2 |         84 |          1 |         12 |         97 |
+| components\NavBar                                                                                                               |          2 |         43 |          0 |          6 |         49 |
+| components\Posts                                                                                                                |          8 |        555 |         43 |         83 |        681 |
+| components\Profile                                                                                                              |          6 |        372 |          2 |         48 |        422 |
+| components\Search                                                                                                               |          2 |        121 |          1 |         17 |        139 |
+| components\SideMenu                                                                                                             |          2 |          0 |          0 |          2 |          2 |
+| components\UsersList                                                                                                            |          3 |         81 |          1 |         13 |         95 |
+| components\ValidationMessage                                                                                                    |          2 |         19 |          0 |          5 |         24 |
+| helpers                                                                                                                         |          7 |        104 |          2 |         20 |        126 |
+| hooks                                                                                                                           |          7 |        118 |          2 |         20 |        140 |
+| hooks (Files)                                                                                                                   |          4 |         61 |          2 |         12 |         75 |
+| hooks\validators                                                                                                                |          3 |         57 |          0 |          8 |         65 |
+| http                                                                                                                            |          5 |        142 |          0 |         22 |        164 |
+| mock                                                                                                                            |          1 |      1,334 |          0 |          1 |      1,335 |
+| models                                                                                                                          |          7 |         52 |          0 |         11 |         63 |
+| store                                                                                                                           |          5 |        178 |         11 |         24 |        213 |
+| store (Files)                                                                                                                   |          2 |         16 |          0 |          6 |         22 |
+| store\slices                                                                                                                    |          3 |        162 |         11 |         18 |        191 |
+| styles                                                                                                                          |          1 |          6 |          1 |          2 |          9 |
++---------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                                                        | language       | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\App.tsx                                                    | TypeScript JSX |         38 |          2 |          8 |         48 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\RoutesManager.tsx                                          | TypeScript JSX |         26 |          0 |          4 |         30 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Auth\Auth.module.scss                           | SCSS           |         45 |          0 |          9 |         54 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Auth\Login.tsx                                  | TypeScript JSX |         85 |          0 |          8 |         93 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Auth\Registration.tsx                           | TypeScript JSX |        206 |          0 |          9 |        215 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Avatar\Avatar.module.scss                       | SCSS           |         19 |          0 |          2 |         21 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Avatar\Avatar.tsx                               | TypeScript JSX |         18 |          0 |          6 |         24 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Button\Button.module.scss                       | SCSS           |         37 |          1 |          6 |         44 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Button\Button.tsx                               | TypeScript JSX |         26 |          0 |          3 |         29 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Chat\Chat.jsx                                   | JavaScript JSX |         22 |          3 |          5 |         30 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Chat\Chat.module.scss                           | SCSS           |         18 |          0 |          3 |         21 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Comments\Comment\Comment.module.scss            | SCSS           |         48 |          0 |          7 |         55 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Comments\Comment\Comment.tsx                    | TypeScript JSX |         23 |          0 |          3 |         26 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Comments\Comments.module.scss                   | SCSS           |          9 |          0 |          1 |         10 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Comments\Comments.tsx                           | TypeScript JSX |         27 |          1 |          4 |         32 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Emojis\Emojis.module.scss                       | SCSS           |         35 |          0 |          4 |         39 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Emojis\Emojis.tsx                               | TypeScript JSX |         28 |          0 |          5 |         33 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Emojis\PickEmoji.tsx                            | TypeScript JSX |          0 |          0 |          1 |          1 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Errors\NotFound.module.scss                     | SCSS           |         12 |          0 |          3 |         15 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Errors\NotFound.tsx                             | TypeScript JSX |          9 |          0 |          2 |         11 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Header\AccountLabel.module.scss                 | SCSS           |         13 |          0 |          3 |         16 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Header\AccountLabel.tsx                         | TypeScript JSX |         52 |          0 |          8 |         60 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Header\Header.module.scss                       | SCSS           |         71 |          0 |         12 |         83 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Header\Header.tsx                               | TypeScript JSX |         36 |          0 |          4 |         40 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\HideIcon\HideIcon.tsx                           | TypeScript JSX |         37 |          0 |          3 |         40 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Input\FileInput.module.scss                     | SCSS           |         27 |          0 |          4 |         31 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Input\FileInput.tsx                             | TypeScript JSX |         32 |          3 |          6 |         41 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Input\Input.module.scss                         | SCSS           |         38 |          0 |          7 |         45 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Input\Input.tsx                                 | TypeScript JSX |         77 |          4 |         10 |         91 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\LikeBtn\LikeBtn.module.scss                     | SCSS           |         57 |          0 |         10 |         67 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\LikeBtn\LikeBtn.tsx                             | TypeScript JSX |         16 |          0 |          3 |         19 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Loading\Loading.module.scss                     | SCSS           |         17 |          0 |          2 |         19 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Loading\Loading.tsx                             | TypeScript JSX |          5 |          0 |          2 |          7 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Modal\Modal.module.scss                         | SCSS           |         54 |          0 |          7 |         61 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Modal\Modal.tsx                                 | TypeScript JSX |         30 |          1 |          5 |         36 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\NavBar\NavBar.module.scss                       | SCSS           |         29 |          0 |          3 |         32 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\NavBar\NavBar.tsx                               | TypeScript JSX |         14 |          0 |          3 |         17 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\CreatingPost.module.scss                  | SCSS           |         20 |          0 |          4 |         24 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\CreatingPost.tsx                          | TypeScript JSX |         93 |          2 |         10 |        105 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\ExtendedPost.module.scss                  | SCSS           |        104 |          0 |         18 |        122 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\ExtendedPost.tsx                          | TypeScript JSX |        169 |          0 |         20 |        189 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\Post.module.scss                          | SCSS           |         80 |          0 |          8 |         88 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\Post.tsx                                  | TypeScript JSX |         45 |          0 |          8 |         53 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\PostsList.module.scss                     | SCSS           |         12 |         29 |          9 |         50 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\PostsList.tsx                             | TypeScript JSX |         32 |         12 |          6 |         50 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Profile\Profile.module.scss                     | SCSS           |         21 |          0 |          4 |         25 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Profile\Profile.tsx                             | TypeScript JSX |         91 |          0 |         12 |        103 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Profile\ProfileButtons.module.scss              | SCSS           |         41 |          0 |          8 |         49 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Profile\ProfileButtons.tsx                      | TypeScript JSX |         45 |          1 |          6 |         52 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Profile\ProfileInfo.module.scss                 | SCSS           |        108 |          1 |         13 |        122 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Profile\ProfileInfo.tsx                         | TypeScript JSX |         66 |          0 |          5 |         71 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Search\Search.module.scss                       | SCSS           |         40 |          0 |          5 |         45 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Search\Search.tsx                               | TypeScript JSX |         81 |          1 |         12 |         94 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\SideMenu\SideMenu.module.scss                   | SCSS           |          0 |          0 |          1 |          1 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\SideMenu\SideMenu.tsx                           | TypeScript JSX |          0 |          0 |          1 |          1 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\UsersList\UsersList.module.scss                 | SCSS           |         25 |          0 |          3 |         28 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\UsersList\UsersList.tsx                         | TypeScript JSX |         41 |          1 |          7 |         49 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\UsersList\UsersListItem.tsx                     | TypeScript JSX |         15 |          0 |          3 |         18 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\ValidationMessage\ValidationMessage.module.scss | SCSS           |         10 |          0 |          2 |         12 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\ValidationMessage\ValidationMessage.tsx         | TypeScript JSX |          9 |          0 |          3 |         12 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\helpers\getCorrectAvatarUrl.ts                             | TypeScript     |          8 |          1 |          3 |         12 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\helpers\getCorrectLabel.ts                                 | TypeScript     |         43 |          0 |          5 |         48 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\helpers\getUserSubscribed.ts                               | TypeScript     |          6 |          0 |          1 |          7 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\helpers\isLikedPost.ts                                     | TypeScript     |          4 |          0 |          1 |          5 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\helpers\resetFormFields.ts                                 | TypeScript     |         11 |          0 |          3 |         14 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\helpers\resetState.ts                                      | TypeScript     |          6 |          0 |          2 |          8 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\helpers\validations.ts                                     | TypeScript     |         26 |          1 |          5 |         32 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\hooks\useCombinedSelector.ts                               | TypeScript     |         17 |          1 |          4 |         22 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\hooks\useLogout.ts                                         | TypeScript     |         13 |          1 |          2 |         16 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\hooks\useOutsideClick.ts                                   | TypeScript     |         20 |          0 |          4 |         24 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\hooks\useProfileRedirect.ts                                | TypeScript     |         11 |          0 |          2 |         13 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\hooks\validators\index.ts                                  | TypeScript     |          4 |          0 |          2 |          6 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\hooks\validators\useFormValidator.ts                       | TypeScript     |         17 |          0 |          1 |         18 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\hooks\validators\useValidator.ts                           | TypeScript     |         36 |          0 |          5 |         41 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\http\authApi.ts                                            | TypeScript     |         30 |          0 |          3 |         33 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\http\chatApi.ts                                            | TypeScript     |         10 |          0 |          2 |         12 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\http\index.ts                                              | TypeScript     |         15 |          0 |          6 |         21 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\http\postsApi.ts                                           | TypeScript     |         41 |          0 |          5 |         46 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\http\profileApi.ts                                         | TypeScript     |         46 |          0 |          6 |         52 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\index.scss                                                 | SCSS           |         23 |          0 |          4 |         27 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\index.tsx                                                  | TypeScript JSX |         14 |          0 |          2 |         16 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\mock\emojis.ts                                             | TypeScript     |      1,334 |          0 |          1 |      1,335 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\models\CallbacksTypes.ts                                   | TypeScript     |          4 |          0 |          2 |          6 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\models\CommentModel.ts                                     | TypeScript     |          9 |          0 |          1 |         10 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\models\Http.ts                                             | TypeScript     |          9 |          0 |          3 |         12 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\models\LoadingStatus.ts                                    | TypeScript     |          5 |          0 |          1 |          6 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\models\PostModel.ts                                        | TypeScript     |         12 |          0 |          2 |         14 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\models\ProfileOwnerModel.ts                                | TypeScript     |         10 |          0 |          1 |         11 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\models\State.ts                                            | TypeScript     |          3 |          0 |          1 |          4 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\routes.ts                                                  | TypeScript     |         33 |          0 |          5 |         38 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\store\hooks.ts                                             | TypeScript     |          4 |          0 |          2 |          6 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\store\index.ts                                             | TypeScript     |         12 |          0 |          4 |         16 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\store\slices\chatSlice.ts                                  | TypeScript     |         12 |         10 |          3 |         25 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\store\slices\profileSlice.ts                               | TypeScript     |         60 |          0 |          7 |         67 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\store\slices\userSlice.ts                                  | TypeScript     |         90 |          1 |          8 |         99 |
+| c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\styles\variables.scss                                      | SCSS           |          6 |          1 |          2 |          9 |
+| Total                                                                                                                           |                |      4,488 |         78 |        464 |      5,030 |
++---------------------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getCorrectAvatarUrl } from '../../helpers/getCorrectAvatarUrl'
+import { getCorrectAvatarUrl, getCorrectImageUrl } from '../../helpers/getCorrectAvatarUrl'
 import { isPostLiked } from '../../helpers/isLikedPost'
 import { useCombinedSelector } from '../../hooks/useCombinedSelector'
+import { getPostsMock } from '../../mock/posts'
 import { Status } from '../../models/LoadingStatus'
-import { ExtendedPostModel } from '../../models/PostModel'
+import { ExtendedPostModel, PostModel } from '../../models/PostModel'
 import { useAppDispatch } from '../../store/hooks'
 import { fetchProfileData } from '../../store/slices/profileSlice'
 import { fetchLikePost, fetchSubscribe } from '../../store/slices/userSlice'
@@ -31,7 +32,11 @@ export function Profile() {
     })
 
     const { likedPosts, isGuest } = useCombinedSelector('user', ['likedPosts', 'isGuest'])
-    const { profileOwnerInfo, loadingStatus } = useCombinedSelector('profile', ['profileOwnerInfo', 'loadingStatus'])
+    const { profileOwnerInfo, loadingStatus, posts } = useCombinedSelector('profile', [
+        'profileOwnerInfo',
+        'loadingStatus',
+        'posts',
+    ])
 
     const dispatch = useAppDispatch()
     const { id: pathProfileId = '' } = useParams<string>()
@@ -73,21 +78,34 @@ export function Profile() {
         return <NotFound />
     }
 
+    function getPostsWithCorrectImage() {
+        return (posts as PostModel[]).map((post) => ({
+            ...post,
+            imageUrl: getCorrectImageUrl(post.imageUrl),
+        }))
+    }
+
+    //mockPosts
+
     return (
         <section className={styles.page}>
             <div className={styles.wrapper}>
                 <div className={styles.header}>
-                    {}{' '}
                     <ProfileInfo
-                        fullName={profileOwnerInfo.fullName || ''}
-                        email={profileOwnerInfo.email || ''}
-                        avatarUrl={getCorrectAvatarUrl(profileOwnerInfo.avatarUrl)}
-                        subscribes={profileOwnerInfo.subscribes}
-                        subscribers={profileOwnerInfo.subscribers}
+                        profileOwnerInfo={{
+                            ...profileOwnerInfo,
+                            avatarUrl: getCorrectAvatarUrl(profileOwnerInfo.avatarUrl),
+                        }}
+                        className={styles.profileInfo}
                     />
                     {!isGuest && <ProfileButtons setCreatingPost={setCreatingPost} toggleSubscribe={toggleSubscribe} />}
                 </div>
-                <PostsList likedPosts={likedPosts} onLike={like} onClickPost={handlePostClick} />
+                <PostsList
+                    posts={[...getPostsWithCorrectImage(), ...getPostsMock(30)]}
+                    likedPosts={likedPosts}
+                    onLike={like}
+                    onClickPost={handlePostClick}
+                />
             </div>
             <ExtendedPost
                 authorInfo={profileOwnerInfo}

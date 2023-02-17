@@ -25,25 +25,25 @@ export const ProfileButtons = memo(function ProfileButtons({ setCreatingPost, to
     }, [subscribes, isGuest, profileOwnerId])
 
     return isUserProfile ? (
-        <Button className={styles.addPostButton} onClick={() => setCreatingPost(true)}>
-            <span className={styles.addPostText}>Создать пост</span>
-            <RiAddCircleLine className={styles.addPostIcon} />
+        <Button className={styles.button} onClick={() => setCreatingPost(true)}>
+            <span className={styles.buttonText}>Создать пост</span>
+            <RiAddCircleLine className={styles.buttonIcon} />
         </Button>
     ) : (
         <div className={styles.communicateButtons}>
-            <Button onClick={() => {}}>
-                <span className={styles.chatText}>Чат</span>
-                <RiChat4Line className={styles.chatIcon} />{' '}
+            <Button className={styles.button} onClick={() => {}}>
+                <span className={styles.buttonText}>Чат</span>
+                <RiChat4Line className={styles.buttonIcon} />{' '}
             </Button>
             {isUserSubscribedOnProfile ? (
-                <Button className={styles.unfollowButton} onClick={toggleSubscribe}>
-                    <span className={styles.unfollowText}>Подписан</span>
-                    <RiUserFollowLine className={styles.unfollowIcon} />
+                <Button className={styles.unfollowButton + ' ' + styles.button} onClick={toggleSubscribe}>
+                    <span className={styles.buttonText}>Подписан</span>
+                    <RiUserFollowLine className={styles.buttonIcon} />
                 </Button>
             ) : (
-                <Button className={styles.followButton} onClick={toggleSubscribe}>
-                    <span className={styles.followText}>Подписаться</span>
-                    <RiUserUnfollowLine className={styles.followIcon} />
+                <Button className={styles.button} onClick={toggleSubscribe}>
+                    <span className={styles.buttonText}>Подписаться</span>
+                    <RiUserUnfollowLine className={styles.buttonIcon} />
                 </Button>
             )}
         </div>

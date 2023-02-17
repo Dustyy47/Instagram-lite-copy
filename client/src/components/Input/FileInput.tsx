@@ -29,7 +29,7 @@ export function FileInput({ validator, setSelectedFile, needToValidate, style, c
     }
 
     return (
-        <div style={{ position: 'relative' }} className={className}>
+        <div style={{ position: 'relative' }} className={className || ''}>
             <ValidationMessage isHidden={true} errorsString={validator?.errors || ''} />
             <label style={style} className={styles.label}>
                 {children || 'Добавить файл'}

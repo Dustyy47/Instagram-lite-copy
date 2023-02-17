@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Header } from './components/Header/Header'
 import { Loading } from './components/Loading/Loading'
+import { NavBar } from './components/NavBar/NavBar'
 import { useLogout } from './hooks/useLogout'
 import { Status } from './models/LoadingStatus'
 import { RoutesManager } from './RoutesManager'
@@ -37,6 +38,7 @@ export function App() {
             <div className="App">
                 <Header />
                 <RoutesManager />
+                <NavBar />
             </div>
         )
     }

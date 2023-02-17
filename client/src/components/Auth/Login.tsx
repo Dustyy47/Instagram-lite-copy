@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { AiOutlineMail } from 'react-icons/ai'
 import { Link } from 'react-router-dom'
-import { useProfileRedirect } from '../../hooks/useProfileRedirect'
+import { useUserAuthRedirect } from '../../hooks/useUserAuthRedirect'
 import { checks, useFormValidator, useValidator, Validation } from '../../hooks/validators'
 import { login } from '../../http/authApi'
 import { REGISTER_ROUTE } from '../../routes'
@@ -11,7 +11,7 @@ import { Input } from '../Input/Input'
 import styles from './Auth.module.scss'
 
 export function Login() {
-    const profileRedirect = useProfileRedirect()
+    const profileRedirect = useUserAuthRedirect()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')

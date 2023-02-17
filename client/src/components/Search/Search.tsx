@@ -8,7 +8,11 @@ import styles from './Search.module.scss'
 const SEARCH_TIME = 333
 const USERS_PER_PAGE = 7
 
-export function Search() {
+interface SearchProps {
+    className?: string
+}
+
+export function Search({ className }: SearchProps) {
     const [areUsersHidden, setUsersHidden] = useState(true)
     const [users, setUsers] = useState([])
     const [isLoading, setLoading] = useState(false)
@@ -62,15 +66,17 @@ export function Search() {
         setUsersHidden(true)
     }
 
+    //TODO Fix inline styles
+
     return (
-        <div className={styles.wrapper}>
+        <div className={`${styles.wrapper} ${className}`}>
             <Input
                 forwardRef={input as React.MutableRefObject<HTMLInputElement>}
                 onBlur={unFocusSearch}
                 onFocus={focusSearch}
                 onChange={typing}
-                styleInput={{ width: '100%', maxWidth: 250, height: 40, color: '#363636' }}
-                styleWrapper={{ margin: '0 30px' }}
+                className={styles.inputWrapper}
+                inputClassName={styles.input}
             >
                 <BiSearchAlt2 style={{ fontSize: 32, fill: '#ededed', margin: '0 15px' }} />
             </Input>

@@ -64,14 +64,14 @@ export function CreatingPost({ isActive, setActive }: CreatingPostProps) {
     }
 
     return (
-        <Modal isActive={isActive} setActive={setActive}>
+        <Modal isActive={isActive} setActive={setActive} className={styles.modal}>
             <>
                 <h3>Создание поста</h3>
                 <hr />
                 <Input
-                    inputClassName={styles.input}
                     validator={titleValidator}
-                    styleWrapper={{ marginTop: 50 }}
+                    validationMessageClassName={styles.validationMessage}
+                    className={styles.inputWrapper}
                     value={newPostTitle}
                     onChange={(value) => setNewPostTitle(value)}
                     isColumn
@@ -79,8 +79,9 @@ export function CreatingPost({ isActive, setActive }: CreatingPostProps) {
                 ></Input>
                 <Input
                     validator={descriptionValidator}
+                    validationMessageClassName={styles.validationMessage}
                     value={newPostDescription}
-                    styleWrapper={{ marginTop: 50 }}
+                    className={styles.inputWrapper}
                     onChange={(value) => setNewPostDescription(value)}
                     isColumn
                     name="Описание"
@@ -93,10 +94,12 @@ export function CreatingPost({ isActive, setActive }: CreatingPostProps) {
                 />
                 {newPostImageUrl && <img className={styles.preview} src={newPostImageUrl} alt="" />}
                 <div className={styles.buttons}>
-                    <Button disabled={formValidator.hasErrors()} onClick={createPost}>
+                    <Button className={styles.button} disabled={formValidator.hasErrors()} onClick={createPost}>
                         Создать
                     </Button>
-                    <Button onClick={() => setActive(false)}>Отменить</Button>
+                    <Button className={styles.button} onClick={() => setActive(false)}>
+                        Отменить
+                    </Button>
                 </div>
             </>
         </Modal>

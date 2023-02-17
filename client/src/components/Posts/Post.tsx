@@ -37,7 +37,7 @@ export function Post({ data, onLike, isLiked, onClick }: PostProps) {
 
     return (
         <div className={styles.wrapper} onClick={handleClick}>
-            <img src={`${process.env.REACT_APP_API_URL}/${imageUrl}`} alt="Post" className={styles.preview} />
+            <img src={imageUrl} alt="Post" className={styles.preview} />
             <div className={styles.info}>
                 <h5 className={styles.title}>{title}</h5>
                 <LikeBtn

@@ -8,7 +8,6 @@
     border-radius: 50%;
     object-fit: cover;
 }
-
 .auth {
     background: white;
     border-radius: 2rem;
@@ -31,6 +30,10 @@
 
     &Input {
         margin-bottom: 4rem;
+        input {
+            max-width: 17rem;
+            width: 100%;
+        }
     }
 
     .buttons {

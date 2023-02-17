@@ -3,7 +3,7 @@ import { AiOutlineMail, AiOutlineUser } from 'react-icons/ai'
 import { BsChatLeftText } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
 import { getCorrectAvatarUrl } from '../../helpers/getCorrectAvatarUrl'
-import { useProfileRedirect } from '../../hooks/useProfileRedirect'
+import { useUserAuthRedirect } from '../../hooks/useUserAuthRedirect'
 import { checks, useFormValidator, useValidator, Validation } from '../../hooks/validators'
 import { registration } from '../../http/authApi'
 import { LOGIN_ROUTE } from '../../routes'
@@ -38,7 +38,7 @@ const initialData: RegistrationFormFields = {
 }
 
 export function Registration() {
-    const profileRedirect = useProfileRedirect()
+    const profileRedirect = useUserAuthRedirect()
     const [data, setData] = useState<RegistrationFormFields>({ ...initialData })
     const {
         email,
