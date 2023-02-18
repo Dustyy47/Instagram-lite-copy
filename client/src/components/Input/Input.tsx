@@ -22,6 +22,7 @@ interface InputProps {
     onFocus?: AnyFunction
     className?: string
     inputClassName?: string
+    groupClassName?: string
     validationMessageClassName?: string
 }
 
@@ -43,6 +44,7 @@ export const Input = memo((props: InputProps) => {
         validationMessageClassName,
         children,
         id,
+        groupClassName,
         onFocus,
     } = props
     // const [isHidden, setIsHidden] = useState(isHiddenPermanently || isHiddenBeforeBlur)
@@ -72,13 +74,13 @@ export const Input = memo((props: InputProps) => {
                 isHidden={!!validator?.isHidden}
                 errorsString={validator?.errors || ''}
             />
-            <div className={styles.group}>
-                {(children || name) &&
+            <div className={styles.group + ' ' + groupClassName || ''}>
+                {(children || name) && (
                     <label className={styles.label}>
                         {children}
                         <span>{name}</span>
                     </label>
-                 }
+                )}
                 <input
                     ref={forwardRef}
                     onBlur={blur}
