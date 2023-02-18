@@ -17,7 +17,7 @@ func Setup(env *bootstrap.Env, timeout time.Duration, store db.Store, router *gi
 			"message": "pong",
 		})
 	})
-	
+
 	authRouter := router.Group("auth")
 	NewAuthRouter(env, timeout, store, authRouter)
 
@@ -28,4 +28,7 @@ func Setup(env *bootstrap.Env, timeout time.Duration, store db.Store, router *gi
 	postRouter := router.Group("posts")
 	postRouter.Use(middleware.JwtAuthMiddleware(env.AccessTokenSecret))
 	NewPostRouter(env, timeout, store, postRouter)
+
+	conversationRouter := router.Group("conversation")
+	NewConversationRouter(env, timeout, store, conversationRouter)
 }

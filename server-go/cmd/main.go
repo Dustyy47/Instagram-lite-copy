@@ -11,6 +11,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 
+	"app/api/controller"
 	route "app/api/route"
 	"app/bootstrap"
 	"app/db"
@@ -25,7 +26,7 @@ func main() {
 	logrus.Print(env.DBSource)
 	db, err := db.Connect(env.DBDriver, env.DBSource)
 	if err != nil {
-		logrus.Fatal("Failed to connect to Postgresql. error: ", err)
+		logrus.Fatalf("Failed to connect to Postgresql. error: %v", err)
 	}
 	logrus.Printf("Connected to Postgresql")
 
@@ -37,7 +38,8 @@ func main() {
 	timeout := time.Duration(env.ContextTimeout) * time.Second
 
 	gin := gin.Default()
-	router := gin.Group("/api/") // endpoint naiming
+	gin.SetHTMLTemplate(controller.HTML)
+	router := gin.Group("/api/")
 	route.Setup(env, timeout, store, router)
 
 	logrus.Infof("Server running on address: %s", env.ServerAddress);
@@ -52,11 +54,11 @@ func runDBMigration(db *sql.DB, DBname, migrationURL string) {
 		DBname, // "postgres"
 		driver)
 	if err != nil {
-		logrus.Fatal("Cannot create new migrate instance", err)
+		logrus.Fatalf("Cannot create new migrate instance: %v", err)
 	}
 
 	if err = migration.Up(); err != nil && err != migrate.ErrNoChange {
-		logrus.Fatal("Failed to run migrate up", err)
+		logrus.Fatalf("Failed to run migrate up: %v", err)
 	}
 
 	logrus.Printf("DB migrated successfully")

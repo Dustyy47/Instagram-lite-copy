@@ -10,6 +10,8 @@ import (
 
 type Querier interface {
 	CreateComment(ctx context.Context, arg CreateCommentParams) (Comment, error)
+	CreateConversation(ctx context.Context, arg CreateConversationParams) (Conversation, error)
+	CreateMessage(ctx context.Context, arg CreateMessageParams) (Message, error)
 	CreatePost(ctx context.Context, arg CreatePostParams) (Post, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	DeleteComment(ctx context.Context, id int64) error
@@ -17,6 +19,7 @@ type Querier interface {
 	DislikeComment(ctx context.Context, arg DislikeCommentParams) error
 	DislikePost(ctx context.Context, arg DislikePostParams) error
 	GetCommentByID(ctx context.Context, id int64) (Comment, error)
+	GetConverstionByID(ctx context.Context, id int64) (Conversation, error)
 	GetLikedComment(ctx context.Context, arg GetLikedCommentParams) (CommentLike, error)
 	GetLikedPost(ctx context.Context, arg GetLikedPostParams) (PostLike, error)
 	GetNumLikesComment(ctx context.Context) (int64, error)
@@ -28,7 +31,10 @@ type Querier interface {
 	LikeComment(ctx context.Context, arg LikeCommentParams) error
 	LikePost(ctx context.Context, arg LikePostParams) error
 	ListCommentsOfPost(ctx context.Context, arg ListCommentsOfPostParams) ([]Comment, error)
+	ListConversationsOfUser(ctx context.Context, arg ListConversationsOfUserParams) ([]Conversation, error)
+	ListMessgesOfConversation(ctx context.Context, arg ListMessgesOfConversationParams) ([]Message, error)
 	ListPostOfUser(ctx context.Context, arg ListPostOfUserParams) ([]Post, error)
+	UpdateLastMsgOfConversation(ctx context.Context, arg UpdateLastMsgOfConversationParams) error
 }
 
 var _ Querier = (*Queries)(nil)

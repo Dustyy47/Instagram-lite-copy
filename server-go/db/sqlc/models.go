@@ -22,9 +22,10 @@ type CommentLike struct {
 }
 
 type Conversation struct {
-	ID           int64 `json:"id"`
-	UserFirstID  int64 `json:"user_first_id"`
-	UserSecondID int64 `json:"user_second_id"`
+	ID               int64     `json:"id"`
+	UserFirstID      int64     `json:"user_first_id"`
+	UserSecondID     int64     `json:"user_second_id"`
+	LastMsgCreatedAt time.Time `json:"last_msg_created_at"`
 }
 
 type Folower struct {
