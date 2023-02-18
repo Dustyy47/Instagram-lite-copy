@@ -1,0 +1,33 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.3s, height 0.1s;
+    position: absolute;
+
+    background: #262626;
+    * {
+        color: white;
+    }
+}
+
+.listItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2b2b2b;
+    padding: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+        background: #1d1d1d;
+    }
+}
+
+.hidden {
+    pointer-events: none;
+    opacity: 0;
+
+    & .listItem {
+    }
+}
