@@ -11,7 +11,6 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 
-	"app/api/controller"
 	route "app/api/route"
 	"app/bootstrap"
 	"app/db"
@@ -26,9 +25,9 @@ func main() {
 	logrus.Print(env.DBSource)
 	db, err := db.Connect(env.DBDriver, env.DBSource)
 	if err != nil {
-		logrus.Fatalf("Failed to connect to Postgresql. error: %v", err)
+		logrus.Fatalf("Failed to connect to Postgresql: %v", err)
 	}
-	logrus.Printf("Connected to Postgresql")
+	logrus.Infof("Connected to Postgresql")
 
 	store := sqlc_db.NewStore(db)
 
@@ -38,7 +37,6 @@ func main() {
 	timeout := time.Duration(env.ContextTimeout) * time.Second
 
 	gin := gin.Default()
-	gin.SetHTMLTemplate(controller.HTML)
 	router := gin.Group("/api/")
 	route.Setup(env, timeout, store, router)
 
