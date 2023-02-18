@@ -17,14 +17,13 @@ interface InputProps {
     onBlur?: AnyFunction
     isHiddenBeforeBlur?: boolean
     isHiddenPermanently?: boolean
-    className?: string
-    styleWrapper?: React.CSSProperties
-    styleLabel?: React.CSSProperties
-    styleInput?: React.CSSProperties
     children?: React.ReactElement
     id?: string
     onFocus?: AnyFunction
+    className?: string
     inputClassName?: string
+    groupClassName?: string
+    validationMessageClassName?: string
 }
 
 //TODO DESTRUCTURIZE PROPS
@@ -40,6 +39,13 @@ export const Input = memo((props: InputProps) => {
         forwardRef,
         isHiddenBeforeBlur = true,
         isHiddenPermanently = false,
+        className,
+        inputClassName,
+        validationMessageClassName,
+        children,
+        id,
+        groupClassName,
+        onFocus,
     } = props
     // const [isHidden, setIsHidden] = useState(isHiddenPermanently || isHiddenBeforeBlur)
 
@@ -61,27 +67,30 @@ export const Input = memo((props: InputProps) => {
         validator?.validate(value || '')
     }, [value])
 
-    const wrapperClassName = `${styles.wrapper} ${props.className}`
-
     return (
-        <div style={props.styleWrapper} className={wrapperClassName}>
-            <ValidationMessage isHidden={!!validator?.isHidden} errorsString={validator?.errors || ''} />
-            <div className={styles.group}>
-                <label style={props.styleLabel} className={styles.label}>
-                    {props.children}
-                    <span>{name}</span>
-                </label>
+        <div className={`${styles.wrapper} ${className || ''}`}>
+            <ValidationMessage
+                className={validationMessageClassName}
+                isHidden={!!validator?.isHidden}
+                errorsString={validator?.errors || ''}
+            />
+            <div className={styles.group + ' ' + groupClassName || ''}>
+                {(children || name) && (
+                    <label className={styles.label}>
+                        {children}
+                        <span>{name}</span>
+                    </label>
+                )}
                 <input
                     ref={forwardRef}
                     onBlur={blur}
-                    onFocus={props.onFocus}
-                    style={props.styleInput}
+                    onFocus={onFocus}
                     onChange={change}
                     value={value}
                     type={type === '' ? 'text' : type}
-                    id={props.id}
+                    id={id}
                     autoComplete="on"
-                    className={`${styles.input} ${props.inputClassName}`}
+                    className={`${styles.input} ${inputClassName}`}
                     placeholder={placeholder}
                 />
             </div>

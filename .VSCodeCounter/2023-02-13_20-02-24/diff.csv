@@ -1,0 +1,117 @@
+"filename", "language", "JSON", "JavaScript", "TypeScript", "TypeScript JSX", "SCSS", "JavaScript JSX", "comment", "blank", "total"
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\App.tsx", "TypeScript JSX", 0, 0, 0, -38, 0, 0, -2, -8, -48
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\RoutesManager.tsx", "TypeScript JSX", 0, 0, 0, -26, 0, 0, 0, -4, -30
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Auth\Auth.module.scss", "SCSS", 0, 0, 0, 0, -45, 0, 0, -9, -54
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Auth\Login.tsx", "TypeScript JSX", 0, 0, 0, -85, 0, 0, 0, -8, -93
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Auth\Registration.tsx", "TypeScript JSX", 0, 0, 0, -206, 0, 0, 0, -9, -215
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Avatar\Avatar.module.scss", "SCSS", 0, 0, 0, 0, -19, 0, 0, -2, -21
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Avatar\Avatar.tsx", "TypeScript JSX", 0, 0, 0, -18, 0, 0, 0, -6, -24
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Button\Button.module.scss", "SCSS", 0, 0, 0, 0, -37, 0, -1, -6, -44
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Button\Button.tsx", "TypeScript JSX", 0, 0, 0, -26, 0, 0, 0, -3, -29
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Chat\Chat.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, -22, -3, -5, -30
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Chat\Chat.module.scss", "SCSS", 0, 0, 0, 0, -18, 0, 0, -3, -21
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Comments\Comment\Comment.module.scss", "SCSS", 0, 0, 0, 0, -48, 0, 0, -7, -55
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Comments\Comment\Comment.tsx", "TypeScript JSX", 0, 0, 0, -23, 0, 0, 0, -3, -26
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Comments\Comments.module.scss", "SCSS", 0, 0, 0, 0, -9, 0, 0, -1, -10
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Comments\Comments.tsx", "TypeScript JSX", 0, 0, 0, -27, 0, 0, -1, -4, -32
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Emojis\Emojis.module.scss", "SCSS", 0, 0, 0, 0, -35, 0, 0, -4, -39
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Emojis\Emojis.tsx", "TypeScript JSX", 0, 0, 0, -28, 0, 0, 0, -5, -33
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Emojis\PickEmoji.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, -1, -1
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Errors\NotFound.module.scss", "SCSS", 0, 0, 0, 0, -12, 0, 0, -3, -15
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Errors\NotFound.tsx", "TypeScript JSX", 0, 0, 0, -9, 0, 0, 0, -2, -11
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Header\AccountLabel.module.scss", "SCSS", 0, 0, 0, 0, -13, 0, 0, -3, -16
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Header\AccountLabel.tsx", "TypeScript JSX", 0, 0, 0, -52, 0, 0, 0, -8, -60
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Header\Header.module.scss", "SCSS", 0, 0, 0, 0, -71, 0, 0, -12, -83
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Header\Header.tsx", "TypeScript JSX", 0, 0, 0, -36, 0, 0, 0, -4, -40
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\HideIcon\HideIcon.tsx", "TypeScript JSX", 0, 0, 0, -37, 0, 0, 0, -3, -40
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Input\FileInput.module.scss", "SCSS", 0, 0, 0, 0, -27, 0, 0, -4, -31
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Input\FileInput.tsx", "TypeScript JSX", 0, 0, 0, -32, 0, 0, -3, -6, -41
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Input\Input.module.scss", "SCSS", 0, 0, 0, 0, -38, 0, 0, -7, -45
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Input\Input.tsx", "TypeScript JSX", 0, 0, 0, -77, 0, 0, -4, -10, -91
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\LikeBtn\LikeBtn.module.scss", "SCSS", 0, 0, 0, 0, -57, 0, 0, -10, -67
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\LikeBtn\LikeBtn.tsx", "TypeScript JSX", 0, 0, 0, -16, 0, 0, 0, -3, -19
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Loading\Loading.module.scss", "SCSS", 0, 0, 0, 0, -17, 0, 0, -2, -19
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Loading\Loading.tsx", "TypeScript JSX", 0, 0, 0, -5, 0, 0, 0, -2, -7
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Modal\Modal.module.scss", "SCSS", 0, 0, 0, 0, -54, 0, 0, -7, -61
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Modal\Modal.tsx", "TypeScript JSX", 0, 0, 0, -30, 0, 0, -1, -5, -36
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\NavBar\NavBar.module.scss", "SCSS", 0, 0, 0, 0, -29, 0, 0, -3, -32
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\NavBar\NavBar.tsx", "TypeScript JSX", 0, 0, 0, -14, 0, 0, 0, -3, -17
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\CreatingPost.module.scss", "SCSS", 0, 0, 0, 0, -20, 0, 0, -4, -24
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\CreatingPost.tsx", "TypeScript JSX", 0, 0, 0, -93, 0, 0, -2, -10, -105
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\ExtendedPost.module.scss", "SCSS", 0, 0, 0, 0, -104, 0, 0, -18, -122
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\ExtendedPost.tsx", "TypeScript JSX", 0, 0, 0, -169, 0, 0, 0, -20, -189
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\Post.module.scss", "SCSS", 0, 0, 0, 0, -80, 0, 0, -8, -88
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\Post.tsx", "TypeScript JSX", 0, 0, 0, -45, 0, 0, 0, -8, -53
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\PostsList.module.scss", "SCSS", 0, 0, 0, 0, -12, 0, -29, -9, -50
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Posts\PostsList.tsx", "TypeScript JSX", 0, 0, 0, -32, 0, 0, -12, -6, -50
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Profile\Profile.module.scss", "SCSS", 0, 0, 0, 0, -21, 0, 0, -4, -25
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Profile\Profile.tsx", "TypeScript JSX", 0, 0, 0, -91, 0, 0, 0, -12, -103
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Profile\ProfileButtons.module.scss", "SCSS", 0, 0, 0, 0, -41, 0, 0, -8, -49
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Profile\ProfileButtons.tsx", "TypeScript JSX", 0, 0, 0, -45, 0, 0, -1, -6, -52
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Profile\ProfileInfo.module.scss", "SCSS", 0, 0, 0, 0, -108, 0, -1, -13, -122
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Profile\ProfileInfo.tsx", "TypeScript JSX", 0, 0, 0, -66, 0, 0, 0, -5, -71
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Search\Search.module.scss", "SCSS", 0, 0, 0, 0, -40, 0, 0, -5, -45
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\Search\Search.tsx", "TypeScript JSX", 0, 0, 0, -81, 0, 0, -1, -12, -94
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\SideMenu\SideMenu.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, -1, -1
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\SideMenu\SideMenu.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, -1, -1
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\UsersList\UsersList.module.scss", "SCSS", 0, 0, 0, 0, -25, 0, 0, -3, -28
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\UsersList\UsersList.tsx", "TypeScript JSX", 0, 0, 0, -41, 0, 0, -1, -7, -49
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\UsersList\UsersListItem.tsx", "TypeScript JSX", 0, 0, 0, -15, 0, 0, 0, -3, -18
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\ValidationMessage\ValidationMessage.module.scss", "SCSS", 0, 0, 0, 0, -10, 0, 0, -2, -12
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\components\ValidationMessage\ValidationMessage.tsx", "TypeScript JSX", 0, 0, 0, -9, 0, 0, 0, -3, -12
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\helpers\getCorrectAvatarUrl.ts", "TypeScript", 0, 0, -8, 0, 0, 0, -1, -3, -12
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\helpers\getCorrectLabel.ts", "TypeScript", 0, 0, -43, 0, 0, 0, 0, -5, -48
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\helpers\getUserSubscribed.ts", "TypeScript", 0, 0, -6, 0, 0, 0, 0, -1, -7
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\helpers\isLikedPost.ts", "TypeScript", 0, 0, -4, 0, 0, 0, 0, -1, -5
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\helpers\resetFormFields.ts", "TypeScript", 0, 0, -11, 0, 0, 0, 0, -3, -14
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\helpers\resetState.ts", "TypeScript", 0, 0, -6, 0, 0, 0, 0, -2, -8
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\helpers\validations.ts", "TypeScript", 0, 0, -26, 0, 0, 0, -1, -5, -32
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\hooks\useCombinedSelector.ts", "TypeScript", 0, 0, -17, 0, 0, 0, -1, -4, -22
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\hooks\useLogout.ts", "TypeScript", 0, 0, -13, 0, 0, 0, -1, -2, -16
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\hooks\useOutsideClick.ts", "TypeScript", 0, 0, -20, 0, 0, 0, 0, -4, -24
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\hooks\useProfileRedirect.ts", "TypeScript", 0, 0, -11, 0, 0, 0, 0, -2, -13
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\hooks\validators\index.ts", "TypeScript", 0, 0, -4, 0, 0, 0, 0, -2, -6
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\hooks\validators\useFormValidator.ts", "TypeScript", 0, 0, -17, 0, 0, 0, 0, -1, -18
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\hooks\validators\useValidator.ts", "TypeScript", 0, 0, -36, 0, 0, 0, 0, -5, -41
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\http\authApi.ts", "TypeScript", 0, 0, -30, 0, 0, 0, 0, -3, -33
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\http\chatApi.ts", "TypeScript", 0, 0, -10, 0, 0, 0, 0, -2, -12
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\http\index.ts", "TypeScript", 0, 0, -15, 0, 0, 0, 0, -6, -21
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\http\postsApi.ts", "TypeScript", 0, 0, -41, 0, 0, 0, 0, -5, -46
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\http\profileApi.ts", "TypeScript", 0, 0, -46, 0, 0, 0, 0, -6, -52
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\index.scss", "SCSS", 0, 0, 0, 0, -23, 0, 0, -4, -27
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\index.tsx", "TypeScript JSX", 0, 0, 0, -14, 0, 0, 0, -2, -16
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\mock\emojis.ts", "TypeScript", 0, 0, -1334, 0, 0, 0, 0, -1, -1335
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\models\CallbacksTypes.ts", "TypeScript", 0, 0, -4, 0, 0, 0, 0, -2, -6
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\models\CommentModel.ts", "TypeScript", 0, 0, -9, 0, 0, 0, 0, -1, -10
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\models\Http.ts", "TypeScript", 0, 0, -9, 0, 0, 0, 0, -3, -12
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\models\LoadingStatus.ts", "TypeScript", 0, 0, -5, 0, 0, 0, 0, -1, -6
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\models\PostModel.ts", "TypeScript", 0, 0, -12, 0, 0, 0, 0, -2, -14
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\models\ProfileOwnerModel.ts", "TypeScript", 0, 0, -10, 0, 0, 0, 0, -1, -11
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\models\State.ts", "TypeScript", 0, 0, -3, 0, 0, 0, 0, -1, -4
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\routes.ts", "TypeScript", 0, 0, -33, 0, 0, 0, 0, -5, -38
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\store\hooks.ts", "TypeScript", 0, 0, -4, 0, 0, 0, 0, -2, -6
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\store\index.ts", "TypeScript", 0, 0, -12, 0, 0, 0, 0, -4, -16
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\store\slices\chatSlice.ts", "TypeScript", 0, 0, -12, 0, 0, 0, -10, -3, -25
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\store\slices\profileSlice.ts", "TypeScript", 0, 0, -60, 0, 0, 0, 0, -7, -67
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\store\slices\userSlice.ts", "TypeScript", 0, 0, -90, 0, 0, 0, -1, -8, -99
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\client\src\styles\variables.scss", "SCSS", 0, 0, 0, 0, -6, 0, -1, -2, -9
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\Models\CommentModel.js", "JavaScript", 0, 12, 0, 0, 0, 0, 0, 3, 15
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\Models\ConversationModel.js", "JavaScript", 0, 8, 0, 0, 0, 0, 0, 3, 11
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\Models\MessageModel.js", "JavaScript", 0, 12, 0, 0, 0, 0, 0, 3, 15
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\Models\PostModel.js", "JavaScript", 0, 12, 0, 0, 0, 0, 0, 3, 15
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\Models\UserModel.js", "JavaScript", 0, 14, 0, 0, 0, 0, 0, 2, 16
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\controllers\authController.js", "JavaScript", 0, 57, 0, 0, 0, 0, 0, 5, 62
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\controllers\chatController.js", "JavaScript", 0, 90, 0, 0, 0, 0, 0, 10, 100
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\controllers\profileController.js", "JavaScript", 0, 259, 0, 0, 0, 0, 3, 16, 278
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\package-lock.json", "JSON", 4246, 0, 0, 0, 0, 0, 0, 1, 4247
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\package.json", "JSON", 31, 0, 0, 0, 0, 0, 0, 1, 32
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\routes\authRouter.js", "JavaScript", 0, 14, 0, 0, 0, 0, 0, 2, 16
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\routes\chatRouter.js", "JavaScript", 0, 9, 0, 0, 0, 0, 0, 1, 10
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\routes\profileRouter.js", "JavaScript", 0, 51, 0, 0, 0, 0, 0, 7, 58
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\routes\routes.js", "JavaScript", 0, 8, 0, 0, 0, 0, 0, 1, 9
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\start.js", "JavaScript", 0, 35, 0, 0, 0, 0, 3, 9, 47
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\utils\authChecker.js", "JavaScript", 0, 30, 0, 0, 0, 0, 1, 3, 34
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\utils\createToken.js", "JavaScript", 0, 7, 0, 0, 0, 0, 0, 1, 8
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\utils\validateParamsId.js", "JavaScript", 0, 14, 0, 0, 0, 0, 1, 2, 17
+"c:\Users\duste\OneDrive\Документы\Web\Instagram-lite-copy\server\utils\validations.js", "JavaScript", 0, 18, 0, 0, 0, 0, 0, 3, 21
+"Total", "-", 4277, 650, -1961, -1486, -1019, -22, -70, -388, -19

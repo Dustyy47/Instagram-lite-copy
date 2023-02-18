@@ -6,15 +6,26 @@ interface ModalProps {
     isActive: boolean
     setActive: AnyFunction
     //TODO REFACTOR NAMINGS FOR STYLES PROPS IN ALL COMPONENTS
-    modalStyles?: React.CSSProperties
+    closeByOutsideClick?: boolean
     className?: string
     children: React.ReactElement
+    style?: React.CSSProperties
+    shouldFixBody?: boolean
 }
 
-export function Modal({ isActive, setActive, modalStyles, children, className }: ModalProps) {
+export function Modal({
+    isActive,
+    setActive,
+    children,
+    className,
+    closeByOutsideClick = true,
+    style,
+    shouldFixBody = true,
+}: ModalProps) {
     let scrollBeforeOpen = useRef(0)
 
     useEffect(() => {
+        if (!shouldFixBody) return
         if (isActive) {
             scrollBeforeOpen.current = window.scrollY
             document.body.style.top = `-${window.scrollY}px`
@@ -25,9 +36,17 @@ export function Modal({ isActive, setActive, modalStyles, children, className }:
         }
     }, [isActive])
 
+    function handleOutsideClick() {
+        if (closeByOutsideClick) setActive(false)
+    }
+
     return (
-        <div onClick={(e) => setActive(false)} className={`${styles.modal} ${!isActive && styles['modal--hidden']}`}>
-            <div onClick={(e) => e.stopPropagation()} className={`${styles.content} ${className}`} style={modalStyles}>
+        <div
+            onClick={handleOutsideClick}
+            style={style}
+            className={`${styles.modal} ${!isActive && styles['modal--hidden']} ${className}`}
+        >
+            <div onClick={(e) => e.stopPropagation()} className={styles.content}>
                 {children}
             </div>
         </div>

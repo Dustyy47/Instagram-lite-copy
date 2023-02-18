@@ -3,7 +3,7 @@ import { AiOutlineMail, AiOutlineUser } from 'react-icons/ai'
 import { BsChatLeftText } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
 import { getCorrectAvatarUrl } from '../../helpers/getCorrectAvatarUrl'
-import { useProfileRedirect } from '../../hooks/useProfileRedirect'
+import { useUserAuthRedirect } from '../../hooks/useUserAuthRedirect'
 import { checks, useFormValidator, useValidator, Validation } from '../../hooks/validators'
 import { registration } from '../../http/authApi'
 import { LOGIN_ROUTE } from '../../routes'
@@ -38,7 +38,7 @@ const initialData: RegistrationFormFields = {
 }
 
 export function Registration() {
-    const profileRedirect = useProfileRedirect()
+    const profileRedirect = useUserAuthRedirect()
     const [data, setData] = useState<RegistrationFormFields>({ ...initialData })
     const {
         email,
@@ -105,16 +105,12 @@ export function Registration() {
     return (
         <form className={styles.auth + ' ' + styles.registration}>
             <h1 className={styles.authTitle}>Регистрация</h1>
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    height: 150,
-                    marginBottom: 70,
-                }}
-            >
-                <FileInput style={{ fontSize: 18 }} setSelectedFile={loadAvatarPreview}>
+            <div className={styles.avatarLoadWrapper}>
+                <FileInput
+                    className={styles.avatarLoadButton}
+                    style={{ fontSize: 18 }}
+                    setSelectedFile={loadAvatarPreview}
+                >
                     Загрузить аватар
                 </FileInput>
                 <img className={styles.avatarPreview} src={avatarPreviewUrl || getCorrectAvatarUrl('')} alt=" " />
@@ -124,6 +120,8 @@ export function Registration() {
                 onChange={(value) => setData({ ...data, fullName: value })}
                 value={fullName}
                 name="Имя"
+                validationMessageClassName={styles.validationMessage}
+                groupClassName={styles.authInputGroup}
                 className={styles.authInput}
                 placeholder="Введите полное имя"
             >
@@ -140,6 +138,8 @@ export function Registration() {
                 onChange={(value) => setData({ ...data, nickName: value })}
                 value={nickName}
                 name="Псевдоним"
+                validationMessageClassName={styles.validationMessage}
+                groupClassName={styles.authInputGroup}
                 className={styles.authInput}
                 placeholder="Введите псевдоним"
             >
@@ -156,6 +156,8 @@ export function Registration() {
                 onChange={(value) => setData({ ...data, email: value })}
                 value={email}
                 name="Почта"
+                validationMessageClassName={styles.validationMessage}
+                groupClassName={styles.authInputGroup}
                 className={styles.authInput}
                 placeholder="Введите почту"
             >
@@ -173,6 +175,8 @@ export function Registration() {
                 value={password}
                 type={isPasswordHidden ? 'password' : 'text'}
                 name="Пароль"
+                validationMessageClassName={styles.validationMessage}
+                groupClassName={styles.authInputGroup}
                 className={styles.authInput}
                 placeholder="Введите пароль"
             >
@@ -187,6 +191,8 @@ export function Registration() {
                 value={passwordConfirm}
                 type={isPasswordHidden ? 'password' : 'text'}
                 name="Подтвердить пароль"
+                validationMessageClassName={styles.validationMessage}
+                groupClassName={styles.authInputGroup}
                 className={styles.authInput}
                 placeholder="Введите пароль"
             >
@@ -198,14 +204,9 @@ export function Registration() {
             {error}
             <div className={styles.buttons}>
                 <Link className={styles.link} onClick={() => setData({ ...initialData })} to={LOGIN_ROUTE}>
-                    {
-                        <p>
-                            У вас уже
-                            <br /> есть аккаунт ?
-                        </p>
-                    }
+                    У вас уже есть аккаунт ?
                 </Link>
-                <Button disabled={registerFormValidator.hasErrors()} onClick={submit}>
+                <Button className={styles.submit} disabled={registerFormValidator.hasErrors()} onClick={submit}>
                     Регистрация
                 </Button>
             </div>

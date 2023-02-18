@@ -1,0 +1,47 @@
+@import '../../styles/variables.scss';
+
+.container {
+    display: none;
+    box-shadow: $shadow;
+    z-index: 5;
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        display: block;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        background: white;
+        box-shadow: $shadow;
+        height: $navbarHeight;
+    }
+
+    .wrapper {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: 100%;
+    }
+
+    .listItem {
+        display: flex;
+        align-items: center;
+        width: 2rem;
+        aspect-ratio: 1;
+        height: fit-content;
+        //background: red;
+    }
+    .icon {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        cursor: pointer;
+        margin: 0;
+    }
+
+    .avatarItem {
+    }
+}

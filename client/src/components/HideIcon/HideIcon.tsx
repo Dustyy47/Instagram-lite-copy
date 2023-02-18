@@ -12,7 +12,7 @@ export function HideIcon({ isHidden, toggle: toggleCb }: HideIconProps) {
         toggleCb()
     }
     return (
-        <div>
+        <>
             {!isHidden ? (
                 <AiOutlineEye
                     style={{
@@ -34,6 +34,6 @@ export function HideIcon({ isHidden, toggle: toggleCb }: HideIconProps) {
                     onClick={toggle}
                 />
             )}
-        </div>
+        </>
     )
 }

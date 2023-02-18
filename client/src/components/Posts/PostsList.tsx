@@ -1,5 +1,4 @@
 import { memo } from 'react'
-import { useSelector } from 'react-redux'
 import { isPostLiked } from '../../helpers/isLikedPost'
 import { ClickPostCallback, LikePostCallback } from '../../models/CallbacksTypes'
 import { PostModel } from '../../models/PostModel'
@@ -10,40 +9,23 @@ interface PostsListProps {
     onLike: LikePostCallback
     likedPosts: string[]
     onClickPost: ClickPostCallback
+    posts: PostModel[]
 }
 
-export const PostsList = memo(function PostsList({ onLike, likedPosts, onClickPost }: PostsListProps) {
-    const posts = useSelector((state: any) => state.profile.posts)
-
-    function generatePost(post: PostModel) {
-        if (!post) return null
-        return (
-            <Post
-                onClick={onClickPost}
-                isLiked={isPostLiked(post._id, likedPosts)}
-                onLike={onLike}
-                key={post?._id}
-                data={post}
-            />
-        )
-    }
-
-    // function generatePostRows(posts: PostModel[]) {
-    //     let rows = []
-    //     for (let i = 0; i < posts.length; i += 3) {
-    //         let row = (
-    //             <div className={styles.row} key={i}>
-    //                 {[0, 1, 2].map((offset) => generatePost(posts[i + offset]))}
-    //             </div>
-    //         )
-    //         rows.push(row)
-    //     }
-    //     return rows
-    // }
-
+export const PostsList = memo(function PostsList({ onLike, likedPosts, onClickPost, posts }: PostsListProps) {
     return (
         <div className={styles.wrapper}>
-            {posts ? posts.map((post: PostModel) => generatePost(post)) : 'Нет постов'}
+            {posts
+                ? posts.map((post: PostModel) => (
+                      <Post
+                          onClick={onClickPost}
+                          isLiked={isPostLiked(post._id, likedPosts)}
+                          onLike={onLike}
+                          key={post?._id}
+                          data={post}
+                      />
+                  ))
+                : 'Нет постов'}
         </div>
     )
 })

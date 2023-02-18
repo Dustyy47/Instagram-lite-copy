@@ -8,13 +8,13 @@ import { Modal } from '../Modal/Modal'
 import { UsersList } from '../UsersList/UsersList'
 import styles from './ProfileInfo.module.scss'
 
-export const ProfileInfo = memo(function ProfileInfo({
-    fullName,
-    avatarUrl,
-    email,
-    subscribes = [],
-    subscribers = [],
-}: ProfileOwnerModel) {
+interface ProfileInfoProps {
+    profileOwnerInfo: ProfileOwnerModel
+    className?: string
+}
+
+export const ProfileInfo = memo(function ProfileInfo({ profileOwnerInfo, className }: ProfileInfoProps) {
+    const { fullName, avatarUrl, email, subscribes = [], subscribers = [] } = profileOwnerInfo
     const [users, setUsers] = useState<ProfileOwnerModel[] | []>([])
     const [title, setTitle] = useState('')
     const [isModalOpen, setModalOpen] = useState(false)
@@ -43,11 +43,13 @@ export const ProfileInfo = memo(function ProfileInfo({
     }, [])
 
     return (
-        <div className={styles.wrapper}>
+        <div className={`${styles.wrapper} ${className}`}>
             <img className={styles.avatar} src={avatarUrl} alt="avatar" />
             <div className={styles.content}>
-                <h3 className={styles.name}>{fullName}</h3>
-                <p className={styles.email}>{email}</p>
+                <div>
+                    <h3 className={styles.name}>{fullName}</h3>
+                    <p className={styles.email}>{email}</p>
+                </div>
                 <div className={styles.subscribesWrapper}>
                     <p
                         onClick={() => openModal(subscribers, 'Подписчики', 'Нет подписчиков')}

@@ -6,6 +6,7 @@ import styles from './Comments.module.scss'
 interface CommentsProps {
     comments: CommentModel[]
     onCommentAvatarClicked: AnyFunction
+    isMobile?: boolean
 }
 
 //TODO AUTO SCROLL TO NEW COMMENT

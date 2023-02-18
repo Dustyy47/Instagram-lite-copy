@@ -4,7 +4,11 @@ import { Status } from '../../models/LoadingStatus'
 import { Avatar } from '../Avatar/Avatar'
 import styles from './AccountLabel.module.scss'
 
-export function AccountLabel() {
+interface AccountLabelProps {
+    className?: string
+}
+
+export function AccountLabel({ className }: AccountLabelProps) {
     const { loadingStatus, avatarUrl, nickName, fullName } = useCombinedSelector('user', [
         'loadingStatus',
         'avatarUrl',
@@ -42,12 +46,11 @@ export function AccountLabel() {
         if (data.link === location.pathname) {
             return
         }
-        console.log(data.link, location.pathname)
         navigate(data.link)
     }
 
     return (
-        <div onClick={handleClick} className={styles.userInfo}>
+        <div onClick={handleClick} className={`${styles.userInfo} ${className}`}>
             <Avatar url={data.avatarUrl}></Avatar>
             <span className={styles.userName}>{data.userName}</span>
         </div>

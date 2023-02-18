@@ -1,7 +1,7 @@
 @import '../../styles/variables';
 
 .fixed {
-    position: fixed;
+    overflow: hidden;
     left: 0;
     right: 0;
     top: 0;
@@ -9,35 +9,27 @@
 }
 
 .modal {
-    z-index: 100;
+    z-index: 4;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
     background: rgba(0, 0, 0, 0.5);
-    transition: 0.3s;
+    transition: transform 0.3s, opacity 0.3s, background 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
     pointer-events: all;
     opacity: 1;
 
-    .content {
-        padding: 30px;
-        background: white;
-        border-radius: 10px;
-        position: relative;
-        overflow: hidden;
-        transition: inherit;
-    }
-
     &--hidden {
         opacity: 0;
         pointer-events: none;
+
         .content {
+            transform: translateY(-5%);
             padding: 30px;
-            transform: translateY(-50px);
         }
     }
 
@@ -56,5 +48,26 @@
         height: 2px;
         width: 80%;
         margin: 0 auto;
+    }
+}
+
+.content {
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    transition: inherit;
+}
+
+@media screen and (max-width: 600px) {
+    .modal--hidden {
+        background: transparent;
+        pointer-events: none;
+
+        .content {
+            transform: translateX(-100vw);
+            padding: 30px;
+        }
     }
 }

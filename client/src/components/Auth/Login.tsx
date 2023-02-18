@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { AiOutlineMail } from 'react-icons/ai'
 import { Link } from 'react-router-dom'
-import { useProfileRedirect } from '../../hooks/useProfileRedirect'
+import { useUserAuthRedirect } from '../../hooks/useUserAuthRedirect'
 import { checks, useFormValidator, useValidator, Validation } from '../../hooks/validators'
 import { login } from '../../http/authApi'
 import { REGISTER_ROUTE } from '../../routes'
@@ -11,7 +11,7 @@ import { Input } from '../Input/Input'
 import styles from './Auth.module.scss'
 
 export function Login() {
-    const profileRedirect = useProfileRedirect()
+    const profileRedirect = useUserAuthRedirect()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
@@ -54,6 +54,8 @@ export function Login() {
                 type="email"
                 name="Почта"
                 className={styles.authInput}
+                validationMessageClassName={styles.validationMessage}
+                groupClassName={styles.authInputGroup}
                 placeholder="Введите почту"
             >
                 <AiOutlineMail
@@ -70,6 +72,8 @@ export function Login() {
                 value={password}
                 type={isPasswordHidden ? 'password' : 'text'}
                 name="Пароль"
+                groupClassName={styles.authInputGroup}
+                validationMessageClassName={styles.validationMessage}
                 className={styles.authInput}
                 placeholder="Введите пароль"
             >
@@ -78,12 +82,9 @@ export function Login() {
             {error}
             <div className={styles.buttons}>
                 <Link className={styles.link} onClick={resetFields} to={REGISTER_ROUTE}>
-                    <p>
-                        У вас ещё
-                        <br /> нет аккаунта ?
-                    </p>
+                    У вас ещё нет аккаунта ?
                 </Link>
-                <Button disabled={loginFormValidator.hasErrors()} onClick={submit}>
+                <Button className={styles.submit} disabled={loginFormValidator.hasErrors()} onClick={submit}>
                     Войти
                 </Button>
             </div>

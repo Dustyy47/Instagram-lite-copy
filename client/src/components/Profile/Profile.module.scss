@@ -17,7 +17,16 @@
     justify-content: space-between;
 }
 
-@media screen and (max-width: 1200px) {
+.profileInfo {
+    margin-bottom: 1rem;
+}
+
+@media screen and (max-width: 500px) {
     .wrapper {
+        padding: 20px;
+    }
+    .header {
+        flex-direction: column;
+        margin-bottom: 2rem;
     }
 }

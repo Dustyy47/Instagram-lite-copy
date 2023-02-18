@@ -1,3 +1,4 @@
+import { FiHeart } from 'react-icons/fi'
 import styles from './LikeBtn.module.scss'
 
 interface LikeBtnProps {
@@ -8,10 +9,9 @@ interface LikeBtnProps {
 }
 
 export function LikeBtn({ isLiked, likesCount, onLike, className }: LikeBtnProps) {
-    const imageClassName = styles.image + ' ' + (isLiked ? styles.imageLiked : styles.imageUnliked)
     return (
         <div onClick={(e) => onLike(e)} className={`${styles.like} ${className}`}>
-            <img className={imageClassName} src="https://img.icons8.com/color/96/000000/like--v3.png" alt="like" />
+            <FiHeart className={styles.image} data-isliked={isLiked} />
             <p className={styles.counter}>{String(likesCount)}</p>
         </div>
     )

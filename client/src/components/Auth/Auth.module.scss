@@ -1,5 +1,12 @@
 @import '../../styles/variables.scss';
 
+.avatarLoadWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
 .avatarPreview {
     width: 150px;
     height: 150px;
@@ -8,7 +15,6 @@
     border-radius: 50%;
     object-fit: cover;
 }
-
 .auth {
     background: white;
     border-radius: 2rem;
@@ -31,6 +37,10 @@
 
     &Input {
         margin-bottom: 4rem;
+        input {
+            max-width: 17rem;
+            width: 100%;
+        }
     }
 
     .buttons {
@@ -50,4 +60,73 @@
 .registration {
     max-width: 37rem;
     margin-bottom: 2rem;
+}
+
+@media screen and (max-width: 600px) {
+    .auth {
+        &InputGroup {
+            flex-direction: column;
+            align-items: start;
+
+            label {
+                font-size: 16px;
+                align-items: end;
+                margin-bottom: 5px;
+                svg {
+                    width: 25px;
+                    height: 25px;
+                }
+            }
+        }
+        &Title {
+            font-size: 25px;
+        }
+        &Input {
+            input {
+                max-width: 100%;
+            }
+            margin-bottom: 50px;
+            * {
+                font-size: 16px;
+            }
+        }
+    }
+    .validationMessage {
+        font-size: 12px;
+    }
+    .avatarLoadWrapper {
+        flex-direction: column-reverse;
+        align-items: start;
+        margin-bottom: 50px;
+    }
+    .avatarLoadButton {
+        width: 100%;
+        * {
+            font-size: 16px !important;
+        }
+        label {
+            padding: 15px;
+        }
+        input {
+            height: 20px;
+        }
+    }
+    .avatarPreview {
+        width: 125px;
+        height: 125px;
+        margin-bottom: 20px;
+    }
+    .buttons {
+        flex-direction: column;
+    }
+    .submit {
+        height: 50px;
+        font-size: 16px;
+        width: 100%;
+    }
+    .link {
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: center;
+    }
 }
