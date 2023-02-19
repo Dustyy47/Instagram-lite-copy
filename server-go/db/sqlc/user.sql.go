@@ -105,3 +105,42 @@ func (q *Queries) GetUserByNickname(ctx context.Context, nickname string) (User,
 	)
 	return i, err
 }
+
+const updateUser = `-- name: UpdateUser :one
+UPDATE users 
+SET 
+  email = COALESCE($2, email),
+  fullname = COALESCE($3, fullname),
+  nickname = COALESCE($4, nickname),
+  avatar_url = COALESCE($5, avatar_url)
+WHERE id = $1
+RETURNING id, email, fullname, hashed_password, nickname, avatar_url
+`
+
+type UpdateUserParams struct {
+	ID        int64  `json:"id"`
+	Email     string `json:"email"`
+	Fullname  string `json:"fullname"`
+	Nickname  string `json:"nickname"`
+	AvatarUrl string `json:"avatar_url"`
+}
+
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
+	row := q.db.QueryRowContext(ctx, updateUser,
+		arg.ID,
+		arg.Email,
+		arg.Fullname,
+		arg.Nickname,
+		arg.AvatarUrl,
+	)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.Fullname,
+		&i.HashedPassword,
+		&i.Nickname,
+		&i.AvatarUrl,
+	)
+	return i, err
+}

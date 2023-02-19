@@ -1,6 +1,12 @@
 package controller
 
 import (
+	"fmt"
+	"mime/multipart"
+	"net/http"
+	"strconv"
+	"time"
+
 	"github.com/gin-gonic/gin"
 
 	"app/bootstrap"
@@ -12,69 +18,208 @@ type ProfileController struct {
 	Env   *bootstrap.Env
 }
 
+type GetProfileDataResponse struct {
+	UserID   int64  `json:"userID"`
+	Email    string `json:"email"`
+	NickName string `json:"nickname"`
+	FullName string `json:"fullname"`
+
+	AvatarURL string `json:"avatarUrl"`
+
+	NumFollowers int64 `json:"numFollowers"`
+	NumFollowing int64 `json:"numFollowing"`
+
+	IsUserProfile bool `json:"isUserProfile"`
+}
+
 func (pc *ProfileController) GetProfileData(c *gin.Context) {
-	// var request domain.GetProfileDataRequest
+	var request struct{}
 
-	// err := c.ShouldBind(&request)
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
-	// 	return
-	// }
+	err := c.ShouldBind(&request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+		return
+	}
 
-	// nickName := c.Params.ByName("nickname")
+	var user db.User
+	nickname, ok := c.Params.Get("nickname")
+	if !ok {
+		ids := c.Params.ByName("id")
+		id, err := strconv.ParseInt(ids, 10, 64)
+		if err != nil {
+			c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
+			return
+		}
 
-	// user, err := pc.UserUsecase.GetUserByNickName(c, nickName)
-	// if err != nil {
-	// 	c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "Profile not found with nickname: " + nickName})
-	// 	return
-	// }
+		user, err = pc.Store.GetUserByID(c, id)
+		if err != nil {
+			c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
+			return
+		}
 
-	// isUserProfile := c.Keys["userID"] == user.ID.Hex()
+	} else {
+		user, err = pc.Store.GetUserByNickname(c, nickname)
+		if err != nil {
+			c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
+			return
+		}
+	}
 
-	// getProfileDataResponse := domain.GetProfileDataResponse{
-	// 	UserID:   user.ID,
-	// 	Email:    user.Email,
-	// 	NickName: user.NickName,
+	numFollowers, err := pc.Store.GetNumFollowers(c, user.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		return
+	}
 
-	// 	AvatarURL: user.AvatarURL,
+	numFollowing, err := pc.Store.GetNumFollowing(c, user.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		return
+	}
 
-	// 	Subscribes:  user.Subscribes,
-	// 	Subscribers: user.Subscribers,
+	userID := c.GetInt64("userID")
+	isUserProfile := userID == user.ID
 
-	// 	IsUserProfile: isUserProfile,
-	// }
+	getProfileDataResponse := GetProfileDataResponse{
+		UserID:   user.ID,
+		Email:    user.Email,
+		NickName: user.Nickname,
 
-	// c.JSON(http.StatusOK, getProfileDataResponse)
+		AvatarURL: user.AvatarUrl,
+
+		NumFollowers: numFollowers,
+		NumFollowing: numFollowing,
+
+		IsUserProfile: isUserProfile,
+	}
+
+	c.JSON(http.StatusOK, getProfileDataResponse)
 }
 
-func (pc *ProfileController) GetUserData(c *gin.Context) {
-	// var request domain.GetUserDataRequest
+func (pc *ProfileController) UpdateProfile(c *gin.Context) {
+	var (
+		fullname, email, nickname string
+		avatarImage               *multipart.FileHeader
+		avatarUrl                 string
+		err                       error
+	)
 
-	// err := c.ShouldBind(&request)
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
-	// 	return
-	// }
+	fullname = c.PostForm("fullname")
+	email = c.PostForm("email")
+	nickname = c.PostForm("nickname")
+	avatarImage, err = c.FormFile("avatarImage")
+	if err != nil && err != http.ErrMissingFile {
+		c.JSON(http.StatusBadRequest, errorResponse("Error uploading avatar image"))
+		return
+	}
 
-	// userID := c.GetString("userID")
+	userID := c.GetInt64("userID")
 
-	// user, err := pc.UserUsecase.GetByID(c, userID)
-	// if err != nil {
-	// 	c.JSON(http.StatusNotFound, domain.ErrorResponse{Message: "User not found with id: " + userID})
-	// 	return
-	// }
+	user, err := pc.Store.GetUserByID(c, userID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
+		return
+	}
 
-	// getUserDataResponse := domain.GetUserDataResponse{
-	// 	UserID:   user.ID,
-	// 	Email:    user.Email,
-	// 	NickName: user.NickName,
-	// 	FullName: user.FullName,
+	if avatarImage != nil {
+		avatarUrl = fmt.Sprintf("%d--%s", time.Now().Unix(), avatarImage.Filename)
+		err = c.SaveUploadedFile(avatarImage, "images/avatars/"+avatarUrl)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errorResponse("Error saving avatar image"))
+			return
+		}
+	}
 
-	// 	AvatarURL: user.AvatarURL,
+	// Update user information
+	if fullname == "" && email == "" && nickname == "" && avatarUrl == "" {
+		c.JSON(http.StatusBadRequest, errorResponse("No updates provided"))
+		return
+	}
 
-	// 	LikedPosts: user.LikedPosts,
-	// 	Subscribes: user.Subscribes,
-	// }
+	updateUserArg := db.UpdateUserParams{
+		ID:        user.ID,
+		Fullname:  NotEmpty(fullname, user.Fullname),
+		Email:     NotEmpty(email, user.Email),
+		Nickname:  NotEmpty(nickname, user.Nickname),
+		AvatarUrl: NotEmpty(avatarUrl, user.AvatarUrl),
+	}
 
-	// c.JSON(http.StatusOK, getUserDataResponse)
+	user, err = pc.Store.UpdateUser(c, updateUserArg)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse("Error updating user information"))
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
 }
+
+func NotEmpty(s1, defaultStr string) string {
+	if s1 == "" {
+		return defaultStr
+	}
+	return s1
+}
+
+func (pc *ProfileController) ToggleFollow(c *gin.Context) {
+	userIDToFollow, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse("Invalid id parameter"))
+		return
+	}
+
+	userID := c.GetInt64("user_id")
+	
+	_, err = pc.Store.GetUserByID(c, userID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, errorResponse("User not found"))
+		return
+	}
+
+	_, err = pc.Store.GetUserByID(c, userIDToFollow)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse("User not found"))
+		return
+	}
+
+	if userID == userIDToFollow {
+		c.JSON(http.StatusBadRequest, errorResponse("You can't follow yourself"))
+		return
+	}
+
+	getFollowerArg := db.GetFollowerParams{
+		UserFromID: userID,
+		UserToID:   userIDToFollow,
+	}
+
+	_, err = pc.Store.GetFollower(c, getFollowerArg)
+	isFollowing := err == nil
+
+	if isFollowing {// then unfollow
+		deleteFollowerArg := db.DeleteFollowerParams{
+			UserFromID: userID,
+			UserToID:   userIDToFollow,
+		}
+
+		pc.Store.DeleteFollower(c, deleteFollowerArg)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+			return
+		}
+
+		c.JSON(http.StatusOK, successResponce("Unfollowed successfully"))
+	} else { // follow
+		createFollowerArg := db.CreateFollowerParams{
+			UserFromID: userID,
+			UserToID:   userIDToFollow,
+		}
+
+		pc.Store.CreateFollower(c, createFollowerArg)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+			return
+		}
+
+		c.JSON(http.StatusOK, successResponce("Followed successfully"))
+	}
+}
+

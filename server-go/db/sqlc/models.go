@@ -28,7 +28,7 @@ type Conversation struct {
 	LastMsgCreatedAt time.Time `json:"last_msg_created_at"`
 }
 
-type Folower struct {
+type Follower struct {
 	UserFromID int64 `json:"user_from_id"`
 	UserToID   int64 `json:"user_to_id"`
 }

@@ -78,7 +78,7 @@ type message struct {
 }
 
 func (cc *ConversationController) Run(c *gin.Context) {
-	conversationID, err := strconv.ParseInt(c.Param("conversation_id"), 10, 64)
+	conversationID, err := strconv.ParseInt(c.Param("conversationID"), 10, 64)
 	if err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return

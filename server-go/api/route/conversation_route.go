@@ -17,5 +17,5 @@ func NewConversationRouter(env *bootstrap.Env, timeout time.Duration, store db.S
 	}
 
 	group.POST("create", cc.Create)
-	group.GET("/:conversation_id", cc.Run)
+	group.GET("/:conversationID", cc.Run)
 }
