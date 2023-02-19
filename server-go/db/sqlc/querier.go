@@ -20,6 +20,7 @@ type Querier interface {
 	DeletePost(ctx context.Context, id int64) error
 	DislikeComment(ctx context.Context, arg DislikeCommentParams) error
 	DislikePost(ctx context.Context, arg DislikePostParams) error
+	FindUsersByNickname(ctx context.Context, arg FindUsersByNicknameParams) ([]User, error)
 	GetCommentByID(ctx context.Context, id int64) (Comment, error)
 	GetConverstionByID(ctx context.Context, id int64) (Conversation, error)
 	GetFollower(ctx context.Context, arg GetFollowerParams) (Follower, error)

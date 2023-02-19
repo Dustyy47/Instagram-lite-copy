@@ -11,6 +11,7 @@ import (
 
 	"app/bootstrap"
 	db "app/db/sqlc"
+	"app/internal/util"
 )
 
 type ProfileController struct {
@@ -168,7 +169,7 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 	}
 
 	userID := c.GetInt64("user_id")
-	
+
 	_, err = pc.Store.GetUserByID(c, userID)
 	if err != nil {
 		c.JSON(http.StatusNotFound, errorResponse("User not found"))
@@ -194,7 +195,7 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 	_, err = pc.Store.GetFollower(c, getFollowerArg)
 	isFollowing := err == nil
 
-	if isFollowing {// then unfollow
+	if isFollowing { // then unfollow
 		deleteFollowerArg := db.DeleteFollowerParams{
 			UserFromID: userID,
 			UserToID:   userIDToFollow,
@@ -223,3 +224,43 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 	}
 }
 
+type FindUsersRequest struct {
+	Limit  int32 `form:"limit" binding:"required"`
+	Offset int32 `form:"offset" binding:"required"`
+}
+
+func (pc *ProfileController) FindUsers(c *gin.Context) {
+	var request FindUsersRequest
+
+	err := c.ShouldBind(&request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+		return
+	}
+
+	name := c.Param("name")
+
+	findUsersByNicknameArgs := db.FindUsersByNicknameParams{
+		Column1: util.NullString(name),
+		Limit:   request.Limit,
+		Offset:  request.Offset,
+	}
+
+	users, err := pc.Store.FindUsersByNickname(c, findUsersByNicknameArgs)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		return
+	}
+
+	response := make([]map[string]interface{}, 0)
+	for _, user := range users {
+		response = append(response, map[string]interface{}{
+			"nickName":  user.Nickname,
+			"fullName":  user.Fullname,
+			"avatarUrl": user.AvatarUrl,
+			"userId":    user.ID,
+		})
+	}
+
+	c.JSON(http.StatusOK, response)
+}
