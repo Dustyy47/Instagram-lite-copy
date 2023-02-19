@@ -46,6 +46,7 @@
 }
 
 .likeBtn {
+    position: relative;
     cursor: pointer;
     left: 0;
     bottom: 0;
@@ -63,9 +64,6 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
-    * {
-        position: relative;
-    }
     margin-bottom: 20px;
 }
 
@@ -140,6 +138,26 @@
     display: inline-block;
 }
 
+.menu {
+    right: 0;
+    top: 40px;
+    width: 250px;
+    font-size: 14px;
+}
+.menuToggleButton {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+}
+.menuToggleWrapper {
+    position: relative;
+}
+
+.headerButtons {
+    display: flex;
+    align-items: center;
+}
+
 @media screen and (max-width: 1800px) {
     .sendCommentBtn {
         padding: 10px;
@@ -209,7 +227,7 @@
 @media screen and (max-width: 600px) {
     .title {
         display: inline-block;
-        font-size: 16px !important;
+        font-size: 18px !important;
         width: 70%;
     }
     .description {
@@ -298,6 +316,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding: 10px;
     }
 
     .sendForm {
@@ -330,5 +349,19 @@
             height: 8rem;
             width: 20rem;
         }
+    }
+    .menu {
+        right: 0;
+        top: 40px;
+        width: 250px;
+        font-size: 14px;
+    }
+    .menuToggleButton {
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+    }
+    .menuToggleWrapper {
+        position: relative;
     }
 }

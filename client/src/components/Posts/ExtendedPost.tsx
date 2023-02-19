@@ -1,7 +1,8 @@
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { FaRegComment } from 'react-icons/fa'
+import { HiOutlineDotsVertical } from 'react-icons/hi'
 import { MdOutlineArrowBack } from 'react-icons/md'
-import { RiSendPlaneLine } from 'react-icons/ri'
+import { RiDeleteBin2Line, RiSendPlaneLine } from 'react-icons/ri'
 import { useMediaQuery } from 'react-responsive'
 import { useFormValidator, useValidator } from '../../hooks/validators'
 import { getComments, sendComment } from '../../http/postsApi'
@@ -10,10 +11,12 @@ import { CommentModel } from '../../models/CommentModel'
 import { Status } from '../../models/LoadingStatus'
 import { ExtendedPostModel } from '../../models/PostModel'
 import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
-import { useAppSelector } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { fetchDeletePost } from '../../store/slices/profileSlice'
 import { Avatar } from '../Avatar/Avatar'
 import { Button } from '../Button/Button'
 import { Comments } from '../Comments/Comments'
+import { DropDown, DropDownItem } from '../DropDown/DropDown'
 import { EmojiPicker } from '../Emojis/PickEmoji'
 import { Input } from '../Input/Input'
 import { LikeBtn } from '../LikeBtn/LikeBtn'
@@ -40,7 +43,10 @@ export const ExtendedPost = memo(function ExtendedPost({
     const { postData, likesCountWithoutUser, isActive } = postInfo
     const { _id, title, description, imageUrl } = postData
 
+    const dispatch = useAppDispatch()
+
     const isGuest = useAppSelector((state) => state.user.isGuest)
+    const userNickName = useAppSelector((state) => state.user.nickName)
     const isMobile = useMediaQuery({ query: '(max-width: 600px)' })
     const sendCommentValidator = useValidator([])
     const formValidator = useFormValidator(sendCommentValidator)
@@ -48,8 +54,10 @@ export const ExtendedPost = memo(function ExtendedPost({
     const [commentText, setCommentText] = useState('')
     const [topOffset, setTopOffset] = useState('0')
     const [comments, setComments] = useState<CommentModel[]>([])
+    const [menuItems, setMenuItems] = useState<DropDownItem[]>([])
     const [commentsStatus, setCommentsStatus] = useState<Status>(Status.loading)
     const [areCommentsOpen, setCommentsOpen] = useState(false)
+    const [isMenuOpen, setMenuOpen] = useState(false)
 
     const like = useCallback(() => {
         if (isGuest) return
@@ -78,6 +86,35 @@ export const ExtendedPost = memo(function ExtendedPost({
         [_id, commentText]
     )
 
+    const handleDeletePost = async () => {
+        dispatch(fetchDeletePost(_id))
+        setActive(false)
+    }
+
+    const defaultMenuItems: DropDownItem[] = useMemo(() => [], [])
+
+    const ownerMenuItems: DropDownItem[] = [
+        {
+            key: 'delete',
+            text: 'Удалить пост',
+            icon: <RiDeleteBin2Line />,
+            callback: handleDeletePost,
+        },
+    ]
+
+    function isUserPost() {
+        return nickName === userNickName
+    }
+
+    function handleClickMenu() {
+        if (isMenuOpen) {
+            setMenuItems([])
+        } else {
+            setMenuItems(isUserPost() ? ownerMenuItems : defaultMenuItems)
+        }
+        setMenuOpen((prev) => !prev)
+    }
+
     function chooseEmoji(emoji: string) {
         setCommentText((prev) => prev + emoji)
         sendCommentValidator.validate(commentText + emoji)
@@ -105,6 +142,7 @@ export const ExtendedPost = memo(function ExtendedPost({
                 document.body.classList.remove(styles.fixed)
             }
         }
+        setMenuOpen(false)
     }, [isActive])
 
     useEffect(() => {
@@ -133,10 +171,24 @@ export const ExtendedPost = memo(function ExtendedPost({
                                 <Avatar url={avatarUrl || ''} className={styles.avatar} />
                                 <p className={styles.nickName}>{nickName}</p>
                             </div>
-                            <button onClick={() => setActive(false)} className={styles.closeButton}>
-                                <MdOutlineArrowBack />
-                                Назад
-                            </button>
+                            <div className={styles.headerButtons}>
+                                <button onClick={() => setActive(false)} className={styles.closeButton}>
+                                    <MdOutlineArrowBack />
+                                    Назад
+                                </button>
+                                <div className={styles.menuToggleWrapper}>
+                                    <HiOutlineDotsVertical
+                                        className={styles.menuToggleButton}
+                                        onClick={handleClickMenu}
+                                    />
+                                    <DropDown
+                                        className={styles.menu}
+                                        setActive={setMenuOpen}
+                                        items={menuItems}
+                                        isActive={isMenuOpen}
+                                    ></DropDown>
+                                </div>
+                            </div>
                         </div>
                         <div className={styles.photoWrapper}>
                             <img className={styles.photo} src={imageUrl} alt="" />
@@ -210,12 +262,23 @@ export const ExtendedPost = memo(function ExtendedPost({
                             <Avatar url={avatarUrl || ''} />
                             <p className={styles.nickName}>{nickName}</p>
                         </div>
-                        <LikeBtn
-                            isLiked={isLiked}
-                            onLike={like}
-                            likesCount={likesCountWithoutUser + +isLiked}
-                            className={styles.likeBtn}
-                        />
+                        <div className={styles.headerButtons}>
+                            <LikeBtn
+                                isLiked={isLiked}
+                                onLike={like}
+                                likesCount={likesCountWithoutUser + +isLiked}
+                                className={styles.likeBtn}
+                            />
+                            <div className={styles.menuToggleWrapper}>
+                                <HiOutlineDotsVertical className={styles.menuToggleButton} onClick={handleClickMenu} />
+                                <DropDown
+                                    className={styles.menu}
+                                    setActive={setMenuOpen}
+                                    items={menuItems}
+                                    isActive={isMenuOpen}
+                                ></DropDown>
+                            </div>
+                        </div>
                     </div>
                     <div className={styles.container}>
                         <div className={styles.content}>

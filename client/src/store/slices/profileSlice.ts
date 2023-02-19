@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { addPost } from '../../http/postsApi'
+import { addPost, deletePost } from '../../http/postsApi'
 import { getPosts, getProfileOwnerInfo } from '../../http/profileApi'
 import { FetchProfileReturn } from '../../models/Http'
 import { Status } from '../../models/LoadingStatus'
@@ -22,6 +22,11 @@ export const fetchProfileData = createAsyncThunk<FetchProfileReturn, string, { r
         }
     }
 )
+
+export const fetchDeletePost = createAsyncThunk('profile/deletePost', async (postId: string) => {
+    await deletePost(postId)
+    return { _id: postId }
+})
 
 export const fetchAddPost = createAsyncThunk('profile/addPost', async (postData: FormData) => {
     return await addPost(postData)
@@ -59,6 +64,9 @@ const profileSlice = createSlice({
         [fetchAddPost.fulfilled.type]: (state, action) => {
             const post = action.payload
             state.posts.push(post)
+        },
+        [fetchDeletePost.fulfilled.type]: (state, action) => {
+            state.posts = [...state.posts.filter((post) => post._id !== action.payload._id)]
         },
     },
 })

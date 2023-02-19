@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom'
 import { getCorrectAvatarUrl, getCorrectImageUrl } from '../../helpers/getCorrectAvatarUrl'
 import { isPostLiked } from '../../helpers/isLikedPost'
 import { useCombinedSelector } from '../../hooks/useCombinedSelector'
-import { getPostsMock } from '../../mock/posts'
 import { Status } from '../../models/LoadingStatus'
 import { ExtendedPostModel, PostModel } from '../../models/PostModel'
 import { useAppDispatch } from '../../store/hooks'
@@ -101,7 +100,7 @@ export function Profile() {
                     {!isGuest && <ProfileButtons setCreatingPost={setCreatingPost} toggleSubscribe={toggleSubscribe} />}
                 </div>
                 <PostsList
-                    posts={[...getPostsWithCorrectImage(), ...getPostsMock(30)]}
+                    posts={getPostsWithCorrectImage()}
                     likedPosts={likedPosts}
                     onLike={like}
                     onClickPost={handlePostClick}
