@@ -49,7 +49,7 @@ func (ac *AuthController) Register(c *gin.Context) {
 
 	_, err = ac.Store.GetUserByNickname(c, request.Nickname)
 	if err == nil {
-		c.JSON(http.StatusConflict, errorResponse("User already exists with the given nickName"))
+		c.JSON(http.StatusConflict, errorResponse("User already exists with the given nickname"))
 		return
 	}
 

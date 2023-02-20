@@ -11,6 +11,7 @@ import (
 
 	"app/bootstrap"
 	db "app/db/sqlc"
+	"app/internal/util"
 )
 
 type ProfileController struct {
@@ -138,10 +139,10 @@ func (pc *ProfileController) UpdateProfile(c *gin.Context) {
 
 	updateUserArg := db.UpdateUserParams{
 		ID:        user.ID,
-		Fullname:  NotEmpty(fullname, user.Fullname),
-		Email:     NotEmpty(email, user.Email),
-		Nickname:  NotEmpty(nickname, user.Nickname),
-		AvatarUrl: NotEmpty(avatarUrl, user.AvatarUrl),
+		Fullname:  util.DefaultIfEmpty(fullname, user.Fullname),
+		Email:     util.DefaultIfEmpty(email, user.Email),
+		Nickname:  util.DefaultIfEmpty(nickname, user.Nickname),
+		AvatarUrl: util.DefaultIfEmpty(avatarUrl, user.AvatarUrl),
 	}
 
 	user, err = pc.Store.UpdateUser(c, updateUserArg)
@@ -153,13 +154,6 @@ func (pc *ProfileController) UpdateProfile(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-func NotEmpty(s1, defaultStr string) string {
-	if s1 == "" {
-		return defaultStr
-	}
-	return s1
-}
-
 func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 	userIDToFollow, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
@@ -167,7 +161,7 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 		return
 	}
 
-	userID := c.GetInt64("user_id")
+	userID := c.GetInt64("userID")
 
 	_, err = pc.Store.GetUserByID(c, userID)
 	if err != nil {

@@ -25,12 +25,12 @@ func NewEnv() *Env {
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		logrus.Fatal("Can't find the file .env : ", err)
+		logrus.Fatal("Can't find the file .env: %v", err)
 	}
 
 	err = viper.Unmarshal(&env)
 	if err != nil {
-		logrus.Fatal("Environment can't be loaded: ", err)
+		logrus.Fatal("Environment can't be loaded: %v", err)
 	}
 
 	if env.AppEnv == "development" {

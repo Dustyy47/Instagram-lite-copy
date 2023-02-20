@@ -102,7 +102,7 @@ func (cc *ConversationController) Run(c *gin.Context) {
 		for {
 			msg := <-ch
 			if err := conn.WriteJSON(msg); err != nil {
-				log.Printf("Failed to write message to websocket: %v", err)
+				logrus.Printf("failed to write message to websocket: %v", err)
 				break
 			}
 		}
@@ -115,7 +115,7 @@ func (cc *ConversationController) Run(c *gin.Context) {
 			Offset:         0,
 		})
 		if err != nil {
-			logrus.Printf("Failed to read messages from database: %v", err)
+			logrus.Printf("failed to read messages from database: %v", err)
 			return
 		}
 
@@ -132,7 +132,7 @@ func (cc *ConversationController) Run(c *gin.Context) {
 	for {
 		var msg message
 		if err := conn.ReadJSON(&msg); err != nil {
-			logrus.Printf("Failed to read message from websocket: %v", err)
+			logrus.Printf("failed to read message from websocket: %v", err)
 			break
 		}
 
@@ -144,7 +144,7 @@ func (cc *ConversationController) Run(c *gin.Context) {
 
 		createdMessage, err := cc.Store.CreateMessage(c, createMessageArg)
 		if err != nil {
-			logrus.Printf("Failed to create message to db: %v", err)
+			logrus.Printf("failed to create message to db: %v", err)
 			break
 		}
 
@@ -155,7 +155,7 @@ func (cc *ConversationController) Run(c *gin.Context) {
 
 		err = cc.Store.UpdateLastMsgOfConversation(c, updateLastMsgOfConversationArg)
 		if err != nil {
-			logrus.Printf("Failed to update last message of conversation: %v", err)
+			logrus.Printf("failed to update last message of conversation: %v", err)
 		}
 
 		msg = message{
