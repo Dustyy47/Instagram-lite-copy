@@ -100,7 +100,7 @@ type GetPostsByUserRequest struct {
 	UserID   int64  `form:"userID" binding:"required"`
 	Nickname string `form:"nickname" binding:"required"`
 	Limit    int32  `form:"limit" binding:"required"`
-	Offset   int32  `form:"offset" binding:"required"`
+	Offset   int32  `form:"offset" binding:"min=0"`
 }
 
 func (pc *PostController) GetPostsByUser(c *gin.Context) {

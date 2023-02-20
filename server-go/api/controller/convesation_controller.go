@@ -86,7 +86,7 @@ func (cc *ConversationController) Run(c *gin.Context) {
 
 	_, err = cc.Store.GetConverstionByID(c, conversationID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, fmt.Sprint("Conversation not found by id: %d", conversationID))
+		c.JSON(http.StatusBadRequest, fmt.Sprintf("Conversation not found by id: %d", conversationID))
 		return
 	}
 
