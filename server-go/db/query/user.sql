@@ -21,13 +21,6 @@ WHERE email = $1 LIMIT 1;
 SELECT * FROM users
 WHERE nickname = $1 LIMIT 1;
 
--- name: FindUsersByNickname :many
-SELECT * FROM users
-WHERE nickname ILIKE '%' || $1 || '%' 
-ORDER BY id
-OFFSET $2
-LIMIT $3;
-
 -- name: UpdateUser :one
 UPDATE users 
 SET 

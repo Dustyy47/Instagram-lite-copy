@@ -11,7 +11,6 @@ import (
 
 	"app/bootstrap"
 	db "app/db/sqlc"
-	"app/internal/util"
 )
 
 type ProfileController struct {
@@ -226,7 +225,7 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 
 type FindUsersRequest struct {
 	Limit  int32 `form:"limit" binding:"required"`
-	Offset int32 `form:"offset" binding:"required"`
+	Offset int32 `form:"offset" binding:"min=0"`
 }
 
 func (pc *ProfileController) FindUsers(c *gin.Context) {
@@ -241,9 +240,9 @@ func (pc *ProfileController) FindUsers(c *gin.Context) {
 	name := c.Param("name")
 
 	findUsersByNicknameArgs := db.FindUsersByNicknameParams{
-		Column1: util.NullString(name),
-		Limit:   request.Limit,
-		Offset:  request.Offset,
+		Nickname: name,
+		Limit:    request.Limit,
+		Offset:   request.Offset,
 	}
 
 	users, err := pc.Store.FindUsersByNickname(c, findUsersByNicknameArgs)

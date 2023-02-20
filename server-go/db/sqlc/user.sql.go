@@ -7,7 +7,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -48,50 +47,6 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.AvatarUrl,
 	)
 	return i, err
-}
-
-const findUsersByNickname = `-- name: FindUsersByNickname :many
-SELECT id, email, fullname, hashed_password, nickname, avatar_url FROM users
-WHERE nickname ILIKE '%' || $1 || '%' 
-ORDER BY id
-OFFSET $2
-LIMIT $3
-`
-
-type FindUsersByNicknameParams struct {
-	Column1 sql.NullString `json:"column_1"`
-	Offset  int32          `json:"offset"`
-	Limit   int32          `json:"limit"`
-}
-
-func (q *Queries) FindUsersByNickname(ctx context.Context, arg FindUsersByNicknameParams) ([]User, error) {
-	rows, err := q.db.QueryContext(ctx, findUsersByNickname, arg.Column1, arg.Offset, arg.Limit)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []User
-	for rows.Next() {
-		var i User
-		if err := rows.Scan(
-			&i.ID,
-			&i.Email,
-			&i.Fullname,
-			&i.HashedPassword,
-			&i.Nickname,
-			&i.AvatarUrl,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
