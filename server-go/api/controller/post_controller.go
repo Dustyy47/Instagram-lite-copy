@@ -189,7 +189,7 @@ func (pc *PostController) Like(c *gin.Context) {
 		}
 	}
 
-	numberLikes, err := pc.Store.GetNumLikesPost(c)
+	numberLikes, err := pc.Store.GetNumLikesPost(c, post.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		return

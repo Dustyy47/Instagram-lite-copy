@@ -44,10 +44,11 @@ func (q *Queries) GetLikedComment(ctx context.Context, arg GetLikedCommentParams
 
 const getNumLikesComment = `-- name: GetNumLikesComment :one
 SELECT COUNT(*) as count FROM comment_likes
+WHERE comment_id = $1
 `
 
-func (q *Queries) GetNumLikesComment(ctx context.Context) (int64, error) {
-	row := q.db.QueryRowContext(ctx, getNumLikesComment)
+func (q *Queries) GetNumLikesComment(ctx context.Context, commentID int64) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getNumLikesComment, commentID)
 	var count int64
 	err := row.Scan(&count)
 	return count, err

@@ -182,7 +182,7 @@ func (cc *CommentController) Like(c *gin.Context) {
 		}
 	}
 
-	numberLikes, err := cc.Store.GetNumLikesComment(c)
+	numberLikes, err := cc.Store.GetNumLikesComment(c, comment.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		return
