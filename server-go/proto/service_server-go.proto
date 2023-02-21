@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package pb;
+
+import "rpc_register.proto";
+import "rpc_login.proto";
+import "rpc_auth_response.proto";
+
+
+option go_package = "app/pb";
+
+
+service ServerGO {
+    rpc Register (RegisterRequest) returns (AuthResponse) {
+    }
+    rpc LoginUser (LoginRequest) returns (AuthResponse) {
+    }
+}

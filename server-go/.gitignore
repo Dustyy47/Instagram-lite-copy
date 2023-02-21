@@ -1,6 +1,10 @@
 .env
 docker-compose.yml
 Dockerfile
+Makefile
+
+/pb
+/images
 
 Thumbs.db
 .DS_Store
@@ -9,4 +13,3 @@ Thumbs.db
 .idea
 .vscode
 
-/images
