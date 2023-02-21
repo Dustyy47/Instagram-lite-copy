@@ -5,14 +5,38 @@ package pb;
 import "rpc_register.proto";
 import "rpc_login.proto";
 import "rpc_auth_response.proto";
-
-
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/api/annotations.proto";
 option go_package = "app/pb";
 
+//option go_package = "github.com/grpc-ecosystem/grpc-gateway/v2/examples/internal/proto/examplepb";
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "server-go";
+    version: "1.0";
+  };
+};
 
 service ServerGO {
     rpc Register (RegisterRequest) returns (AuthResponse) {
+      option (google.api.http) = {
+        post: "/v1/auth/registration"
+        body: "*"
+      };
+      option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+        description: "Use this API to register a new user and get access token";
+        summary: "Register";
+      };
     }
-    rpc LoginUser (LoginRequest) returns (AuthResponse) {
+
+    rpc Login (LoginRequest) returns (AuthResponse) {
+      option (google.api.http) = {
+        post: "/v1/auth/login"
+        body: "*"
+      };
+      option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+        description: "Use this API to login user and get access token";
+        summary: "Login";
+      };
     }
 }

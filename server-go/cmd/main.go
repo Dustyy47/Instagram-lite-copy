@@ -2,6 +2,8 @@ package main
 
 import (
 	"database/sql"
+	"net"
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -37,10 +39,26 @@ func main() {
 	timeout := time.Duration(env.ContextTimeout) * time.Second
 
 	gin := gin.Default()
-	router := gin.Group("/api/")
+
+	fs := http.FileServer(http.Dir("./doc/swagger"))
+	mux := http.NewServeMux()
+	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
+
+	listener, err := net.Listen("tcp", "0.0.0.0:8000")
+	if err != nil {
+		logrus.Fatalf("cannot create listener: %w", err)
+	}
+
+	logrus.Info("start HTTP gateway server at %s", listener.Addr().String())
+	err = http.Serve(listener, mux)
+	if err != nil {
+		logrus.Fatalf("cannot start HTTP gateway server: %w", err)
+	}
+
+	router := gin.Group("/v1/")
 	route.Setup(env, timeout, store, router)
 
-	logrus.Infof("server running on address: %s", env.ServerAddress);
+	logrus.Infof("server running on address: %s", env.ServerAddress)
 	gin.Run(env.ServerAddress)
 }
 

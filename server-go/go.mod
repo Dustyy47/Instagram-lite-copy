@@ -4,11 +4,14 @@ go 1.19
 
 require (
 	github.com/gin-gonic/gin v1.8.2
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.0
 	google.golang.org/grpc v1.52.0
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0
 )
 
 require (
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/golang/glog v1.0.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
