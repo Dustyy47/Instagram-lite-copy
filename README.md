@@ -45,3 +45,4 @@ Hello world! It\`s my first MERN project. The main task was to create a simple c
   - **\*ADAPTIVE\*** - Solving adaptive design issues 
   - **\*OPTIMIZE\*** - Improving the performance, efficiency, or scalability of the code
   - **\*PROTO\*** - Proto
+  - **\*SWAGGER\*** - Swagger
