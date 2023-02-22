@@ -17,7 +17,7 @@ func NewProfileRouter(env *bootstrap.Env, timeout time.Duration, store db.Store,
 	}
 
 	group.GET("/id/:id", pc.GetProfileData)
-	group.GET("/nickname/nickname", pc.GetProfileData)
+	group.GET("/nickname/:nickname", pc.GetProfileData)
 	group.PATCH("/me", pc.UpdateProfile)
 	group.GET("/id/:id/follow", pc.ToggleFollow)
 

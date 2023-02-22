@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "app/pb";
+
+message GetProfileDataRequest  {
+	int64 id = 1;
+	string nickname = 2;
+}
+
+message GetProfileDataResponse  {
+	int64 user_id = 1;
+	string email = 2;
+	string nickname = 3;
+	string fullname = 4;
+
+	string avatar_url = 5;
+
+	int64 num_followers = 6;
+	int64 num_following = 7;
+
+	bool is_user_profile = 8;
+}
+
+
+//google.protobuf.Timestamp created_at = 5;

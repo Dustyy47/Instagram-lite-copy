@@ -5,19 +5,33 @@ package pb;
 import "rpc_register.proto";
 import "rpc_login.proto";
 import "rpc_auth_response.proto";
+
+import "rpc_get_profile_data.proto";
+
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "google/api/annotations.proto";
+
 option go_package = "app/pb";
 
-//option go_package = "github.com/grpc-ecosystem/grpc-gateway/v2/examples/internal/proto/examplepb";
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
     title: "server-go";
     version: "1.0";
   };
+
+  security_definitions: {
+    security: {
+      value:{
+      type: TYPE_API_KEY;
+      name: "Authorization";
+      in: IN_HEADER;
+      },
+    }
+  };
 };
 
 service ServerGO {
+  // Auth
     rpc Register (RegisterRequest) returns (AuthResponse) {
       option (google.api.http) = {
         post: "/v1/auth/registration"
@@ -37,6 +51,23 @@ service ServerGO {
       option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
         description: "Use this API to login user and get access token";
         summary: "Login";
+      };
+    }
+
+  // Profile
+    rpc GetProfileData (GetProfileDataRequest) returns (GetProfileDataResponse) {
+      option (google.api.http) = {
+        get: "/v1/profile/id/{id}"
+        additional_bindings {
+          get: "/v1/profile/nickname/{nickname}"
+        }
+      };
+
+      option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+        description: "Use this API to get profile data by id";
+        summary: "GetProfileData";
+
+        security: {}
       };
     }
 }

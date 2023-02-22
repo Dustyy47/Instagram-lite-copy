@@ -83,6 +83,86 @@
           "ServerGO"
         ]
       }
+    },
+    "/v1/profile/id/{id}": {
+      "get": {
+        "summary": "GetProfileData",
+        "description": "Use this API to get profile data by id",
+        "operationId": "ServerGO_GetProfileData",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetProfileDataResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "nickname",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ServerGO"
+        ],
+        "security": []
+      }
+    },
+    "/v1/profile/nickname/{nickname}": {
+      "get": {
+        "summary": "GetProfileData",
+        "description": "Use this API to get profile data by id",
+        "operationId": "ServerGO_GetProfileData2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetProfileDataResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "nickname",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ServerGO"
+        ],
+        "security": []
+      }
     }
   },
   "definitions": {
@@ -91,6 +171,38 @@
       "properties": {
         "accessToken": {
           "type": "string"
+        }
+      }
+    },
+    "pbGetProfileDataResponse": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "email": {
+          "type": "string"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "fullname": {
+          "type": "string"
+        },
+        "avatarUrl": {
+          "type": "string"
+        },
+        "numFollowers": {
+          "type": "string",
+          "format": "int64"
+        },
+        "numFollowing": {
+          "type": "string",
+          "format": "int64"
+        },
+        "isUserProfile": {
+          "type": "boolean"
         }
       }
     },
@@ -152,6 +264,13 @@
           }
         }
       }
+    }
+  },
+  "securityDefinitions": {
+    "": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
     }
   }
 }

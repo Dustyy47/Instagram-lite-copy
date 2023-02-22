@@ -22,8 +22,8 @@ type ProfileController struct {
 type GetProfileDataResponse struct {
 	UserID   int64  `json:"userID"`
 	Email    string `json:"email"`
-	NickName string `json:"nickname"`
-	FullName string `json:"fullname"`
+	Nickname string `json:"nickname"`
+	Fullname string `json:"fullname"`
 
 	AvatarURL string `json:"avatarUrl"`
 
@@ -84,7 +84,8 @@ func (pc *ProfileController) GetProfileData(c *gin.Context) {
 	getProfileDataResponse := GetProfileDataResponse{
 		UserID:   user.ID,
 		Email:    user.Email,
-		NickName: user.Nickname,
+		Nickname: user.Nickname,
+		Fullname: user.Fullname,
 
 		AvatarURL: user.AvatarUrl,
 
@@ -95,6 +96,14 @@ func (pc *ProfileController) GetProfileData(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, getProfileDataResponse)
+}
+
+type UpdateProfileResponse struct {
+	UserID    int64  `json:"userID"`
+	Email     string `json:"email"`
+	Fullname  string `json:"fullname"`
+	Nickname  string `json:"nickname"`
+	AvatarUrl string `json:"avatarUrl"`
 }
 
 func (pc *ProfileController) UpdateProfile(c *gin.Context) {
@@ -151,7 +160,14 @@ func (pc *ProfileController) UpdateProfile(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, user)
+	updateProfileResponse := UpdateProfileResponse{
+		UserID:    user.ID,
+		Email:     user.Email,
+		Fullname:  user.Fullname,
+		Nickname:  user.Nickname,
+		AvatarUrl: user.AvatarUrl,
+	}
+	c.JSON(http.StatusOK, updateProfileResponse)
 }
 
 func (pc *ProfileController) ToggleFollow(c *gin.Context) {

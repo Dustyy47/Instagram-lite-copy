@@ -3,6 +3,7 @@ docker-compose.yml
 Dockerfile
 Makefile
 
+hlam.json
 /pb
 /images
 
