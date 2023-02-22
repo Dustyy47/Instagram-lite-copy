@@ -10,7 +10,6 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
-
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
@@ -25,6 +24,16 @@ func main() {
 
 	env := bootstrap.NewEnv()
 
+	db, store := connectToDB(env)
+
+	DBName := env.DBDriver
+	runDBMigration(db, DBName, env.MigrationURL)
+
+	timeout := time.Duration(env.ContextTimeout) * time.Second
+	runGinServer(env, timeout, store)
+}
+
+func connectToDB(env *bootstrap.Env) (*sql.DB, sqlc_db.Store) {
 	logrus.Print(env.DBSource)
 	db, err := db.Connect(env.DBDriver, env.DBSource)
 	if err != nil {
@@ -33,26 +42,7 @@ func main() {
 	logrus.Infof("connected to Postgresql")
 
 	store := sqlc_db.NewStore(db)
-
-	DBName := env.DBDriver
-	runDBMigration(db, DBName, env.MigrationURL)
-
-	timeout := time.Duration(env.ContextTimeout) * time.Second
-
-	ginEngine := gin.Default()
-
-	// Serve the Swagger UI files.
-	ginEngine.Static("/swagger/", "./doc/swagger")
-
-	// Serve the Swagger JSON endpoint.
-	swaggerURL := ginSwagger.URL("swagger/server_go.swagger.json")
-	ginEngine.GET("/swagger-docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, swaggerURL))
-
-	router := ginEngine.Group("/v1/")
-	route.Setup(env, timeout, store, router)
-
-	logrus.Infof("server running on address: %s", env.ServerAddress)
-	ginEngine.Run(env.ServerAddress)
+	return db, store
 }
 
 func runDBMigration(db *sql.DB, DBname, migrationURL string) {
@@ -71,4 +61,25 @@ func runDBMigration(db *sql.DB, DBname, migrationURL string) {
 	}
 
 	logrus.Printf("db migrated successfully")
+}
+
+func runGinServer(env *bootstrap.Env, timeout time.Duration, store sqlc_db.Store) {
+	ginEngine := gin.Default()
+
+	connectSwaggerToGin(ginEngine)
+
+	router := ginEngine.Group("/v1/")
+	route.Setup(env, timeout, store, router)
+
+	logrus.Infof("server running on address: %s", env.ServerAddress)
+	ginEngine.Run(env.ServerAddress)
+}
+
+func connectSwaggerToGin(ginEngine *gin.Engine) {
+	// Serve the Swagger UI files
+	ginEngine.Static("/swagger/", "./doc/swagger")
+
+	// Serve the Swagger JSON endpoint
+	swaggerURL := ginSwagger.URL("swagger/server_go.swagger.json")
+	ginEngine.GET("/swagger-docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, swaggerURL))
 }
