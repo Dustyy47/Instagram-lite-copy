@@ -1,5 +1,3 @@
-@import '../../styles/variables.scss';
-
 .communicateButtons {
     display: flex;
     align-items: top;
@@ -17,7 +15,7 @@
     * {
         color: white !important;
     }
-    background-color: $accentColor !important;
+    background-color: var(--accentColor) !important;
 }
 
 @media screen and (max-width: 1000px) {

@@ -5,9 +5,9 @@ import { useUserAuthRedirect } from '../../hooks/useUserAuthRedirect'
 import { checks, useFormValidator, useValidator, Validation } from '../../hooks/validators'
 import { login } from '../../http/authApi'
 import { REGISTER_ROUTE } from '../../routes'
-import { Button } from '../Button/Button'
+import { Button } from '../UI/Button/Button'
 import { HideIcon } from '../HideIcon/HideIcon'
-import { Input } from '../Input/Input'
+import { Input } from '../UI/Input/Input'
 import styles from './Auth.module.scss'
 
 export function Login() {

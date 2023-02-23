@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import { searchUsers } from '../../http/profileApi'
-import { Input } from '../Input/Input'
+import { Input } from '../UI/Input/Input'
 import { UsersList } from '../UsersList/UsersList'
 import styles from './Search.module.scss'
 

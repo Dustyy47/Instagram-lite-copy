@@ -1,4 +1,3 @@
-@import '../../styles/variables.scss';
 .emojisBtn {
     cursor: pointer;
     transition: 0.3s;
@@ -9,7 +8,7 @@
     }
     path {
         transition: 0.3s;
-        color: $accentColor;
+        color: var(--accentColor);
     }
 }
 

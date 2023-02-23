@@ -1,6 +1,5 @@
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useCombinedSelector } from '../../hooks/useCombinedSelector'
-import { Status } from '../../models/LoadingStatus'
+import { useLocation } from 'react-router-dom'
+import { useProfileNavigate } from '../../hooks/useProfileNavigate'
 import { Avatar } from '../Avatar/Avatar'
 import styles from './AccountLabel.module.scss'
 
@@ -9,44 +8,14 @@ interface AccountLabelProps {
 }
 
 export function AccountLabel({ className }: AccountLabelProps) {
-    const { loadingStatus, avatarUrl, nickName, fullName } = useCombinedSelector('user', [
-        'loadingStatus',
-        'avatarUrl',
-        'nickName',
-        'fullName',
-    ])
-
+    const { data, navigateToProfile } = useProfileNavigate()
     const location = useLocation()
-    const navigate = useNavigate()
-
-    function generateData() {
-        if (loadingStatus === Status.loading) {
-            return {
-                avatarUrl: '#',
-                userName: '',
-                link: '/auth/login',
-            }
-        }
-        if (avatarUrl !== '')
-            return {
-                avatarUrl: avatarUrl,
-                userName: fullName,
-                link: `/profile/${nickName}`,
-            }
-        return {
-            avatarUrl: '',
-            userName: 'Гость',
-            link: '/auth/login',
-        }
-    }
-
-    let data = generateData()
 
     function handleClick() {
         if (data.link === location.pathname) {
             return
         }
-        navigate(data.link)
+        navigateToProfile()
     }
 
     return (

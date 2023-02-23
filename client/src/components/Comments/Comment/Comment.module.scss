@@ -1,8 +1,6 @@
-@import '../../../styles/variables.scss';
-
 .wrapper {
     width: 95%;
-    box-shadow: $lightShadow;
+    box-shadow: var(--lightShadow);
     background: white;
     border-radius: 5px;
     display: flex;

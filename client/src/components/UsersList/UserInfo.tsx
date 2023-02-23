@@ -7,7 +7,7 @@ interface UsersListItemProps {
     onClick: React.MouseEventHandler
 }
 
-export function UsersListItem({ user, onClick }: UsersListItemProps) {
+export function UserInfo({ user, onClick }: UsersListItemProps) {
     return (
         <div onClick={onClick} className={styles.item}>
             <Avatar url={user.avatarUrl as string} />

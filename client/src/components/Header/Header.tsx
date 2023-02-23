@@ -1,7 +1,7 @@
 import { BiExit } from 'react-icons/bi'
 import { useLogout } from '../../hooks/useLogout'
 import { useAppSelector } from '../../store/hooks'
-import { Button } from '../Button/Button'
+import { Button } from '../UI/Button/Button'
 import { Search } from '../Search/Search'
 import { AccountLabel } from './AccountLabel'
 import styles from './Header.module.scss'

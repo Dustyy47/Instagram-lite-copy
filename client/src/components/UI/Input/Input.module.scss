@@ -1,5 +1,3 @@
-@import '../../styles/variables';
-
 .wrapper {
     display: flex;
     flex-direction: column;
@@ -18,12 +16,12 @@
     font-weight: 500;
 
     span {
-        color: $accentColor;
+        color: var(--accentColor);
     }
 }
 
 .input {
-    color: $accentColor;
+    color: var(--accentColor);
     background: #fcfcfc;
     box-shadow: 0 2px 7px -3px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
@@ -35,8 +33,8 @@
 }
 
 input::-webkit-input-placeholder {
-    color: $accentColor;
+    color: var(--accentColor);
 }
 input::placeholder {
-    color: $accentColor;
+    color: var(--accentColor);
 }

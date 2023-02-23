@@ -1,8 +1,6 @@
-@import '../../styles/variables.scss';
-
 .container {
     display: none;
-    box-shadow: $shadow;
+    box-shadow: var(--shadow);
     z-index: 5;
 }
 
@@ -15,8 +13,8 @@
         right: 0;
         width: 100%;
         background: white;
-        box-shadow: $shadow;
-        height: $navbarHeight;
+        box-shadow: var(--shadow);
+        height: var(--navbarHeight);
     }
 
     .wrapper {

@@ -1,0 +1,27 @@
+.form {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+}
+
+.formLeftWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sendBtnIcon {
+    display: none;
+}
+.sendBtnText {
+    display: inline-block;
+}
+
+@media screen and (max-width: 600px) {
+    .sendBtnIcon {
+        display: inline-block;
+    }
+    .sendBtnText {
+        display: none;
+    }
+}

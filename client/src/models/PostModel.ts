@@ -4,6 +4,7 @@ export interface PostModel {
     imageUrl: string
     title: string
     description: string
+    postedBy: string
 }
 
 export interface ExtendedPostModel {

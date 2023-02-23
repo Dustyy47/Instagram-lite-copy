@@ -1,10 +1,9 @@
-@import '../../styles/variables.scss';
 .wrapper {
     cursor: pointer;
     width: 100%;
     aspect-ratio: 1;
     border-radius: 15px;
-    box-shadow: $shadow;
+    box-shadow: var(--shadow);
     outline: none;
     overflow: hidden;
     position: relative;
@@ -60,6 +59,10 @@
     transform: translateY(20px);
     left: 15px;
     bottom: 15px;
+
+    svg {
+        width: 35px;
+    }
 
     svg[data-isliked='false'] {
         stroke: rgb(238, 238, 238);

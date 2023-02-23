@@ -1,8 +1,8 @@
 import { ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
-import { Loading } from '../Loading/Loading'
-import { UsersListItem } from './UsersListItem'
+import { Loading } from '../UI/Loading/Loading'
+import { UserInfo } from './UserInfo'
 
 interface UsersListProps {
     users: ProfileOwnerModel[]
@@ -32,7 +32,7 @@ export function UsersList({ users, title, onClick, isLoading, children }: UsersL
                 {users.length > 0 ? (
                     users.map((user) => (
                         <li>
-                            <UsersListItem
+                            <UserInfo
                                 onClick={onClick ? () => onClick(user) : () => handleClickToUser(user)}
                                 key={user._id}
                                 user={user}

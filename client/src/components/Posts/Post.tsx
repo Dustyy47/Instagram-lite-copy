@@ -1,51 +1,28 @@
-import { useCallback, useEffect, useState } from 'react'
-import { ClickPostCallback, LikePostCallback } from '../../models/CallbacksTypes'
+import { PostLikeButton } from 'components/LikeBtn/PostLikeBtn'
 import { PostModel } from '../../models/PostModel'
-import { useAppSelector } from '../../store/hooks'
-import { LikeBtn } from '../LikeBtn/LikeBtn'
+import { useAppDispatch } from '../../store/hooks'
+import { fetchOpenPost } from '../../store/slices/extendedPostSlice'
 import styles from './Post.module.scss'
 
 interface PostProps {
     data: PostModel
-    onLike: LikePostCallback
-    isLiked: boolean
-    onClick: ClickPostCallback
 }
 
-export function Post({ data, onLike, isLiked, onClick }: PostProps) {
-    const { likes, _id, imageUrl, title } = data
-    const [likesCountWithoutUser, setLikesCountWithoutUser] = useState<number>(0)
+export function Post({ data }: PostProps) {
+    const { imageUrl, title } = data
 
-    const isGuest = useAppSelector((state) => state.user.isGuest)
-
-    const like = useCallback(
-        (e: React.MouseEvent) => {
-            if (isGuest) return
-            e.stopPropagation()
-            onLike(_id)
-        },
-        [_id, onLike]
-    )
+    const dispatch = useAppDispatch()
 
     function handleClick() {
-        onClick({ postData: data, likesCountWithoutUser, isActive: true })
+        dispatch(fetchOpenPost(data))
     }
-
-    useEffect(() => {
-        setLikesCountWithoutUser(likes.length - +isLiked)
-    }, [])
 
     return (
         <div className={styles.wrapper} onClick={handleClick}>
             <img src={imageUrl} alt="Post" className={styles.preview} />
             <div className={styles.info}>
                 <h5 className={styles.title}>{title}</h5>
-                <LikeBtn
-                    className={styles.likes}
-                    onLike={like}
-                    likesCount={likesCountWithoutUser + +isLiked}
-                    isLiked={isLiked}
-                />
+                <PostLikeButton className={styles.likes} post={data} />
             </div>
         </div>
     )
