@@ -6,9 +6,6 @@
 .git/
 .gitignore
 
-# Ignore documentation files
-doc/
-
 pb/
 Makefile
 
