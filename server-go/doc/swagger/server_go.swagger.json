@@ -121,7 +121,105 @@
         "tags": [
           "ServerGO"
         ],
-        "security": []
+        "security": [
+          {
+            "": []
+          }
+        ]
+      }
+    },
+    "/v1/profile/id/{id}/follow": {
+      "put": {
+        "summary": "ToggleFollow",
+        "description": "Use this API to follow or unfollow a profile",
+        "operationId": "ServerGO_ToggleFollow",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbSuccessResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ServerGO"
+        ],
+        "security": [
+          {
+            "": []
+          }
+        ]
+      }
+    },
+    "/v1/profile/me": {
+      "patch": {
+        "summary": "UpdateProfile",
+        "description": "Use this API to update profile data",
+        "operationId": "ServerGO_UpdateProfile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateProfileResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "fullname",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "nickname",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "avatarImage",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          }
+        ],
+        "tags": [
+          "ServerGO"
+        ],
+        "security": [
+          {
+            "": []
+          }
+        ]
       }
     },
     "/v1/profile/nickname/{nickname}": {
@@ -161,7 +259,11 @@
         "tags": [
           "ServerGO"
         ],
-        "security": []
+        "security": [
+          {
+            "": []
+          }
+        ]
       }
     }
   },
@@ -235,6 +337,35 @@
         "AvatarImage": {
           "type": "string",
           "format": "byte"
+        }
+      }
+    },
+    "pbSuccessResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "pbUpdateProfileResponse": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "email": {
+          "type": "string"
+        },
+        "fullname": {
+          "type": "string"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "avatarUrl": {
+          "type": "string"
         }
       }
     },

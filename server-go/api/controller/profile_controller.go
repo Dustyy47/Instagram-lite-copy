@@ -223,7 +223,7 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 			UserToID:   userIDToFollow,
 		}
 
-		pc.Store.CreateFollower(c, createFollowerArg)
+		_, err = pc.Store.CreateFollower(c, createFollowerArg)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 			return

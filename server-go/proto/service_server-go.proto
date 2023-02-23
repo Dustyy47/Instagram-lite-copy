@@ -7,11 +7,16 @@ import "rpc_login.proto";
 import "rpc_auth_response.proto";
 
 import "rpc_get_profile_data.proto";
+import "rpc_update_profile.proto";
+import "rpc_toggle_follow.proto";
+import "success_response.proto";
+
 
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "google/api/annotations.proto";
 
 option go_package = "app/pb";
+
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
@@ -22,11 +27,11 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   security_definitions: {
     security: {
       value:{
-      type: TYPE_API_KEY;
-      name: "Authorization";
-      in: IN_HEADER;
+        type: TYPE_API_KEY;
+        name: "Authorization";
+        in: IN_HEADER;
       },
-    }
+    },
   };
 };
 
@@ -67,7 +72,41 @@ service ServerGO {
         description: "Use this API to get profile data by id";
         summary: "GetProfileData";
 
-        security: {}
+        security: {
+          security_requirement: {
+          }
+        };
+      };
+    }
+
+    rpc UpdateProfile (UpdateProfileRequest) returns (UpdateProfileResponse) {
+      option (google.api.http) = {
+        patch: "/v1/profile/me"
+      };
+
+      option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+        description: "Use this API to update profile data";
+        summary: "UpdateProfile";
+
+        security: {
+          security_requirement: {
+          }
+        };
+      };
+    }
+
+    rpc ToggleFollow (ToggleFollowRequest) returns (SuccessResponse) {
+      option (google.api.http) = {
+        put: "/v1/profile/id/{id}/follow"
+      };
+
+      option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+        description: "Use this API to follow or unfollow a profile";
+        summary: "ToggleFollow";
+
+        security: {
+          security_requirement: {}
+        };
       };
     }
 }
