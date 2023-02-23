@@ -17,6 +17,7 @@ func JwtAuthMiddleware(secret string) gin.HandlerFunc {
 		t := strings.Split(authHeader, " ")
 		if len(t) == 2 {
 			authToken := t[1]
+			
 			authorized, err := tokenutil.IsAuthorized(authToken, secret)
 			if authorized {
 				userID, err := tokenutil.ExtractIDFromToken(authToken, secret)

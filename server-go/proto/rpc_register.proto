@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "app/pb";
+
+message RegisterRequest {
+    string email = 1;
+	string password = 2;
+	string fullname = 3;
+	string nickname = 4;
+
+	bytes AvatarImage = 5;
+}
+
+
+//*multipart.FileHeader analog into protobuf

@@ -49,7 +49,7 @@ CREATE TABLE "post_likes" (
   "user_id" bigint NOT NULL
 );
 
-CREATE TABLE "folowers" (
+CREATE TABLE "followers" (
   "user_from_id" bigint NOT NULL,
   "user_to_id" bigint NOT NULL
 );
@@ -80,11 +80,11 @@ CREATE INDEX ON "comment_likes" ("comment_id", "user_id");
 
 CREATE INDEX ON "post_likes" ("post_id", "user_id");
 
-CREATE INDEX ON "folowers" ("user_from_id");
+CREATE INDEX ON "followers" ("user_from_id");
 
-CREATE INDEX ON "folowers" ("user_to_id");
+CREATE INDEX ON "followers" ("user_to_id");
 
-CREATE INDEX ON "folowers" ("user_from_id", "user_to_id");
+CREATE INDEX ON "followers" ("user_from_id", "user_to_id");
 
 ALTER TABLE "posts" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
@@ -108,6 +108,6 @@ ALTER TABLE "post_likes" ADD FOREIGN KEY ("post_id") REFERENCES "posts" ("id");
 
 ALTER TABLE "post_likes" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
-ALTER TABLE "folowers" ADD FOREIGN KEY ("user_from_id") REFERENCES "users" ("id");
+ALTER TABLE "followers" ADD FOREIGN KEY ("user_from_id") REFERENCES "users" ("id");
 
-ALTER TABLE "folowers" ADD FOREIGN KEY ("user_to_id") REFERENCES "users" ("id");
+ALTER TABLE "followers" ADD FOREIGN KEY ("user_to_id") REFERENCES "users" ("id");

@@ -40,8 +40,9 @@ func CreateAccessToken(user *db.User, secret string, expiry int) (accessToken st
 func IsAuthorized(requestToken string, secret string) (bool, error) {
 	_, err := jwt.Parse(requestToken, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
+
 		return []byte(secret), nil
 	})
 	if err != nil {
@@ -53,20 +54,20 @@ func IsAuthorized(requestToken string, secret string) (bool, error) {
 
 func ExtractIDFromToken(requestToken string, secret string) (string, error) {
 	token, err := jwt.Parse(requestToken, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		_, ok := token.Method.(*jwt.SigningMethodHMAC)
+		if !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
+
 		return []byte(secret), nil
 	})
-
 	if err != nil {
 		return "", err
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
-
 	if !ok && !token.Valid {
-		return "", fmt.Errorf("Invalid Token")
+		return "", fmt.Errorf("invalid Token")
 	}
 
 	return claims["id"].(string), nil

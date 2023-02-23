@@ -102,7 +102,7 @@ func (cc *CommentController) Remove(c *gin.Context) {
 type GetCommentOfPostRequest struct {
 	PostID int64 `form:"postID" binding:"required"`
 	Limit  int32 `form:"limit" binding:"required"`
-	Offset int32 `form:"offset" binding:"required"`
+	Offset int32 `form:"offset" binding:"min=0"`
 }
 
 func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
@@ -120,13 +120,13 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 		Offset: request.Offset,
 	}
 
-	posts, err := cc.Store.ListCommentsOfPost(c, listCommentsOfPostArg)
+	comments, err := cc.Store.ListCommentsOfPost(c, listCommentsOfPostArg)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		return
 	}
 
-	c.JSON(http.StatusOK, posts)
+	c.JSON(http.StatusOK, comments)
 }
 
 func (cc *CommentController) Like(c *gin.Context) {
@@ -182,7 +182,7 @@ func (cc *CommentController) Like(c *gin.Context) {
 		}
 	}
 
-	numberLikes, err := cc.Store.GetNumLikesComment(c)
+	numberLikes, err := cc.Store.GetNumLikesComment(c, comment.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		return

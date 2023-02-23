@@ -3,7 +3,7 @@
 </br>
 **About Project**: </br>
 Hello world! It\`s my first MERN project. The main task was to create a simple copy of famous social network - Instagram. To be honest I am an absolutely zero in AI (my bad), so  you won\`t see anything about "heavy alghoritms" in this repo. But if you\`re a beginner in webdev, I\`m sure, this will be useful for you!
-  >A few words about contributor - [Alexander](https://github.com/energy-spectrum) his opportunity is to improove the server with using Go lang and PostgreSQL.
+  >A few words about contributor - [Alexander](https://github.com/energy-spectrum) his opportunity is to improove the server with using Go and PostgreSQL.
   
 :gear: **Stack** :gear::     
   - *Client* :
@@ -24,7 +24,7 @@ Hello world! It\`s my first MERN project. The main task was to create a simple c
 
 :zap: **In progress** :zap:: 
   - Adaptive design
-  - Rewriting the server in Go lang
+  - Rewriting the server in go
 
 :bulb: **What planned** :bulb::
   - Adaptive design
@@ -43,3 +43,6 @@ Hello world! It\`s my first MERN project. The main task was to create a simple c
   - **\*TEST\*** - Adding tests
   - **\*GRAND\*** - Major update 
   - **\*ADAPTIVE\*** - Solving adaptive design issues 
+  - **\*OPTIMIZE\*** - Improving the performance, efficiency, or scalability of the code
+  - **\*PROTO\*** - Proto
+  - **\*SWAGGER\*** - Swagger

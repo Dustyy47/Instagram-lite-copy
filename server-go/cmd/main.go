@@ -10,6 +10,8 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 
 	route "app/api/route"
 	"app/bootstrap"
@@ -22,26 +24,25 @@ func main() {
 
 	env := bootstrap.NewEnv()
 
-	logrus.Print(env.DBSource)
-	db, err := db.Connect(env.DBDriver, env.DBSource)
-	if err != nil {
-		logrus.Fatalf("Failed to connect to Postgresql: %v", err)
-	}
-	logrus.Infof("Connected to Postgresql")
-
-	store := sqlc_db.NewStore(db)
+	db, store := connectToDB(env)
 
 	DBName := env.DBDriver
 	runDBMigration(db, DBName, env.MigrationURL)
 
 	timeout := time.Duration(env.ContextTimeout) * time.Second
+	runGinServer(env, timeout, store)
+}
 
-	gin := gin.Default()
-	router := gin.Group("/api/")
-	route.Setup(env, timeout, store, router)
+func connectToDB(env *bootstrap.Env) (*sql.DB, sqlc_db.Store) {
+	logrus.Print(env.DBSource)
+	db, err := db.Connect(env.DBDriver, env.DBSource)
+	if err != nil {
+		logrus.Fatalf("failed to connect to Postgresql: %v", err)
+	}
+	logrus.Infof("connected to Postgresql")
 
-	logrus.Infof("Server running on address: %s", env.ServerAddress);
-	gin.Run(env.ServerAddress)
+	store := sqlc_db.NewStore(db)
+	return db, store
 }
 
 func runDBMigration(db *sql.DB, DBname, migrationURL string) {
@@ -52,12 +53,33 @@ func runDBMigration(db *sql.DB, DBname, migrationURL string) {
 		DBname, // "postgres"
 		driver)
 	if err != nil {
-		logrus.Fatalf("Cannot create new migrate instance: %v", err)
+		logrus.Fatalf("cannot create new migrate instance: %v", err)
 	}
 
 	if err = migration.Up(); err != nil && err != migrate.ErrNoChange {
-		logrus.Fatalf("Failed to run migrate up: %v", err)
+		logrus.Fatalf("failed to run migrate up: %v", err)
 	}
 
-	logrus.Printf("DB migrated successfully")
+	logrus.Printf("db migrated successfully")
+}
+
+func runGinServer(env *bootstrap.Env, timeout time.Duration, store sqlc_db.Store) {
+	ginEngine := gin.Default()
+
+	connectSwaggerToGin(ginEngine)
+
+	router := ginEngine.Group("/v1/")
+	route.Setup(env, timeout, store, router)
+
+	logrus.Infof("server running on address: %s", env.ServerAddress)
+	ginEngine.Run(env.ServerAddress)
+}
+
+func connectSwaggerToGin(ginEngine *gin.Engine) {
+	// Serve the Swagger UI files
+	ginEngine.Static("/swagger/", "./doc/swagger")
+
+	// Serve the Swagger JSON endpoint
+	swaggerURL := ginSwagger.URL("swagger/server_go.swagger.json")
+	ginEngine.GET("/swagger-docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, swaggerURL))
 }

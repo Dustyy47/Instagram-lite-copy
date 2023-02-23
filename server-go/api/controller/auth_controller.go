@@ -49,7 +49,7 @@ func (ac *AuthController) Register(c *gin.Context) {
 
 	_, err = ac.Store.GetUserByNickname(c, request.Nickname)
 	if err == nil {
-		c.JSON(http.StatusConflict, errorResponse("User already exists with the given nickName"))
+		c.JSON(http.StatusConflict, errorResponse("User already exists with the given nickname"))
 		return
 	}
 
@@ -66,7 +66,7 @@ func (ac *AuthController) Register(c *gin.Context) {
 
 	err = c.SaveUploadedFile(request.AvatarImage, "images/avatars/"+avatarName)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, errorResponse("Failed to save the avatarImage on the server"))
+		c.JSON(http.StatusInternalServerError, errorResponse("Error saving avatar image"))
 		return
 	}
 

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "app/pb";
+
+message UpdateProfileRequest  {
+	string fullname = 1;
+	string email = 2;
+	string nickname = 3;
+	bytes avatarImage = 4;
+}
+
+message UpdateProfileResponse  {
+	int64 user_id = 1;
+	string email = 2;
+	string fullname = 3;
+	string nickname = 4;
+	string avatar_url = 5;
+}

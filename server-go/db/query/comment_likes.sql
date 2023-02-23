@@ -16,4 +16,5 @@ DELETE FROM comment_likes
 WHERE comment_id = $1 AND user_id = $2;
 
 -- name: GetNumLikesComment :one
-SELECT COUNT(*) as count FROM comment_likes;
+SELECT COUNT(*) as count FROM comment_likes
+WHERE comment_id = $1;
