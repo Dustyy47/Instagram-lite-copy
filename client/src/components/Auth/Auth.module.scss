@@ -1,5 +1,3 @@
-@import '../../styles/variables.scss';
-
 .avatarLoadWrapper {
     display: flex;
     justify-content: space-between;
@@ -26,7 +24,7 @@
     transition: 0.3s;
 
     * {
-        color: $accentColor;
+        color: var(--accentColor);
         transition: 0.3s;
     }
 

@@ -1,10 +1,8 @@
-@import '../../styles/variables.scss';
-
 .label {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: $accentColor;
+    color: var(--accentColor);
     font-size: 20px;
     border-radius: 10px;
     font-weight: 500;
@@ -15,7 +13,7 @@
 
     &:hover {
         color: white;
-        background: $accentColor;
+        background: var(--accentColor);
         box-shadow: 0 2px 7px -3px rgba(72, 197, 209, 0.74);
     }
 }

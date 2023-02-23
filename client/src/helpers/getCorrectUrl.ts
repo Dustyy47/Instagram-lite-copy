@@ -1,3 +1,4 @@
+import { PostModel } from './../models/PostModel';
 export const PLACEHOLDER_FILENAME = 'placeholder.jpg'
 
 /** Return correct url path for avatar with provided name, if name is undefined, return url of placeholder */
@@ -8,4 +9,11 @@ export function getCorrectAvatarUrl(avatarFileName?: string): string {
 
 export function getCorrectImageUrl(imageUrl: string): string {
     return `${process.env.REACT_APP_API_URL}/${imageUrl}`
+}
+
+export function getPostsWithCorrectImage(posts:PostModel[]) {
+    return posts.map((post) => ({
+        ...post,
+        imageUrl: getCorrectImageUrl(post.imageUrl),
+    }))
 }

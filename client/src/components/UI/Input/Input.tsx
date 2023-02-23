@@ -1,7 +1,7 @@
 import { memo, useEffect } from 'react'
-import { Validator } from '../../hooks/validators/useValidator'
-import { AnyFunction } from '../../models/CallbacksTypes'
-import { ValidationMessage } from '../ValidationMessage/ValidationMessage'
+import { Validator } from '../../../hooks/validators/useValidator'
+import { AnyFunction } from '../../../models/CallbacksTypes'
+import { ValidationMessage } from '../../ValidationMessage/ValidationMessage'
 import styles from './Input.module.scss'
 
 //TODO CLEAR STYLES PROPS

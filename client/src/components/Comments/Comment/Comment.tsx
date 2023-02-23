@@ -1,18 +1,16 @@
 import { AnyFunction } from '../../../models/CallbacksTypes'
 import { CommentModel } from '../../../models/CommentModel'
-import { ProfileOwnerModel } from '../../../models/ProfileOwnerModel'
 import { Avatar } from '../../Avatar/Avatar'
 import styles from './Comment.module.scss'
 
 interface CommentProps {
-    authorInfo: ProfileOwnerModel
     commentInfo: CommentModel
-    onAvatarClicked: AnyFunction
+    onAvatarClicked?: AnyFunction
 }
 
-export function Comment({ authorInfo, commentInfo, onAvatarClicked }: CommentProps) {
-    const { nickName, avatarUrl } = authorInfo
-    const { text } = commentInfo
+export function Comment({ commentInfo, onAvatarClicked }: CommentProps) {
+    const { text, author } = commentInfo
+    const { nickName, avatarUrl } = author
     return (
         <div className={styles.wrapper}>
             <Avatar onClick={onAvatarClicked} nickName={nickName} url={avatarUrl || ''} className={styles.avatar} />

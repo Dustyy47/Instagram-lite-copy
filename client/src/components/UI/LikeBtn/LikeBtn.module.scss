@@ -14,7 +14,6 @@
 }
 .image {
     opacity: 0.85;
-    width: 35px;
     height: fit-content;
     transition: 0.1s;
     //filter: brightness(0) invert(100%) brightness(0.3);
@@ -27,7 +26,7 @@
 
 [data-isliked='true'] {
     fill: rgb(255, 21, 21);
-    stroke-width: 0;
+    stroke: transparent;
     transform: scale(1.1);
     //filter: none;
     animation: 0.2s like alternate;
@@ -35,7 +34,7 @@
 
 [data-isliked='false'] {
     fill: transparent;
-    stroke: #343434;
+    stroke: black;
     //filter: brightness(0) invert(100%) brightness(0.3);
     animation: 0.2s unlike alternate;
 }

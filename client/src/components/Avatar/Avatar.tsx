@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { getCorrectAvatarUrl } from '../../helpers/getCorrectAvatarUrl'
+import { getCorrectAvatarUrl } from '../../helpers/getCorrectUrl'
 import styles from './Avatar.module.scss'
 
 interface AvatarProps {

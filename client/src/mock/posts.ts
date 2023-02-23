@@ -6,6 +6,7 @@ const postMock: PostModel = {
     imageUrl: 'https://www.pokepedia.fr/images/thumb/7/76/Pikachu-DEPS.png/800px-Pikachu-DEPS.png',
     title: 'test',
     description: 'test',
+    postedBy: 'me',
 }
 
 export function getPostsMock(count: number) {

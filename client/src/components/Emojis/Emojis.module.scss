@@ -1,10 +1,8 @@
-@import '../../styles/variables.scss';
-
 .wrapper {
     width: 25rem;
     height: 10rem;
     background-color: white;
-    box-shadow: $lightShadow;
+    box-shadow: var(--lightShadow);
     display: flex;
     flex-wrap: wrap;
     overflow-x: hidden;

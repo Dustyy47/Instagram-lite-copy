@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect } from 'react'
-import { Validator } from '../../hooks/validators/useValidator'
-import { ValidationMessage } from '../ValidationMessage/ValidationMessage'
+import { Validator } from '../../../hooks/validators/useValidator'
+import { ValidationMessage } from '../../ValidationMessage/ValidationMessage'
 import styles from './FileInput.module.scss'
 
 interface FileInputProps {

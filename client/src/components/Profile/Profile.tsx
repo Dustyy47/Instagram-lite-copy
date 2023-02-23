@@ -1,36 +1,24 @@
+import { getPostsMock } from 'mock/posts'
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getCorrectAvatarUrl, getCorrectImageUrl } from '../../helpers/getCorrectAvatarUrl'
-import { isPostLiked } from '../../helpers/isLikedPost'
+import { getCorrectAvatarUrl } from '../../helpers/getCorrectUrl'
 import { useCombinedSelector } from '../../hooks/useCombinedSelector'
 import { Status } from '../../models/LoadingStatus'
-import { ExtendedPostModel, PostModel } from '../../models/PostModel'
-import { useAppDispatch } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { fetchProfileData } from '../../store/slices/profileSlice'
-import { fetchLikePost, fetchSubscribe } from '../../store/slices/userSlice'
+import { fetchSubscribe } from '../../store/slices/userSlice'
 import { NotFound } from '../Errors/NotFound'
-import { Loading } from '../Loading/Loading'
+import { Loading } from '../UI/Loading/Loading'
 import { CreatingPost } from '../Posts/CreatingPost'
-import { ExtendedPost } from '../Posts/ExtendedPost'
 import { PostsList } from '../Posts/PostsList'
+import { SelectedPost } from '../SelectedPost/SelectedPost'
 import styles from './Profile.module.scss'
 import { ProfileButtons } from './ProfileButtons'
 import { ProfileInfo } from './ProfileInfo'
 
 export function Profile() {
     const [isCreatingPost, setCreatingPost] = useState(false)
-    const [extendedPostData, setExtendedPostData] = useState<ExtendedPostModel>({
-        postData: {
-            _id: '',
-            title: '',
-            description: '',
-            imageUrl: '',
-        },
-        isActive: false,
-        likesCountWithoutUser: 0,
-    })
-
-    const { likedPosts, isGuest } = useCombinedSelector('user', ['likedPosts', 'isGuest'])
+    const isGuest = useAppSelector((state) => state.user.isGuest)
     const { profileOwnerInfo, loadingStatus, posts } = useCombinedSelector('profile', [
         'profileOwnerInfo',
         'loadingStatus',
@@ -51,24 +39,6 @@ export function Profile() {
         [profileOwnerInfo._id]
     )
 
-    const handlePostClick = useCallback(async function (data: ExtendedPostModel) {
-        setExtendedPostData(data)
-    }, [])
-
-    const like = useCallback(function (postId: string) {
-        dispatch(fetchLikePost(postId))
-    }, [])
-
-    const closeExtendedPost = useCallback(
-        function () {
-            setExtendedPostData({
-                ...extendedPostData,
-                isActive: false,
-            })
-        },
-        [extendedPostData]
-    )
-
     if (loadingStatus === Status.loading) {
         return <Loading />
     }
@@ -76,15 +46,6 @@ export function Profile() {
     if (loadingStatus === Status.error) {
         return <NotFound />
     }
-
-    function getPostsWithCorrectImage() {
-        return (posts as PostModel[]).map((post) => ({
-            ...post,
-            imageUrl: getCorrectImageUrl(post.imageUrl),
-        }))
-    }
-
-    //mockPosts
 
     return (
         <section className={styles.page}>
@@ -99,20 +60,16 @@ export function Profile() {
                     />
                     {!isGuest && <ProfileButtons setCreatingPost={setCreatingPost} toggleSubscribe={toggleSubscribe} />}
                 </div>
-                <PostsList
-                    posts={getPostsWithCorrectImage()}
-                    likedPosts={likedPosts}
-                    onLike={like}
-                    onClickPost={handlePostClick}
-                />
+                <PostsList posts={getPostsMock(20)} />
             </div>
-            <ExtendedPost
+            <SelectedPost />
+            {/* <ExtendedPost
                 authorInfo={profileOwnerInfo}
                 postInfo={extendedPostData}
                 setActive={closeExtendedPost}
-                onLike={like}
+                onLike={() => {}}
                 isLiked={isPostLiked(extendedPostData?.postData._id, likedPosts)}
-            />
+            /> */}
             <CreatingPost isActive={isCreatingPost} setActive={setCreatingPost} />
         </section>
     )

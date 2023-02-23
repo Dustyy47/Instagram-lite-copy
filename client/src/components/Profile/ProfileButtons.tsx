@@ -4,7 +4,7 @@ import { getIsUserSubscribed } from '../../helpers/getUserSubscribed'
 import { useCombinedSelector } from '../../hooks/useCombinedSelector'
 import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
 import { useAppSelector } from '../../store/hooks'
-import { Button } from '../Button/Button'
+import { Button } from '../UI/Button/Button'
 import styles from './ProfileButtons.module.scss'
 //TODO Добавить Loader при подписке
 

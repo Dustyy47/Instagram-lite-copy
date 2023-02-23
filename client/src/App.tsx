@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Header } from './components/Header/Header'
-import { Loading } from './components/Loading/Loading'
+import { Loading } from './components/UI/Loading/Loading'
 import { NavBar } from './components/NavBar/NavBar'
 import { useLogout } from './hooks/useLogout'
 import { Status } from './models/LoadingStatus'
