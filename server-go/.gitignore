@@ -3,9 +3,14 @@ docker-compose.yml
 Dockerfile
 Makefile
 
+# Ignore images from 
+images/*
+!images/.gitkeep
+images/avatars/*
+!images/avatars/.gitkeep
+
 hlam.json
 /pb
-/images
 
 Thumbs.db
 .DS_Store

@@ -4,13 +4,20 @@ package pb;
 
 option go_package = "app/pb";
 
+message FileUpload {
+	string fieldname = 1;
+	string filename = 2;
+	string content_type = 3;
+	bytes data = 4;
+}
+
 message RegisterRequest {
     string email = 1;
 	string password = 2;
 	string fullname = 3;
 	string nickname = 4;
 
-	bytes AvatarImage = 5;
+	FileUpload avatar_image = 5;
 }
 
 

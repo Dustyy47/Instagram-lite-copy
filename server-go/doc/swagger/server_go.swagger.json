@@ -276,6 +276,24 @@
         }
       }
     },
+    "pbFileUpload": {
+      "type": "object",
+      "properties": {
+        "fieldname": {
+          "type": "string"
+        },
+        "filename": {
+          "type": "string"
+        },
+        "contentType": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
     "pbGetProfileDataResponse": {
       "type": "object",
       "properties": {
@@ -334,9 +352,8 @@
         "nickname": {
           "type": "string"
         },
-        "AvatarImage": {
-          "type": "string",
-          "format": "byte"
+        "avatarImage": {
+          "$ref": "#/definitions/pbFileUpload"
         }
       }
     },
