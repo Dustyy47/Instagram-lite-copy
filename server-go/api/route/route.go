@@ -21,7 +21,7 @@ func Setup(env *bootstrap.Env, timeout time.Duration, store db.Store, router *gi
 	authRouter := router.Group("auth")
 	NewAuthRouter(env, timeout, store, authRouter)
 
-	profileRouter := router.Group("profile")
+	profileRouter := router.Group("profiles")
 	profileRouter.Use(middleware.JwtAuthMiddleware(env.AccessTokenSecret))
 	NewProfileRouter(env, timeout, store, profileRouter)
 

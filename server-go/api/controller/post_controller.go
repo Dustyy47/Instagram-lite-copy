@@ -93,7 +93,7 @@ func (pc *PostController) Remove(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, successResponce("Post was removed"))
+	c.JSON(http.StatusOK, successResponse("Post was removed"))
 }
 
 type GetPostsByUserRequest struct {

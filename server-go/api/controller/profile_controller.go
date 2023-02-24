@@ -33,6 +33,22 @@ type GetProfileDataResponse struct {
 	IsUserProfile bool `json:"isUserProfile"`
 }
 
+// GetProfileData fetches profile data for a given user.
+// 
+// @Summary Get user profile data
+// @Description Get user profile data for the user with the given ID or nickname
+// @Tags Profile
+// @Accept json
+// @Produce json
+// @Param nickname path string false "User nickname" format(NICKNAME)
+// @Param id path integer false "User ID"
+// @Param Authorization header string true "JWT Authorization token"
+// @Success 200 {object} GetProfileDataResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /profiles/id/{id} [get]
+// @Router /profiles/nickname/{nickname} [get]
 func (pc *ProfileController) GetProfileData(c *gin.Context) {
 	var request struct{}
 
@@ -106,6 +122,23 @@ type UpdateProfileResponse struct {
 	AvatarUrl string `json:"avatarUrl"`
 }
 
+// UpdateProfile updates the profile information for the authenticated user.
+//
+// @Summary Update user profile
+// @Description Update the profile information for the authenticated user
+// @Tags Profile
+// @Accept multipart/form-data
+// @Produce json
+// @Param fullname formData string false "User full name"
+// @Param email formData string false "User email address"
+// @Param nickname formData string false "User nickname"
+// @Param avatarImage formData file false "User avatar image"
+// @Param Authorization header string true "JWT Authorization token"
+// @Success 200 {object} UpdateProfileResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /profiles/me [patch]
 func (pc *ProfileController) UpdateProfile(c *gin.Context) {
 	var (
 		fullname, email, nickname string
@@ -170,6 +203,19 @@ func (pc *ProfileController) UpdateProfile(c *gin.Context) {
 	c.JSON(http.StatusOK, updateProfileResponse)
 }
 
+// @Summary Toggle follow/unfollow user
+// @Description Toggle follow/unfollow user by user ID
+// @Tags Profile
+// @Security JwtAuth
+// @ID toggle-follow
+// @Accept  json
+// @Produce  json
+// @Param id path int true "User ID to follow/unfollow"
+// @Success 200 {object} SuccessResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /profiles/id/{id}/follow [put]
 func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 	userIDToFollow, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
@@ -216,7 +262,7 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusOK, successResponce("Unfollowed successfully"))
+		c.JSON(http.StatusOK, successResponse("Unfollowed successfully"))
 	} else { // follow
 		createFollowerArg := db.CreateFollowerParams{
 			UserFromID: userID,
@@ -229,7 +275,7 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusOK, successResponce("Followed successfully"))
+		c.JSON(http.StatusOK, successResponse("Followed successfully"))
 	}
 }
 
@@ -238,6 +284,20 @@ type FindUsersRequest struct {
 	Offset int32 `form:"offset" binding:"min=0"`
 }
 
+// @Summary Find users by nickname
+// @Description Find users by nickname with pagination
+// @Tags Profile
+// @Security JwtAuth
+// @ID find-users
+// @Accept  json
+// @Produce  json
+// @Param name path string true "User nickname"
+// @Param limit query int true "Number of results to return"
+// @Param offset query int false "Number of results to skip"
+// @Success 200 {array} map[string]interface{}
+// @Failure 400 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /profiles/find/{name} [get]
 func (pc *ProfileController) FindUsers(c *gin.Context) {
 	var request FindUsersRequest
 

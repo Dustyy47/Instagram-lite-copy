@@ -96,7 +96,7 @@ func (cc *CommentController) Remove(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, successResponce("Comment was removed"))
+	c.JSON(http.StatusOK, successResponse("Comment was removed"))
 }
 
 type GetCommentOfPostRequest struct {
