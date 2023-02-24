@@ -1,4 +1,4 @@
-import { PostLikeButton } from 'components/LikeBtn/PostLikeBtn'
+import { PostLikeButton } from 'components/PostLikeBtn/PostLikeBtn'
 import { PostModel } from '../../models/PostModel'
 import { useAppDispatch } from '../../store/hooks'
 import { fetchOpenPost } from '../../store/slices/extendedPostSlice'
@@ -15,6 +15,9 @@ export function Post({ data }: PostProps) {
 
     function handleClick() {
         dispatch(fetchOpenPost(data))
+    }
+
+    if (!imageUrl) {
     }
 
     return (

@@ -6,14 +6,14 @@ interface AvatarProps {
     url: string
     nickName?: string
     className?: string
-    onClick?: () => {}
+    onClick?: (e: React.MouseEvent) => any
 }
 
 export function Avatar({ url, nickName, className, onClick }: AvatarProps) {
     const navigate = useNavigate()
 
-    function handleClick() {
-        if (onClick) onClick()
+    function handleClick(e: React.MouseEvent) {
+        if (onClick) onClick(e)
         if (nickName) navigate('/profile/' + nickName)
     }
 

@@ -1,17 +1,17 @@
-import { getPostsMock } from 'mock/posts'
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getCorrectAvatarUrl } from '../../helpers/getCorrectUrl'
+import { extendedPostActions } from 'store/slices/extendedPostSlice'
+import { getCorrectAvatarUrl, getPostsWithCorrectImage } from '../../helpers/getCorrectUrl'
 import { useCombinedSelector } from '../../hooks/useCombinedSelector'
 import { Status } from '../../models/LoadingStatus'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { fetchProfileData } from '../../store/slices/profileSlice'
 import { fetchSubscribe } from '../../store/slices/userSlice'
 import { NotFound } from '../Errors/NotFound'
-import { Loading } from '../UI/Loading/Loading'
 import { CreatingPost } from '../Posts/CreatingPost'
 import { PostsList } from '../Posts/PostsList'
 import { SelectedPost } from '../SelectedPost/SelectedPost'
+import { Loading } from '../UI/Loading/Loading'
 import styles from './Profile.module.scss'
 import { ProfileButtons } from './ProfileButtons'
 import { ProfileInfo } from './ProfileInfo'
@@ -30,6 +30,7 @@ export function Profile() {
 
     useEffect(() => {
         dispatch(fetchProfileData(pathProfileId))
+        dispatch(extendedPostActions.reset())
     }, [pathProfileId, dispatch])
 
     const toggleSubscribe = useCallback(
@@ -60,7 +61,8 @@ export function Profile() {
                     />
                     {!isGuest && <ProfileButtons setCreatingPost={setCreatingPost} toggleSubscribe={toggleSubscribe} />}
                 </div>
-                <PostsList posts={getPostsMock(20)} />
+                <PostsList posts={getPostsWithCorrectImage(posts)} />
+                {/* <PostsList posts={getPostsMock(20)} /> */}
             </div>
             <SelectedPost />
             {/* <ExtendedPost

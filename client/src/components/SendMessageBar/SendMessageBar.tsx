@@ -8,10 +8,17 @@ import styles from './SendMessageBar.module.scss'
 
 interface SendMessageBarProps {
     onSend: (text: string) => any
-    className?: string
+    classNames?: {
+        form?: string
+        emojiPicker?: string
+        input?: string
+        sendBtn?: string
+        sendBtnText?: string
+        sendBtnIcon?: string
+    }
 }
 
-export function SendMessageBar({ onSend, className }: SendMessageBarProps) {
+export function SendMessageBar({ onSend, classNames }: SendMessageBarProps) {
     const [message, setMessage] = useState('')
 
     const messageValidator = useValidator([])
@@ -29,21 +36,21 @@ export function SendMessageBar({ onSend, className }: SendMessageBarProps) {
     }
 
     return (
-        <form className={`${styles.form} ${className || ''}`}>
+        <form className={`${styles.form} ${classNames?.form || ''}`}>
             <div className={styles.formLeftWrapper}>
-                <EmojiPicker className={styles.emojiPicker} onChoose={chooseEmoji} />
+                <EmojiPicker className={classNames?.emojiPicker || ''} onChoose={chooseEmoji} />
                 <Input
                     isHiddenPermanently={true}
                     isHiddenBeforeBlur={true}
                     validator={messageValidator}
-                    className={styles.commentInput}
+                    className={classNames?.input || ''}
                     value={message}
                     onChange={setMessage}
                 />
             </div>
-            <Button className={styles.sendBtn} onClick={handleSend} disabled={formValidator.hasErrors()}>
-                <span className={styles.sendBtnText}>Отправить</span>
-                <RiSendPlaneLine className={styles.sendBtnIcon} />
+            <Button className={classNames?.sendBtn || ''} onClick={handleSend} disabled={formValidator.hasErrors()}>
+                <span className={classNames?.sendBtnText || ''}>Отправить</span>
+                <RiSendPlaneLine className={classNames?.sendBtnIcon || ''} />
             </Button>
         </form>
     )

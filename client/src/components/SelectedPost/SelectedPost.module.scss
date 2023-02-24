@@ -1,7 +1,7 @@
 .modal > div {
-    width: 70%;
+    width: 70vw;
+    height: 80vh;
     max-width: auto;
-    aspect-ratio: 1.55;
 }
 
 .commentsModal {
@@ -26,7 +26,7 @@
     width: 100%;
 }
 .photo {
-    width: 60%;
+    width: 55%;
     height: 100%;
     object-fit: contain;
     background: black;
@@ -69,12 +69,13 @@
 
 .info {
     padding: 15px;
-    width: 40%;
+    width: 45%;
     position: relative;
 }
 
 .container {
     width: 95%;
+    height: 80%;
 }
 
 .content {
@@ -150,10 +151,49 @@
     align-items: center;
 }
 
-@media screen and (max-width: 1800px) {
-    .sendCommentBtn {
-        padding: 10px;
-        font-size: 1rem;
+.commentsWrapper {
+    width: 100%;
+    height: 75%;
+    overflow-y: scroll;
+}
+
+.sendBtnIcon {
+    display: none;
+}
+
+@media screen and (max-width: 1900px) {
+    .sendForm {
+        button,
+        input {
+            padding: 10px;
+            font-size: 1.2rem;
+        }
+    }
+}
+
+@media screen and (max-width: 1600px) {
+    .sendForm {
+        & > div {
+            display: block;
+        }
+        input {
+            width: 90%;
+        }
+        .sendBtnIcon {
+            display: inline-block;
+            width: 75%;
+            aspect-ratio: 1;
+            height: auto;
+        }
+        .sendBtn {
+            height: auto;
+            aspect-ratio: 1;
+            width: 60px;
+        }
+        .sendBtnText {
+            display: none;
+            height: auto;
+        }
     }
 }
 
@@ -161,6 +201,12 @@
     .emojiPicker svg {
         width: 30px;
         height: 30px;
+    }
+
+    .commentsWrapper {
+        & > div {
+            min-height: 12%;
+        }
     }
 
     .emojiPicker ul {
@@ -180,12 +226,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        &:hover {
-            box-shadow: var(--shadow);
-            svg {
-                fill: white;
-            }
-        }
     }
     .sendCommentBtnIcon {
         width: 30px;
@@ -206,6 +246,9 @@
     }
     .commentInput {
         max-width: 100%;
+        input {
+            padding: 0;
+        }
     }
 }
 

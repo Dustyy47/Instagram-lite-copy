@@ -63,10 +63,10 @@ func (ac *AuthController) Register(c *gin.Context) {
 
 	var millisecondsUTC string = strconv.FormatInt(time.Now().UTC().UnixNano()/1e6, 10)
 	avatarName := millisecondsUTC + "--" + request.AvatarImage.Filename
-
+	
 	err = c.SaveUploadedFile(request.AvatarImage, "images/avatars/"+avatarName)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, errorResponse("Error saving avatar image"))
+		c.JSON(http.StatusInternalServerError, errorResponse("Error saving avatar image " + err.Error() + " " + avatarName))
 		return
 	}
 
