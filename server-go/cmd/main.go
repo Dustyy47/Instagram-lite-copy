@@ -21,8 +21,11 @@ import (
 // @title           Instagram-lite-copy API
 // @version         1.0
 // @description     server-go.
-// @host      localhost:8000
-// @BasePath  /v1
+// @host            localhost:8000
+// @BasePath        /v1
+// @securityDefinitions.apiKey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 

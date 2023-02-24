@@ -155,7 +155,6 @@ paths:
       consumes:
       - application/json
       description: Find users by nickname with pagination
-      operationId: find-users
       parameters:
       - description: User nickname
         in: path
@@ -190,7 +189,7 @@ paths:
           schema:
             $ref: '#/definitions/controller.ErrorResponse'
       security:
-      - JwtAuth: []
+      - ApiKeyAuth: []
       summary: Find users by nickname
       tags:
       - Profile
@@ -198,10 +197,9 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get user profile data for the user with the given ID or nickname
+      description: Get profile data for the user with the given ID or nickname
       parameters:
       - description: User nickname
-        format: NICKNAME
         in: path
         name: nickname
         type: string
@@ -209,11 +207,6 @@ paths:
         in: path
         name: id
         type: integer
-      - description: JWT Authorization token
-        in: header
-        name: Authorization
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -233,7 +226,9 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controller.ErrorResponse'
-      summary: Get user profile data
+      security:
+      - ApiKeyAuth: []
+      summary: Get profile data
       tags:
       - Profile
   /profiles/id/{id}/follow:
@@ -241,7 +236,6 @@ paths:
       consumes:
       - application/json
       description: Toggle follow/unfollow user by user ID
-      operationId: toggle-follow
       parameters:
       - description: User ID to follow/unfollow
         in: path
@@ -268,7 +262,7 @@ paths:
           schema:
             $ref: '#/definitions/controller.ErrorResponse'
       security:
-      - JwtAuth: []
+      - ApiKeyAuth: []
       summary: Toggle follow/unfollow user
       tags:
       - Profile
@@ -318,6 +312,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Update user profile
       tags:
       - Profile
@@ -325,10 +321,9 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get user profile data for the user with the given ID or nickname
+      description: Get profile data for the user with the given ID or nickname
       parameters:
       - description: User nickname
-        format: NICKNAME
         in: path
         name: nickname
         type: string
@@ -336,11 +331,6 @@ paths:
         in: path
         name: id
         type: integer
-      - description: JWT Authorization token
-        in: header
-        name: Authorization
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -360,7 +350,14 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controller.ErrorResponse'
-      summary: Get user profile data
+      security:
+      - ApiKeyAuth: []
+      summary: Get profile data
       tags:
       - Profile
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

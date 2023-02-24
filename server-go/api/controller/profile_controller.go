@@ -34,21 +34,21 @@ type GetProfileDataResponse struct {
 }
 
 // GetProfileData fetches profile data for a given user.
-// 
-// @Summary Get user profile data
-// @Description Get user profile data for the user with the given ID or nickname
+//
+// @Summary Get profile data
+// @Description Get profile data for the user with the given ID or nickname
 // @Tags Profile
 // @Accept json
 // @Produce json
-// @Param nickname path string false "User nickname" format(NICKNAME)
-// @Param id path integer false "User ID"
-// @Param Authorization header string true "JWT Authorization token"
+// @Param nickname path string false "User nickname"
+// @Param id path int64 false "User ID"
 // @Success 200 {object} GetProfileDataResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /profiles/id/{id} [get]
 // @Router /profiles/nickname/{nickname} [get]
+// @security ApiKeyAuth
 func (pc *ProfileController) GetProfileData(c *gin.Context) {
 	var request struct{}
 
@@ -139,6 +139,7 @@ type UpdateProfileResponse struct {
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /profiles/me [patch]
+// @security ApiKeyAuth
 func (pc *ProfileController) UpdateProfile(c *gin.Context) {
 	var (
 		fullname, email, nickname string
@@ -206,16 +207,15 @@ func (pc *ProfileController) UpdateProfile(c *gin.Context) {
 // @Summary Toggle follow/unfollow user
 // @Description Toggle follow/unfollow user by user ID
 // @Tags Profile
-// @Security JwtAuth
-// @ID toggle-follow
 // @Accept  json
 // @Produce  json
-// @Param id path int true "User ID to follow/unfollow"
+// @Param id path int64 true "User ID to follow/unfollow"
 // @Success 200 {object} SuccessResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /profiles/id/{id}/follow [put]
+// @security ApiKeyAuth
 func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 	userIDToFollow, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
@@ -287,8 +287,6 @@ type FindUsersRequest struct {
 // @Summary Find users by nickname
 // @Description Find users by nickname with pagination
 // @Tags Profile
-// @Security JwtAuth
-// @ID find-users
 // @Accept  json
 // @Produce  json
 // @Param name path string true "User nickname"
@@ -298,6 +296,7 @@ type FindUsersRequest struct {
 // @Failure 400 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /profiles/find/{name} [get]
+// @security ApiKeyAuth
 func (pc *ProfileController) FindUsers(c *gin.Context) {
 	var request FindUsersRequest
 

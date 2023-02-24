@@ -160,7 +160,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "JwtAuth": []
+                        "ApiKeyAuth": []
                     }
                 ],
                 "description": "Find users by nickname with pagination",
@@ -174,7 +174,6 @@ const docTemplate = `{
                     "Profile"
                 ],
                 "summary": "Find users by nickname",
-                "operationId": "find-users",
                 "parameters": [
                     {
                         "type": "string",
@@ -225,7 +224,12 @@ const docTemplate = `{
         },
         "/profiles/id/{id}": {
             "get": {
-                "description": "Get user profile data for the user with the given ID or nickname",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get profile data for the user with the given ID or nickname",
                 "consumes": [
                     "application/json"
                 ],
@@ -235,11 +239,10 @@ const docTemplate = `{
                 "tags": [
                     "Profile"
                 ],
-                "summary": "Get user profile data",
+                "summary": "Get profile data",
                 "parameters": [
                     {
                         "type": "string",
-                        "format": "NICKNAME",
                         "description": "User nickname",
                         "name": "nickname",
                         "in": "path"
@@ -249,13 +252,6 @@ const docTemplate = `{
                         "description": "User ID",
                         "name": "id",
                         "in": "path"
-                    },
-                    {
-                        "type": "string",
-                        "description": "JWT Authorization token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -290,7 +286,7 @@ const docTemplate = `{
             "put": {
                 "security": [
                     {
-                        "JwtAuth": []
+                        "ApiKeyAuth": []
                     }
                 ],
                 "description": "Toggle follow/unfollow user by user ID",
@@ -304,7 +300,6 @@ const docTemplate = `{
                     "Profile"
                 ],
                 "summary": "Toggle follow/unfollow user",
-                "operationId": "toggle-follow",
                 "parameters": [
                     {
                         "type": "integer",
@@ -344,6 +339,11 @@ const docTemplate = `{
         },
         "/profiles/me": {
             "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Update the profile information for the authenticated user",
                 "consumes": [
                     "multipart/form-data"
@@ -418,7 +418,12 @@ const docTemplate = `{
         },
         "/profiles/nickname/{nickname}": {
             "get": {
-                "description": "Get user profile data for the user with the given ID or nickname",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get profile data for the user with the given ID or nickname",
                 "consumes": [
                     "application/json"
                 ],
@@ -428,11 +433,10 @@ const docTemplate = `{
                 "tags": [
                     "Profile"
                 ],
-                "summary": "Get user profile data",
+                "summary": "Get profile data",
                 "parameters": [
                     {
                         "type": "string",
-                        "format": "NICKNAME",
                         "description": "User nickname",
                         "name": "nickname",
                         "in": "path"
@@ -442,13 +446,6 @@ const docTemplate = `{
                         "description": "User ID",
                         "name": "id",
                         "in": "path"
-                    },
-                    {
-                        "type": "string",
-                        "description": "JWT Authorization token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -553,6 +550,13 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`
