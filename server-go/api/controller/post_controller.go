@@ -24,6 +24,17 @@ type AddPostRequest struct {
 	Img *multipart.FileHeader `form:"img" binding:"required"`
 }
 
+// @Summary Add new post
+// @Tags Posts
+// @Accept multipart/form-data
+// @Param title formData string true "Title of the post"
+// @Param description formData string true "Description of the post"
+// @Param img formData file true "Image of the post"
+// @Success 200 {object} db.Post
+// @Failure 400 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /posts/create [post]
+// @security ApiKeyAuth
 func (pc *PostController) Add(c *gin.Context) {
 	var request AddPostRequest
 
@@ -60,6 +71,16 @@ func (pc *PostController) Add(c *gin.Context) {
 	c.JSON(http.StatusOK, createdPost)
 }
 
+// @Summary Remove a post by ID
+// @Tags Posts
+// @Param postID path int64 true "Post ID"
+// @Success 200 {object} SuccessResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 403 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /posts/{postID} [delete]
+// @security ApiKeyAuth
 func (pc *PostController) Remove(c *gin.Context) {
 	var request struct{}
 
@@ -103,6 +124,19 @@ type GetPostsByUserRequest struct {
 	Offset   int32  `form:"offset" binding:"min=0"`
 }
 
+// @Summary Get posts by user
+// @Description Get posts by user with pagination
+// @Tags Posts
+// @Param userID query int64 true "User ID"
+// @Param nickname query string true "User nickname"
+// @Param limit query int true "Limit"
+// @Param offset query int false "Offset"
+// @Success 200 {array} db.Post "List of posts"
+// @Failure 400 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /posts/ [get]
+// @security ApiKeyAuth
 func (pc *PostController) GetPostsByUser(c *gin.Context) {
 	var request GetPostsByUserRequest
 
@@ -136,6 +170,15 @@ func (pc *PostController) GetPostsByUser(c *gin.Context) {
 	c.JSON(http.StatusOK, posts)
 }
 
+// @Summary Like or dislike a post
+// @Tags Posts
+// @Param postID path int true "Post ID"
+// @Success 200 {object} int "Number of likes"
+// @Failure 400 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /posts/{postID}/like [put]
+// @security ApiKeyAuth
 func (pc *PostController) Like(c *gin.Context) {
 	var request struct{}
 

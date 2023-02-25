@@ -122,8 +122,6 @@ type UpdateProfileResponse struct {
 	AvatarUrl string `json:"avatarUrl"`
 }
 
-// UpdateProfile updates the profile information for the authenticated user.
-//
 // @Summary Update user profile
 // @Description Update the profile information for the authenticated user
 // @Tags Profile
@@ -133,7 +131,6 @@ type UpdateProfileResponse struct {
 // @Param email formData string false "User email address"
 // @Param nickname formData string false "User nickname"
 // @Param avatarImage formData file false "User avatar image"
-// @Param Authorization header string true "JWT Authorization token"
 // @Success 200 {object} UpdateProfileResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse

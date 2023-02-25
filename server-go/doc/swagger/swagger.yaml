@@ -1,9 +1,28 @@
 basePath: /v1
 definitions:
+  controller.AddCommentRequest:
+    properties:
+      text:
+        type: string
+    required:
+    - text
+    type: object
   controller.AuthResponse:
     properties:
       accessToken:
         type: string
+    type: object
+  controller.CreateConversationRequest:
+    properties:
+      secondUserID:
+        type: integer
+    required:
+    - secondUserID
+    type: object
+  controller.CreateConversationResponce:
+    properties:
+      conversationID:
+        type: integer
     type: object
   controller.ErrorResponse:
     properties:
@@ -45,6 +64,34 @@ definitions:
       nickname:
         type: string
       userID:
+        type: integer
+    type: object
+  db.Comment:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      post_id:
+        type: integer
+      text:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  db.Post:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      image_url:
+        type: string
+      title:
+        type: string
+      user_id:
         type: integer
     type: object
 host: localhost:8000
@@ -150,6 +197,351 @@ paths:
       summary: Register
       tags:
       - Auth
+  /comments:
+    get:
+      consumes:
+      - application/json
+      description: Get comments of a post with pagination
+      parameters:
+      - description: Post ID
+        in: query
+        name: postID
+        required: true
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/db.Comment'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get comments of a post
+      tags:
+      - Comments
+  /comments/{commentID}:
+    delete:
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Remove a comment by ID
+      tags:
+      - Comments
+  /comments/{commentID}/like:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Number of likes
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Like or dislike a comment
+      tags:
+      - Comments
+  /conversations/create:
+    post:
+      description: Create a new conversation with the user specified in the request
+        body. The authenticated user must be one of the users in the conversation.
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.CreateConversationRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.CreateConversationResponce'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new conversation
+      tags:
+      - Conversations
+  /posts/:
+    get:
+      description: Get posts by user with pagination
+      parameters:
+      - description: User ID
+        in: query
+        name: userID
+        required: true
+        type: integer
+      - description: User nickname
+        in: query
+        name: nickname
+        required: true
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      responses:
+        "200":
+          description: List of posts
+          schema:
+            items:
+              $ref: '#/definitions/db.Post'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get posts by user
+      tags:
+      - Posts
+  /posts/{postID}:
+    delete:
+      parameters:
+      - description: Post ID
+        in: path
+        name: postID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Remove a post by ID
+      tags:
+      - Posts
+  /posts/{postID}/comments/create:
+    post:
+      consumes:
+      - application/json
+      description: Add a new comment to a post
+      parameters:
+      - description: Post ID
+        in: path
+        name: postID
+        required: true
+        type: integer
+      - description: Comment text
+        in: body
+        name: text
+        required: true
+        schema:
+          $ref: '#/definitions/controller.AddCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.Comment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Add a new comment
+      tags:
+      - Comments
+  /posts/{postID}/like:
+    put:
+      parameters:
+      - description: Post ID
+        in: path
+        name: postID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Number of likes
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Like or dislike a post
+      tags:
+      - Posts
+  /posts/create:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Title of the post
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Description of the post
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Image of the post
+        in: formData
+        name: img
+        required: true
+        type: file
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.Post'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Add new post
+      tags:
+      - Posts
   /profiles/find/{name}:
     get:
       consumes:
@@ -288,11 +680,6 @@ paths:
         in: formData
         name: avatarImage
         type: file
-      - description: JWT Authorization token
-        in: header
-        name: Authorization
-        required: true
-        type: string
       produces:
       - application/json
       responses:

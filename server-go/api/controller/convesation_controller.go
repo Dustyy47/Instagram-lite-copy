@@ -34,6 +34,17 @@ type CreateConversationResponce struct {
 	ConversationID int64 `json:"conversationID"`
 }
 
+// @Summary Create a new conversation
+// @Description Create a new conversation with the user specified in the request body. The authenticated user must be one of the users in the conversation.
+// @Tags Conversations
+// @Param body body CreateConversationRequest true "Request body"
+// @Success 200 {object} CreateConversationResponce
+// @Failure 400 {object} ErrorResponse
+// @Failure 401 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /conversations/create [post]
+// @security ApiKeyAuth
 func (cc *ConversationController) Create(c *gin.Context) {
 	var request CreateConversationRequest
 
@@ -45,7 +56,7 @@ func (cc *ConversationController) Create(c *gin.Context) {
 
 	userID := c.GetInt64("userID")
 
-	_, err = cc.Store.GetUserByID(c, userID)
+	user, err := cc.Store.GetUserByID(c, userID)
 	if err != nil {
 		c.JSON(http.StatusNotAcceptable, "You don't have access")
 		return
@@ -58,7 +69,7 @@ func (cc *ConversationController) Create(c *gin.Context) {
 	}
 
 	createConversationArg := db.CreateConversationParams{
-		UserFirstID:  userID,
+		UserFirstID:  user.ID,
 		UserSecondID: request.SecondUserID,
 	}
 
