@@ -9,9 +9,8 @@ import (
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
+	_ "github.com/santosh/gingo/docs"
 	"github.com/sirupsen/logrus"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 
 	route "app/api/route"
 	"app/bootstrap"
@@ -19,6 +18,14 @@ import (
 	sqlc_db "app/db/sqlc"
 )
 
+// @title           Instagram-lite-copy API
+// @version         1.0
+// @description     server-go.
+// @host            localhost:8000
+// @BasePath        /v1
+// @securityDefinitions.apiKey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
@@ -78,8 +85,4 @@ func runGinServer(env *bootstrap.Env, timeout time.Duration, store sqlc_db.Store
 func connectSwaggerToGin(ginEngine *gin.Engine) {
 	// Serve the Swagger UI files
 	ginEngine.Static("/swagger/", "./doc/swagger")
-
-	// Serve the Swagger JSON endpoint
-	swaggerURL := ginSwagger.URL("swagger/server_go.swagger.json")
-	ginEngine.GET("/swagger-docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, swaggerURL))
 }

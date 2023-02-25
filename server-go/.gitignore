@@ -4,10 +4,9 @@ Dockerfile
 Makefile
 
 # Ignore images from 
-images/*
-!images/.gitkeep
 images/avatars/*
-!images/avatars/.gitkeep
+images/*
+!images/avatars
 
 hlam.json
 /pb

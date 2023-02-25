@@ -1,0 +1,750 @@
+basePath: /v1
+definitions:
+  controller.AddCommentRequest:
+    properties:
+      text:
+        type: string
+    required:
+    - text
+    type: object
+  controller.AuthResponse:
+    properties:
+      accessToken:
+        type: string
+    type: object
+  controller.CreateConversationRequest:
+    properties:
+      secondUserID:
+        type: integer
+    required:
+    - secondUserID
+    type: object
+  controller.CreateConversationResponce:
+    properties:
+      conversationID:
+        type: integer
+    type: object
+  controller.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  controller.GetProfileDataResponse:
+    properties:
+      avatarUrl:
+        type: string
+      email:
+        type: string
+      fullname:
+        type: string
+      isUserProfile:
+        type: boolean
+      nickname:
+        type: string
+      numFollowers:
+        type: integer
+      numFollowing:
+        type: integer
+      userID:
+        type: integer
+    type: object
+  controller.SuccessResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  controller.UpdateProfileResponse:
+    properties:
+      avatarUrl:
+        type: string
+      email:
+        type: string
+      fullname:
+        type: string
+      nickname:
+        type: string
+      userID:
+        type: integer
+    type: object
+  db.Comment:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      post_id:
+        type: integer
+      text:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  db.Post:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      image_url:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: integer
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: server-go.
+  title: Instagram-lite-copy API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Authenticate a user with email and password
+      parameters:
+      - description: Email address of the user
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Password for the user account
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: Login
+      tags:
+      - Auth
+  /auth/registration:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Register a new user with email, password, fullname, nickname, and
+        avatar image
+      parameters:
+      - description: Email address of the user
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Password for the user account
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: Full name of the user
+        in: formData
+        name: fullname
+        required: true
+        type: string
+      - description: Nickname of the user
+        in: formData
+        name: nickname
+        required: true
+        type: string
+      - description: Avatar image for the user
+        in: formData
+        name: avatarImage
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      summary: Register
+      tags:
+      - Auth
+  /comments:
+    get:
+      consumes:
+      - application/json
+      description: Get comments of a post with pagination
+      parameters:
+      - description: Post ID
+        in: query
+        name: postID
+        required: true
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/db.Comment'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get comments of a post
+      tags:
+      - Comments
+  /comments/{commentID}:
+    delete:
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Remove a comment by ID
+      tags:
+      - Comments
+  /comments/{commentID}/like:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Number of likes
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Like or dislike a comment
+      tags:
+      - Comments
+  /conversations/create:
+    post:
+      description: Create a new conversation with the user specified in the request
+        body. The authenticated user must be one of the users in the conversation.
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.CreateConversationRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.CreateConversationResponce'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new conversation
+      tags:
+      - Conversations
+  /posts/:
+    get:
+      description: Get posts by user with pagination
+      parameters:
+      - description: User ID
+        in: query
+        name: userID
+        required: true
+        type: integer
+      - description: User nickname
+        in: query
+        name: nickname
+        required: true
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      responses:
+        "200":
+          description: List of posts
+          schema:
+            items:
+              $ref: '#/definitions/db.Post'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get posts by user
+      tags:
+      - Posts
+  /posts/{postID}:
+    delete:
+      parameters:
+      - description: Post ID
+        in: path
+        name: postID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Remove a post by ID
+      tags:
+      - Posts
+  /posts/{postID}/comments/create:
+    post:
+      consumes:
+      - application/json
+      description: Add a new comment to a post
+      parameters:
+      - description: Post ID
+        in: path
+        name: postID
+        required: true
+        type: integer
+      - description: Comment text
+        in: body
+        name: text
+        required: true
+        schema:
+          $ref: '#/definitions/controller.AddCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.Comment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Add a new comment
+      tags:
+      - Comments
+  /posts/{postID}/like:
+    put:
+      parameters:
+      - description: Post ID
+        in: path
+        name: postID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Number of likes
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Like or dislike a post
+      tags:
+      - Posts
+  /posts/create:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Title of the post
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Description of the post
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Image of the post
+        in: formData
+        name: img
+        required: true
+        type: file
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.Post'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Add new post
+      tags:
+      - Posts
+  /profiles/find/{name}:
+    get:
+      consumes:
+      - application/json
+      description: Find users by nickname with pagination
+      parameters:
+      - description: User nickname
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Number of results to return
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: Number of results to skip
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Find users by nickname
+      tags:
+      - Profile
+  /profiles/id/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get profile data for the user with the given ID or nickname
+      parameters:
+      - description: User nickname
+        in: path
+        name: nickname
+        type: string
+      - description: User ID
+        in: path
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.GetProfileDataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get profile data
+      tags:
+      - Profile
+  /profiles/id/{id}/follow:
+    put:
+      consumes:
+      - application/json
+      description: Toggle follow/unfollow user by user ID
+      parameters:
+      - description: User ID to follow/unfollow
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Toggle follow/unfollow user
+      tags:
+      - Profile
+  /profiles/me:
+    patch:
+      consumes:
+      - multipart/form-data
+      description: Update the profile information for the authenticated user
+      parameters:
+      - description: User full name
+        in: formData
+        name: fullname
+        type: string
+      - description: User email address
+        in: formData
+        name: email
+        type: string
+      - description: User nickname
+        in: formData
+        name: nickname
+        type: string
+      - description: User avatar image
+        in: formData
+        name: avatarImage
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.UpdateProfileResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update user profile
+      tags:
+      - Profile
+  /profiles/nickname/{nickname}:
+    get:
+      consumes:
+      - application/json
+      description: Get profile data for the user with the given ID or nickname
+      parameters:
+      - description: User nickname
+        in: path
+        name: nickname
+        type: string
+      - description: User ID
+        in: path
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.GetProfileDataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get profile data
+      tags:
+      - Profile
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

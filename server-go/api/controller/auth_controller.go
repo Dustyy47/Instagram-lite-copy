@@ -12,6 +12,8 @@ import (
 	db "app/db/sqlc"
 	"app/internal/tokenutil"
 	"app/internal/util"
+
+	_ "github.com/santosh/gingo/docs"
 )
 
 type AuthController struct {
@@ -32,6 +34,21 @@ type AuthResponse struct {
 	AccessToken string `json:"accessToken"`
 }
 
+// @Summary Register
+// @Description Register a new user with email, password, fullname, nickname, and avatar image
+// @Tags Auth
+// @Accept mpfd
+// @Produce json
+// @Param email formData string true "Email address of the user"
+// @Param password formData string true "Password for the user account"
+// @Param fullname formData string true "Full name of the user"
+// @Param nickname formData string true "Nickname of the user"
+// @Param avatarImage formData file true "Avatar image for the user"
+// @Success 200 {object} AuthResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 409 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /auth/registration [post]
 // TODO: validation
 func (ac *AuthController) Register(c *gin.Context) {
 	var request RegisterRequest
@@ -103,6 +120,19 @@ type LoginRequest struct {
 	Password string `form:"password" binding:"required"`
 }
 
+// @Summary Login
+// @Description Authenticate a user with email and password
+// @Tags Auth
+// @Accept mpfd
+// @Produce json
+// @Param email formData string true "Email address of the user"
+// @Param password formData string true "Password for the user account"
+// @Success 200 {object} AuthResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 401 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /auth/login [post]
 func (ac *AuthController) Login(c *gin.Context) {
 	var request LoginRequest
 

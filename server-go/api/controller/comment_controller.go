@@ -19,6 +19,20 @@ type AddCommentRequest struct {
 	Text string `form:"text" binding:"required"`
 }
 
+// @Summary Add a new comment
+// @Description Add a new comment to a post
+// @Tags Comments
+// @Accept json
+// @Produce json
+// @Param postID path int true "Post ID"
+// @Param text body AddCommentRequest true "Comment text"
+// @Success 200 {object} db.Comment
+// @Failure 400 {object} ErrorResponse
+// @Failure 401 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /posts/{postID}/comments/create [post]
+// @security ApiKeyAuth
 func (cc *CommentController) Add(c *gin.Context) {
 	var request AddCommentRequest
 
@@ -62,6 +76,16 @@ func (cc *CommentController) Add(c *gin.Context) {
 	c.JSON(http.StatusOK, createdComment)
 }
 
+// @Summary Remove a comment by ID
+// @Tags Comments
+// @Param commentID path int64 true "Comment ID"
+// @Success 200 {object} SuccessResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 403 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /comments/{commentID} [delete]
+// @Security ApiKeyAuth
 func (cc *CommentController) Remove(c *gin.Context) {
 	var request struct{}
 
@@ -96,7 +120,7 @@ func (cc *CommentController) Remove(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, successResponce("Comment was removed"))
+	c.JSON(http.StatusOK, successResponse("Comment was removed"))
 }
 
 type GetCommentOfPostRequest struct {
@@ -105,6 +129,20 @@ type GetCommentOfPostRequest struct {
 	Offset int32 `form:"offset" binding:"min=0"`
 }
 
+// @Summary Get comments of a post
+// @Description Get comments of a post with pagination
+// @Tags Comments
+// @Accept json
+// @Produce json
+// @Param postID query int64 true "Post ID"
+// @Param limit query int32 true "Limit"
+// @Param offset query int32 false "Offset"
+// @Success 200 {array} db.Comment
+// @Failure 400 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /comments [get]
+// @Security ApiKeyAuth
 func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 	var request GetCommentOfPostRequest
 
@@ -129,6 +167,17 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 	c.JSON(http.StatusOK, comments)
 }
 
+// @Summary Like or dislike a comment
+// @Tags Comments
+// @Accept json
+// @Produce json
+// @Param commentID path int64 true "Comment ID"
+// @Success 200 {object} int "Number of likes"
+// @Failure 400 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /comments/{commentID}/like [post]
+// @Security ApiKeyAuth
 func (cc *CommentController) Like(c *gin.Context) {
 	var request struct{}
 

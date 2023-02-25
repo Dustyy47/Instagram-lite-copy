@@ -17,7 +17,7 @@ func NewCommentRouter(env *bootstrap.Env, timeout time.Duration, store db.Store,
 	}
 
 	group.POST("/create", cc.Add)
+	group.DELETE("/delete/:commentID", cc.Remove)
 	group.GET("", cc.GetCommentsOfPost)
 	group.PUT("/:commentID", cc.Like)
-	group.DELETE("/delete/:commentID", cc.Remove)
 }
