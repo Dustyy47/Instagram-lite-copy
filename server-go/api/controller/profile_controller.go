@@ -33,10 +33,8 @@ type GetProfileDataResponse struct {
 	IsUserProfile bool `json:"isUserProfile"`
 }
 
-// GetProfileData fetches profile data for a given user.
-//
 // @Summary Get profile data
-// @Description Get profile data for the user with the given ID or nickname
+// @Description Get profile data for the user with the given ID or nickname or nothing if user is autherization
 // @Tags Profile
 // @Accept json
 // @Produce json
@@ -48,20 +46,22 @@ type GetProfileDataResponse struct {
 // @Failure 500 {object} ErrorResponse
 // @Router /profiles/id/{id} [get]
 // @Router /profiles/nickname/{nickname} [get]
+// @Router /profiles/me [get]
 // @security ApiKeyAuth
 func (pc *ProfileController) GetProfileData(c *gin.Context) {
-	var request struct{}
-
-	err := c.ShouldBind(&request)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
-		return
-	}
-
 	var user db.User
-	nickname, ok := c.Params.Get("nickname")
-	if !ok {
-		ids := c.Params.ByName("id")
+	var err error
+
+	ids := c.Params.ByName("id")
+	nickname := c.Params.ByName("nickname")
+
+	if nickname != "" {
+		user, err = pc.Store.GetUserByNickname(c, nickname)
+		if err != nil {
+			c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
+			return
+		}
+	} else if ids != "" {
 		id, err := strconv.ParseInt(ids, 10, 64)
 		if err != nil {
 			c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
@@ -73,9 +73,9 @@ func (pc *ProfileController) GetProfileData(c *gin.Context) {
 			c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
 			return
 		}
-
 	} else {
-		user, err = pc.Store.GetUserByNickname(c, nickname)
+		userID := c.GetInt64("userID")
+		user, err = pc.Store.GetUserByID(c, userID)
 		if err != nil {
 			c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
 			return
@@ -98,16 +98,13 @@ func (pc *ProfileController) GetProfileData(c *gin.Context) {
 	isUserProfile := userID == user.ID
 
 	getProfileDataResponse := GetProfileDataResponse{
-		UserID:   user.ID,
-		Email:    user.Email,
-		Nickname: user.Nickname,
-		Fullname: user.Fullname,
-
-		AvatarURL: user.AvatarUrl,
-
-		NumFollowers: numFollowers,
-		NumFollowing: numFollowing,
-
+		UserID:        user.ID,
+		Email:         user.Email,
+		Nickname:      user.Nickname,
+		Fullname:      user.Fullname,
+		AvatarURL:     user.AvatarUrl,
+		NumFollowers:  numFollowers,
+		NumFollowing:  numFollowing,
 		IsUserProfile: isUserProfile,
 	}
 
@@ -277,8 +274,15 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 }
 
 type FindUsersRequest struct {
-	Limit  int32 `form:"limit" binding:"required"`
+	Limit  int32 `form:"limit" binding:"min=0"`
 	Offset int32 `form:"offset" binding:"min=0"`
+}
+
+type FindUsersResponse []struct {
+	UserId    int64
+	NickName  string
+	FullName  string
+	AvatarUrl string
 }
 
 // @Summary Find users by nickname
@@ -287,20 +291,23 @@ type FindUsersRequest struct {
 // @Accept  json
 // @Produce  json
 // @Param name path string true "User nickname"
-// @Param limit query int true "Number of results to return"
-// @Param offset query int false "Number of results to skip"
-// @Success 200 {array} map[string]interface{}
+// @Param limit query int false "Limit"
+// @Param offset query int false "Offset"
+// @Success 200 {object} FindUsersResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /profiles/find/{name} [get]
 // @security ApiKeyAuth
 func (pc *ProfileController) FindUsers(c *gin.Context) {
 	var request FindUsersRequest
-
 	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 		return
+	}
+
+	if request.Limit == 0 {
+		request.Limit = pc.Env.DefaultLimitFindUsers
 	}
 
 	name := c.Param("name")
@@ -317,15 +324,19 @@ func (pc *ProfileController) FindUsers(c *gin.Context) {
 		return
 	}
 
-	response := make([]map[string]interface{}, 0)
-	for _, user := range users {
-		response = append(response, map[string]interface{}{
-			"nickName":  user.Nickname,
-			"fullName":  user.Fullname,
-			"avatarUrl": user.AvatarUrl,
-			"userId":    user.ID,
-		})
+	findUsersResponse := make(FindUsersResponse, len(users))
+	for i, user := range users {
+		findUsersResponse[i] = struct {
+			UserId    int64
+			NickName  string
+			FullName  string
+			AvatarUrl string
+		}{
+			UserId:    user.ID,
+			NickName:  user.Nickname,
+			FullName:  user.Fullname,
+			AvatarUrl: user.AvatarUrl,
+		}
 	}
-
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusOK, findUsersResponse)
 }

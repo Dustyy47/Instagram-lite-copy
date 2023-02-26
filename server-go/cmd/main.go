@@ -20,7 +20,7 @@ import (
 
 // @title           Instagram-lite-copy API
 // @version         1.0
-// @description     server-go.
+// @description     server-go
 // @host            localhost:8000
 // @BasePath        /v1
 // @securityDefinitions.apiKey ApiKeyAuth

@@ -12,6 +12,15 @@ definitions:
       accessToken:
         type: string
     type: object
+  controller.CommentWithLikes:
+    properties:
+      comment:
+        $ref: '#/definitions/db.Comment'
+      isLikedMe:
+        type: boolean
+      numLikes:
+        type: integer
+    type: object
   controller.CreateConversationRequest:
     properties:
       secondUserID:
@@ -28,6 +37,20 @@ definitions:
     properties:
       error:
         type: string
+    type: object
+  controller.GetCommentsOfPostResponse:
+    properties:
+      commentWithLikes:
+        items:
+          $ref: '#/definitions/controller.CommentWithLikes'
+        type: array
+    type: object
+  controller.GetPostsByUserResponse:
+    properties:
+      postWithLikes:
+        items:
+          $ref: '#/definitions/controller.PostWithLikes'
+        type: array
     type: object
   controller.GetProfileDataResponse:
     properties:
@@ -48,9 +71,25 @@ definitions:
       userID:
         type: integer
     type: object
+  controller.LikeResponse:
+    properties:
+      isLikedMe:
+        type: boolean
+      numLikes:
+        type: integer
+    type: object
+  controller.PostWithLikes:
+    properties:
+      isLikedMe:
+        type: boolean
+      numLikes:
+        type: integer
+      post:
+        $ref: '#/definitions/db.Post'
+    type: object
   controller.SuccessResponse:
     properties:
-      error:
+      message:
         type: string
     type: object
   controller.UpdateProfileResponse:
@@ -97,14 +136,12 @@ definitions:
 host: localhost:8000
 info:
   contact: {}
-  description: server-go.
+  description: server-go
   title: Instagram-lite-copy API
   version: "1.0"
 paths:
   /auth/login:
     post:
-      consumes:
-      - multipart/form-data
       description: Authenticate a user with email and password
       parameters:
       - description: Email address of the user
@@ -197,120 +234,6 @@ paths:
       summary: Register
       tags:
       - Auth
-  /comments:
-    get:
-      consumes:
-      - application/json
-      description: Get comments of a post with pagination
-      parameters:
-      - description: Post ID
-        in: query
-        name: postID
-        required: true
-        type: integer
-      - description: Limit
-        in: query
-        name: limit
-        required: true
-        type: integer
-      - description: Offset
-        in: query
-        name: offset
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/db.Comment'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/controller.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/controller.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/controller.ErrorResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Get comments of a post
-      tags:
-      - Comments
-  /comments/{commentID}:
-    delete:
-      parameters:
-      - description: Comment ID
-        in: path
-        name: commentID
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controller.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/controller.ErrorResponse'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/controller.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/controller.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/controller.ErrorResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Remove a comment by ID
-      tags:
-      - Comments
-  /comments/{commentID}/like:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Comment ID
-        in: path
-        name: commentID
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Number of likes
-          schema:
-            type: integer
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/controller.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/controller.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/controller.ErrorResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Like or dislike a comment
-      tags:
-      - Comments
   /conversations/create:
     post:
       description: Create a new conversation with the user specified in the request
@@ -365,7 +288,6 @@ paths:
       - description: Limit
         in: query
         name: limit
-        required: true
         type: integer
       - description: Offset
         in: query
@@ -373,11 +295,9 @@ paths:
         type: integer
       responses:
         "200":
-          description: List of posts
+          description: List of posts with number likes and isLikedMe
           schema:
-            items:
-              $ref: '#/definitions/db.Post'
-            type: array
+            $ref: '#/definitions/controller.GetPostsByUserResponse'
         "400":
           description: Bad Request
           schema:
@@ -429,6 +349,117 @@ paths:
       summary: Remove a post by ID
       tags:
       - Posts
+  /posts/{postID}/comments:
+    get:
+      consumes:
+      - application/json
+      description: Get comments of a post with pagination
+      parameters:
+      - description: Post ID
+        in: query
+        name: postID
+        required: true
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.GetCommentsOfPostResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get comments of a post
+      tags:
+      - Comments
+  /posts/{postID}/comments/{commentID}:
+    delete:
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Remove a comment by ID
+      tags:
+      - Comments
+  /posts/{postID}/comments/{commentID}/like:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Number of likes
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Like or dislike a comment
+      tags:
+      - Comments
   /posts/{postID}/comments/create:
     post:
       consumes:
@@ -484,9 +515,9 @@ paths:
         type: integer
       responses:
         "200":
-          description: Number of likes
+          description: Number of likes and isLikedMe
           schema:
-            type: integer
+            $ref: '#/definitions/controller.LikeResponse'
         "400":
           description: Bad Request
           schema:
@@ -512,12 +543,10 @@ paths:
       - description: Title of the post
         in: formData
         name: title
-        required: true
         type: string
       - description: Description of the post
         in: formData
         name: description
-        required: true
         type: string
       - description: Image of the post
         in: formData
@@ -553,12 +582,11 @@ paths:
         name: name
         required: true
         type: string
-      - description: Number of results to return
+      - description: Limit
         in: query
         name: limit
-        required: true
         type: integer
-      - description: Number of results to skip
+      - description: Offset
         in: query
         name: offset
         type: integer
@@ -569,7 +597,15 @@ paths:
           description: OK
           schema:
             items:
-              additionalProperties: true
+              properties:
+                avatarUrl:
+                  type: string
+                fullName:
+                  type: string
+                nickName:
+                  type: string
+                userId:
+                  type: integer
               type: object
             type: array
         "400":
@@ -589,7 +625,8 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get profile data for the user with the given ID or nickname
+      description: Get profile data for the user with the given ID or nickname or
+        nothing if user is autherization
       parameters:
       - description: User nickname
         in: path
@@ -659,6 +696,44 @@ paths:
       tags:
       - Profile
   /profiles/me:
+    get:
+      consumes:
+      - application/json
+      description: Get profile data for the user with the given ID or nickname or
+        nothing if user is autherization
+      parameters:
+      - description: User nickname
+        in: path
+        name: nickname
+        type: string
+      - description: User ID
+        in: path
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.GetProfileDataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get profile data
+      tags:
+      - Profile
     patch:
       consumes:
       - multipart/form-data
@@ -708,7 +783,8 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get profile data for the user with the given ID or nickname
+      description: Get profile data for the user with the given ID or nickname or
+        nothing if user is autherization
       parameters:
       - description: User nickname
         in: path

@@ -27,8 +27,8 @@ type AddPostRequest struct {
 // @Summary Add new post
 // @Tags Posts
 // @Accept multipart/form-data
-// @Param title formData string true "Title of the post"
-// @Param description formData string true "Description of the post"
+// @Param title formData string false "Title of the post"
+// @Param description formData string false "Description of the post"
 // @Param img formData file true "Image of the post"
 // @Success 200 {object} db.Post
 // @Failure 400 {object} ErrorResponse
@@ -120,8 +120,18 @@ func (pc *PostController) Remove(c *gin.Context) {
 type GetPostsByUserRequest struct {
 	UserID   int64  `form:"userID" binding:"required"`
 	Nickname string `form:"nickname" binding:"required"`
-	Limit    int32  `form:"limit" binding:"required"`
+	Limit    int32  `form:"limit" binding:"min=0"`
 	Offset   int32  `form:"offset" binding:"min=0"`
+}
+
+type PostWithLikes struct {
+	db.Post   `json:"post"`
+	NumLikes  int64 `json:"numLikes"`
+	IsLikedMe bool  `json:"isLikedMe"`
+}
+
+type GetPostsByUserResponse struct {
+	PostWithLikes []PostWithLikes `json:"postWithLikes"`
 }
 
 // @Summary Get posts by user
@@ -129,9 +139,9 @@ type GetPostsByUserRequest struct {
 // @Tags Posts
 // @Param userID query int64 true "User ID"
 // @Param nickname query string true "User nickname"
-// @Param limit query int true "Limit"
+// @Param limit query int false "Limit"
 // @Param offset query int false "Offset"
-// @Success 200 {array} db.Post "List of posts"
+// @Success 200 {object} GetPostsByUserResponse "List of posts with number likes and isLikedMe"
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
@@ -139,11 +149,14 @@ type GetPostsByUserRequest struct {
 // @security ApiKeyAuth
 func (pc *PostController) GetPostsByUser(c *gin.Context) {
 	var request GetPostsByUserRequest
-
 	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 		return
+	}
+
+	if request.Limit == 0 {
+		request.Limit = pc.Env.DefaultLimitGetPostsByUser
 	}
 
 	user, err := pc.Store.GetUserByID(c, request.UserID)
@@ -167,13 +180,45 @@ func (pc *PostController) GetPostsByUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, posts)
+	getPostsByUserResponse := GetPostsByUserResponse{
+		PostWithLikes: make([]PostWithLikes, len(posts)),
+	}
+
+	for i, post := range posts {
+		numLikes, err := pc.Store.GetNumLikesPost(c, post.ID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+			return
+		}
+
+		isLikedMe := false
+
+		userID := c.GetInt64("userID")
+
+		getLikePostArg := db.GetLikedPostParams{
+			PostID: post.ID,
+			UserID: userID,
+		}
+		_, err = pc.Store.GetLikedPost(c, getLikePostArg)
+		// if err = nil => user liked this post
+		if err == nil {
+			isLikedMe = true
+		}
+
+		getPostsByUserResponse.PostWithLikes[i] = PostWithLikes{
+			Post:      post,
+			NumLikes:  numLikes,
+			IsLikedMe: isLikedMe,
+		}
+	}
+
+	c.JSON(http.StatusOK, getPostsByUserResponse)
 }
 
 // @Summary Like or dislike a post
 // @Tags Posts
 // @Param postID path int true "Post ID"
-// @Success 200 {object} int "Number of likes"
+// @Success 200 {object} LikeResponse "Number of likes and isLikedMe"
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
@@ -181,7 +226,6 @@ func (pc *PostController) GetPostsByUser(c *gin.Context) {
 // @security ApiKeyAuth
 func (pc *PostController) Like(c *gin.Context) {
 	var request struct{}
-
 	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
@@ -207,6 +251,8 @@ func (pc *PostController) Like(c *gin.Context) {
 		UserID: userID,
 	}
 
+	var likeRespose LikeResponse
+
 	_, err = pc.Store.GetLikedPost(c, getLikePostArg)
 	if err != nil {
 		likePostArg := db.LikePostParams{
@@ -219,6 +265,8 @@ func (pc *PostController) Like(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 			return
 		}
+
+		likeRespose.IsLikedMe = true
 	} else {
 		dislikePostParams := db.DislikePostParams{
 			PostID: post.ID,
@@ -230,13 +278,16 @@ func (pc *PostController) Like(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 			return
 		}
+
+		likeRespose.IsLikedMe = false
 	}
 
-	numberLikes, err := pc.Store.GetNumLikesPost(c, post.ID)
+	numLikes, err := pc.Store.GetNumLikesPost(c, post.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		return
 	}
+	likeRespose.NumLikes = numLikes
 
-	c.JSON(http.StatusOK, numberLikes)
+	c.JSON(http.StatusOK, likeRespose)
 }
