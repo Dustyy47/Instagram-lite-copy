@@ -14,6 +14,7 @@
 
 .infoWrapper {
     position: relative;
+    width: 100%;
 }
 
 .nickName {
@@ -32,6 +33,17 @@
     font-size: 13px;
     line-height: 14px;
     position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.passedTime {
+    color: grey;
+    font-size: 13px;
 }
 
 @media screen and (max-width: 1400px) {

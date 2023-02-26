@@ -34,7 +34,7 @@
 
 [data-isliked='false'] {
     fill: transparent;
-    stroke: black;
+    stroke: rgb(255, 21, 21);
     //filter: brightness(0) invert(100%) brightness(0.3);
     animation: 0.2s unlike alternate;
 }

@@ -10,9 +10,11 @@ const barClassNames = {
     form: styles.sendForm,
     emojiPicker: styles.emojiPicker,
     input: styles.commentInput,
+    inputWrapper: styles.commentInputWrapper,
     sendBtn: styles.sendBtn,
     sendBtnText: styles.sendBtnText,
     sendBtnIcon: styles.sendBtnIcon,
+    leftWrapper: styles.formLeftWrapper,
 }
 
 export function SelectedPostComments() {
