@@ -19,7 +19,7 @@ func NewPostRouter(env *bootstrap.Env, timeout time.Duration, store db.Store, gr
 	group.POST("/create", pc.Add)
 	group.DELETE("/:postID", pc.Remove)
 	group.GET("", pc.GetPostsByUser)
-	group.PUT("/:postID", pc.Like)
+	group.PUT("/:postID/like", pc.Like)
 
 	commentRouter := group.Group("/:postID/comments")
 	NewCommentRouter(env, timeout, store, commentRouter)
