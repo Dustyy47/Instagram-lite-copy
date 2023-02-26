@@ -54,6 +54,7 @@ func (ac *AuthController) Register(c *gin.Context) {
 	var request RegisterRequest
 	err := c.ShouldBind(&request)
 	if err != nil {
+		logrus.Errorf("%d err: %w", http.StatusBadRequest, err.Error())
 		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 		return
 	}
@@ -80,10 +81,10 @@ func (ac *AuthController) Register(c *gin.Context) {
 
 	var millisecondsUTC string = strconv.FormatInt(time.Now().UTC().UnixNano()/1e6, 10)
 	avatarName := millisecondsUTC + "--" + request.AvatarImage.Filename
-	
+
 	err = c.SaveUploadedFile(request.AvatarImage, "images/avatars/"+avatarName)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, errorResponse("Error saving avatar image " + err.Error() + " " + avatarName))
+		c.JSON(http.StatusInternalServerError, errorResponse("Error saving avatar image "+err.Error()+" "+avatarName))
 		return
 	}
 

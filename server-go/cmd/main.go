@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -72,6 +73,12 @@ func runDBMigration(db *sql.DB, DBname, migrationURL string) {
 
 func runGinServer(env *bootstrap.Env, timeout time.Duration, store sqlc_db.Store) {
 	ginEngine := gin.Default()
+
+	// CORS middleware
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
+	ginEngine.Use(cors.New(config))
 
 	connectSwaggerToGin(ginEngine)
 
