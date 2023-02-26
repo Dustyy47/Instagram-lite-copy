@@ -1,5 +1,6 @@
 # Ignore images from 
 images/avatars/*
+!images/avatars/placeholder.jpg
 images/*
 !images/avatars
 
