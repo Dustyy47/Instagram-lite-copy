@@ -156,185 +156,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/comments": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get comments of a post with pagination",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Comments"
-                ],
-                "summary": "Get comments of a post",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Post ID",
-                        "name": "postID",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/db.Comment"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controller.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controller.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controller.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/comments/{commentID}": {
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "Comments"
-                ],
-                "summary": "Remove a comment by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Comment ID",
-                        "name": "commentID",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controller.SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controller.ErrorResponse"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/controller.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controller.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controller.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/comments/{commentID}/like": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Comments"
-                ],
-                "summary": "Like or dislike a comment",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Comment ID",
-                        "name": "commentID",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Number of likes",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controller.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controller.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controller.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/conversations/create": {
             "post": {
                 "security": [
@@ -423,8 +244,7 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "Limit",
                         "name": "limit",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "integer",
@@ -435,12 +255,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "List of posts",
+                        "description": "List of posts with number likes and isLikedMe",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/db.Post"
-                            }
+                            "$ref": "#/definitions/controller.GetPostsByUserResponse"
                         }
                     },
                     "400": {
@@ -483,15 +300,13 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Title of the post",
                         "name": "title",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "string",
                         "description": "Description of the post",
                         "name": "description",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "file",
@@ -558,6 +373,73 @@ const docTemplate = `{
                     },
                     "403": {
                         "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/posts/{postID}/comments": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get comments of a post with pagination",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Get comments of a post",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Post ID",
+                        "name": "postID",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.GetCommentsOfPostResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/controller.ErrorResponse"
                         }
@@ -647,6 +529,114 @@ const docTemplate = `{
                 }
             }
         },
+        "/posts/{postID}/comments/{commentID}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Remove a comment by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Comment ID",
+                        "name": "commentID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/posts/{postID}/comments/{commentID}/like": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Like or dislike a comment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Comment ID",
+                        "name": "commentID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Number of likes",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/posts/{postID}/like": {
             "put": {
                 "security": [
@@ -669,9 +659,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Number of likes",
+                        "description": "Number of likes and isLikedMe",
                         "schema": {
-                            "type": "integer"
+                            "$ref": "#/definitions/controller.LikeResponse"
                         }
                     },
                     "400": {
@@ -723,14 +713,13 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "Number of results to return",
+                        "description": "Limit",
                         "name": "limit",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "Number of results to skip",
+                        "description": "Offset",
                         "name": "offset",
                         "in": "query"
                     }
@@ -742,7 +731,20 @@ const docTemplate = `{
                             "type": "array",
                             "items": {
                                 "type": "object",
-                                "additionalProperties": true
+                                "properties": {
+                                    "avatarUrl": {
+                                        "type": "string"
+                                    },
+                                    "fullName": {
+                                        "type": "string"
+                                    },
+                                    "nickName": {
+                                        "type": "string"
+                                    },
+                                    "userId": {
+                                        "type": "integer"
+                                    }
+                                }
                             }
                         }
                     },
@@ -1029,6 +1031,20 @@ const docTemplate = `{
                 }
             }
         },
+        "controller.CommentWithLikes": {
+            "type": "object",
+            "properties": {
+                "comment": {
+                    "$ref": "#/definitions/db.Comment"
+                },
+                "isLikedMe": {
+                    "type": "boolean"
+                },
+                "numLikes": {
+                    "type": "integer"
+                }
+            }
+        },
         "controller.CreateConversationRequest": {
             "type": "object",
             "required": [
@@ -1053,6 +1069,28 @@ const docTemplate = `{
             "properties": {
                 "error": {
                     "type": "string"
+                }
+            }
+        },
+        "controller.GetCommentsOfPostResponse": {
+            "type": "object",
+            "properties": {
+                "commentWithLikes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controller.CommentWithLikes"
+                    }
+                }
+            }
+        },
+        "controller.GetPostsByUserResponse": {
+            "type": "object",
+            "properties": {
+                "postWithLikes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controller.PostWithLikes"
+                    }
                 }
             }
         },
@@ -1085,10 +1123,35 @@ const docTemplate = `{
                 }
             }
         },
+        "controller.LikeResponse": {
+            "type": "object",
+            "properties": {
+                "isLikedMe": {
+                    "type": "boolean"
+                },
+                "numLikes": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controller.PostWithLikes": {
+            "type": "object",
+            "properties": {
+                "isLikedMe": {
+                    "type": "boolean"
+                },
+                "numLikes": {
+                    "type": "integer"
+                },
+                "post": {
+                    "$ref": "#/definitions/db.Post"
+                }
+            }
+        },
         "controller.SuccessResponse": {
             "type": "object",
             "properties": {
-                "error": {
+                "message": {
                     "type": "string"
                 }
             }
@@ -1173,7 +1236,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/v1",
 	Schemes:          []string{},
 	Title:            "Instagram-lite-copy API",
-	Description:      "server-go.",
+	Description:      "server-go",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

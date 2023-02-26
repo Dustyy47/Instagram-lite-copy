@@ -84,7 +84,7 @@ func (cc *CommentController) Add(c *gin.Context) {
 // @Failure 403 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /comments/{commentID} [delete]
+// @Router /posts/{postID}/comments/{commentID} [delete]
 // @Security ApiKeyAuth
 func (cc *CommentController) Remove(c *gin.Context) {
 	var request struct{}
@@ -125,27 +125,35 @@ func (cc *CommentController) Remove(c *gin.Context) {
 
 type GetCommentOfPostRequest struct {
 	PostID int64 `form:"postID" binding:"required"`
-	Limit  int32 `form:"limit" binding:"required"`
+	Limit  int32 `form:"limit" binding:"min=0"`
 	Offset int32 `form:"offset" binding:"min=0"`
 }
 
+type CommentWithLikes struct {
+	db.Comment   `json:"comment"`
+	NumLikes  int64 `json:"numLikes"`
+	IsLikedMe bool  `json:"isLikedMe"`
+}
+
+type GetCommentsOfPostResponse struct {
+	CommentWithLikes []CommentWithLikes `json:"commentWithLikes"`
+}
 // @Summary Get comments of a post
 // @Description Get comments of a post with pagination
 // @Tags Comments
 // @Accept json
 // @Produce json
 // @Param postID query int64 true "Post ID"
-// @Param limit query int32 true "Limit"
+// @Param limit query int32 false "Limit"
 // @Param offset query int32 false "Offset"
-// @Success 200 {array} db.Comment
+// @Success 200 {object} GetCommentsOfPostResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /comments [get]
+// @Router /posts/{postID}/comments [get]
 // @Security ApiKeyAuth
 func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 	var request GetCommentOfPostRequest
-
 	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
@@ -164,7 +172,39 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, comments)
+	getCommentsOfPostResponse := GetCommentsOfPostResponse{
+		CommentWithLikes: make([]CommentWithLikes, len(comments)),
+	}
+
+	for i, comment := range comments {
+		numLikes, err := cc.Store.GetNumLikesComment(c, comment.ID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+			return
+		}
+
+		isLikedMe := false
+
+		userID := c.GetInt64("userID")
+
+		getLikeCommentArg := db.GetLikedCommentParams{
+			CommentID: comment.ID,
+			UserID: userID,
+		}
+		_, err = cc.Store.GetLikedComment(c, getLikeCommentArg)
+		// if err = nil => user liked this comment
+		if err == nil {
+			isLikedMe = true
+		}
+
+		getCommentsOfPostResponse.CommentWithLikes[i] = CommentWithLikes{
+			Comment:      comment,
+			NumLikes:  numLikes,
+			IsLikedMe: isLikedMe,
+		}
+	}
+
+	c.JSON(http.StatusOK, getCommentsOfPostResponse)
 }
 
 // @Summary Like or dislike a comment
@@ -176,7 +216,7 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /comments/{commentID}/like [post]
+// @Router /posts/{postID}/comments/{commentID}/like [put]
 // @Security ApiKeyAuth
 func (cc *CommentController) Like(c *gin.Context) {
 	var request struct{}

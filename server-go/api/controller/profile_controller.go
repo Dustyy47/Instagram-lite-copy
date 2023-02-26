@@ -277,8 +277,15 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 }
 
 type FindUsersRequest struct {
-	Limit  int32 `form:"limit" binding:"required"`
+	Limit  int32 `form:"limit" binding:"min=0"`
 	Offset int32 `form:"offset" binding:"min=0"`
+}
+
+type FindUsersResponse []struct {
+	UserId    int64
+	NickName  string
+	FullName  string
+	AvatarUrl string
 }
 
 // @Summary Find users by nickname
@@ -287,20 +294,23 @@ type FindUsersRequest struct {
 // @Accept  json
 // @Produce  json
 // @Param name path string true "User nickname"
-// @Param limit query int true "Number of results to return"
-// @Param offset query int false "Number of results to skip"
-// @Success 200 {array} map[string]interface{}
+// @Param limit query int false "Limit"
+// @Param offset query int false "Offset"
+// @Success 200 {object} FindUsersResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /profiles/find/{name} [get]
 // @security ApiKeyAuth
 func (pc *ProfileController) FindUsers(c *gin.Context) {
 	var request FindUsersRequest
-
 	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 		return
+	}
+
+	if request.Limit == 0 {
+		request.Limit = pc.Env.DefaultLimitFindUsers
 	}
 
 	name := c.Param("name")
@@ -317,15 +327,14 @@ func (pc *ProfileController) FindUsers(c *gin.Context) {
 		return
 	}
 
-	response := make([]map[string]interface{}, 0)
-	for _, user := range users {
-		response = append(response, map[string]interface{}{
-			"nickName":  user.Nickname,
-			"fullName":  user.Fullname,
-			"avatarUrl": user.AvatarUrl,
-			"userId":    user.ID,
-		})
+	findUsersResponse := make(FindUsersResponse, len(users))
+	for i, user := range users {
+		findUsersResponse[i] = struct{UserId int64; NickName string; FullName string; AvatarUrl string}{
+			UserId:    user.ID,
+			NickName:  user.Nickname,
+			FullName:  user.Fullname,
+			AvatarUrl: user.AvatarUrl,
+		}
 	}
-
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusOK, findUsersResponse)
 }

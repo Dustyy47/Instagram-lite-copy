@@ -1,7 +1,7 @@
 package controller
 
 type SuccessResponse struct {
-	Message string `json:"error"`
+	Message string `json:"message"`
 }
 
 func successResponse(message string) SuccessResponse {

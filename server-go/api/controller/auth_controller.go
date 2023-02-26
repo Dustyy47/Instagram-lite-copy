@@ -49,7 +49,6 @@ type AuthResponse struct {
 // @Failure 409 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /auth/registration [post]
-// TODO: validation
 func (ac *AuthController) Register(c *gin.Context) {
 	var request RegisterRequest
 	err := c.ShouldBind(&request)
