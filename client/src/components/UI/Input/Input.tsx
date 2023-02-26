@@ -5,7 +5,7 @@ import { ValidationMessage } from '../../ValidationMessage/ValidationMessage'
 import styles from './Input.module.scss'
 
 //TODO CLEAR STYLES PROPS
-interface InputProps {
+export interface InputProps {
     onChange: (value: string) => any
     value?: string
     name?: string
@@ -13,7 +13,7 @@ interface InputProps {
     placeholder?: string
     isColumn?: boolean
     validator?: Validator
-    forwardRef?: React.MutableRefObject<HTMLInputElement>
+    forwardRef?: React.MutableRefObject<HTMLInputElement | null>
     onBlur?: AnyFunction
     isHiddenBeforeBlur?: boolean
     isHiddenPermanently?: boolean
@@ -55,7 +55,6 @@ export const Input = memo((props: InputProps) => {
     }
 
     const change = (e: React.ChangeEvent<HTMLInputElement>) => {
-        //validator?.validate(e.target.value)
         onChange(e.target.value)
     }
 

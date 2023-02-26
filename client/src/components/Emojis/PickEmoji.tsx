@@ -1,3 +1,4 @@
+import { ChooseEmojiCallback } from 'models/CallbacksTypes'
 import { useRef, useState } from 'react'
 import { VscSmiley } from 'react-icons/vsc'
 import { useOutsideClick } from '../../hooks/useOutsideClick'
@@ -5,7 +6,7 @@ import { Emojis } from './Emojis'
 import styles from './PickEmoji.module.scss'
 
 interface EmojiPickerProps {
-    onChoose: (emoji: string) => any
+    onChoose: ChooseEmojiCallback
     className?: string
 }
 
@@ -19,9 +20,8 @@ export function EmojiPicker({ onChoose, className }: EmojiPickerProps) {
         setEmojisVisible(false)
     }
 
-    function toggleEmojis() {
-        console.log('toggled')
-
+    function toggleEmojis(e: React.MouseEvent) {
+        e.stopPropagation()
         setEmojisVisible((prev) => !prev)
     }
 

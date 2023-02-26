@@ -18,7 +18,7 @@ export function Search({ className }: SearchProps) {
     const [isLoading, setLoading] = useState(false)
     let page = useRef(0)
     let timer = useRef<NodeJS.Timeout>()
-    let input = useRef<HTMLInputElement>()
+    let input = useRef<HTMLInputElement>(null)
 
     const handleScroll = useCallback(
         (e: React.WheelEvent<HTMLDivElement>) => {
@@ -71,7 +71,7 @@ export function Search({ className }: SearchProps) {
     return (
         <div className={`${styles.wrapper} ${className}`}>
             <Input
-                forwardRef={input as React.MutableRefObject<HTMLInputElement>}
+                forwardRef={input}
                 onBlur={unFocusSearch}
                 onFocus={focusSearch}
                 onChange={typing}

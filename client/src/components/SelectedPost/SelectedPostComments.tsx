@@ -1,10 +1,21 @@
 import { SendMessageBar } from 'components/SendMessageBar/SendMessageBar'
-import { fetchSendComment } from 'store/slices/extendedPostSlice'
+import { extendedPostActions, fetchSendComment } from 'store/slices/extendedPostSlice'
 import { Status } from '../../models/LoadingStatus'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { Comments } from '../Comments/Comments'
 import { Loading } from '../UI/Loading/Loading'
 import styles from './SelectedPost.module.scss'
+
+const barClassNames = {
+    form: styles.sendForm,
+    emojiPicker: styles.emojiPicker,
+    input: styles.commentInput,
+    inputWrapper: styles.commentInputWrapper,
+    sendBtn: styles.sendBtn,
+    sendBtnText: styles.sendBtnText,
+    sendBtnIcon: styles.sendBtnIcon,
+    leftWrapper: styles.formLeftWrapper,
+}
 
 export function SelectedPostComments() {
     const { comments, commentsStatus } = useAppSelector((state) => state.extendedPost)
@@ -18,17 +29,27 @@ export function SelectedPostComments() {
         if (commentsStatus === Status.error) {
             return <h5>Ошибка, что-то пошло не так...</h5>
         }
-        return <Comments comments={comments} />
+        return (
+            <Comments
+                className={styles.commentsWrapper}
+                onCommentAvatarClicked={handleAvatarClick}
+                comments={comments}
+            />
+        )
     }
 
     function sendComment(message: string) {
         dispatch(fetchSendComment(message))
     }
 
+    function handleAvatarClick() {
+        dispatch(extendedPostActions.toggle(false))
+    }
+
     return (
-        <div>
+        <>
             {renderComments()}
-            {!isGuest && <SendMessageBar onSend={sendComment} className={styles.sendForm} />}
-        </div>
+            {!isGuest && <SendMessageBar onSend={sendComment} classNames={barClassNames} />}
+        </>
     )
 }

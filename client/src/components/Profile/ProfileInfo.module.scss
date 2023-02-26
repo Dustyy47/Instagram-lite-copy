@@ -49,9 +49,13 @@
 }
 
 .modal > div {
-    width: 20rem;
-    min-height: 20rem;
+    width: 25rem;
+    height: 30rem;
     text-align: left;
+
+    h3 {
+        margin-bottom: 1rem;
+    }
 
     // FOR USER LIST ITEM
     ul {

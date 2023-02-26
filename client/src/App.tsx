@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Header } from './components/Header/Header'
-import { Loading } from './components/UI/Loading/Loading'
 import { NavBar } from './components/NavBar/NavBar'
+import { Loading } from './components/UI/Loading/Loading'
 import { useLogout } from './hooks/useLogout'
 import { Status } from './models/LoadingStatus'
 import { RoutesManager } from './RoutesManager'
@@ -18,6 +18,7 @@ export function App() {
     const logout = useLogout()
 
     useEffect(() => {
+        window.addEventListener('beforeunload', (event) => {})
         dispatch(fetchUserData())
     }, [])
 

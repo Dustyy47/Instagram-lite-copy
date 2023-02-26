@@ -1,9 +1,10 @@
+import { ChooseEmojiCallback } from 'models/CallbacksTypes'
 import { emojis as emojisMock } from '../../mock/emojis'
 import styles from './Emojis.module.scss'
 
 interface EmojisProps {
     isClosed: boolean
-    onChoose: (emoji: string) => any
+    onChoose: ChooseEmojiCallback
     className?: string
     forwardRef?: React.RefObject<any>
 }
@@ -11,8 +12,8 @@ interface EmojisProps {
 const emojis = [...emojisMock]
 
 export function Emojis({ onChoose, className, isClosed, forwardRef }: EmojisProps) {
-    function handleClick(emoji: string) {
-        onChoose(emoji)
+    function handleClick(emoji: string, e: React.MouseEvent) {
+        onChoose(emoji, e)
     }
 
     return (
@@ -23,7 +24,7 @@ export function Emojis({ onChoose, className, isClosed, forwardRef }: EmojisProp
             data-closed={isClosed}
         >
             {emojis.map((emoji) => (
-                <div key={emoji} tabIndex={0} onClick={() => handleClick(emoji)} className={styles.emoji}>
+                <div key={emoji} tabIndex={0} onClick={(e) => handleClick(emoji, e)} className={styles.emoji}>
                     {emoji}
                 </div>
             ))}

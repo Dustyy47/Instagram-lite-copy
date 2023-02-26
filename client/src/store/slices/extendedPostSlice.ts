@@ -56,6 +56,11 @@ const extendedPostSlice = createSlice({
         setPost(state, action: PayloadAction<PostModel>) {
             state.post = action.payload
         },
+        reset(state) {
+            state.post = { ...initialState.post }
+            state.author = { ...initialState.author }
+            state.comments = [...initialState.comments]
+        },
     },
     extraReducers: (builder) => {
         builder

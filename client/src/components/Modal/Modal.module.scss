@@ -20,7 +20,7 @@
     justify-content: center;
     pointer-events: all;
     opacity: 1;
-    overflow-y: scroll;
+    overflow: auto;
 
     &--hidden {
         opacity: 0;
@@ -52,7 +52,7 @@
     padding: 30px;
     background: white;
     border-radius: 10px;
-    overflow: scroll;
+    overflow: auto;
     position: relative;
     transition: inherit;
 }

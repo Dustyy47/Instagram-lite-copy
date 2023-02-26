@@ -1,4 +1,4 @@
-import { PostLikeButton } from 'components/LikeBtn/PostLikeBtn'
+import { PostLikeButton } from 'components/PostLikeBtn/PostLikeBtn'
 import { Back } from 'components/UI/Back'
 import { useState } from 'react'
 import { FaRegComment } from 'react-icons/fa'
@@ -14,7 +14,7 @@ import { SelectedPostHeader } from './SelectedPostHeader'
 export function SelectedPost() {
     const { isOpen, post } = useAppSelector((state) => state.extendedPost)
     const dispatch = useAppDispatch()
-    
+
     const [areCommentsOpen, setCommentsOpen] = useState(false)
 
     const isMobile = useMediaQuery({ query: '(max-width: 600px)' })
