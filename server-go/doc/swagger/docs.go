@@ -18,9 +18,6 @@ const docTemplate = `{
         "/auth/login": {
             "post": {
                 "description": "Authenticate a user with email and password",
-                "consumes": [
-                    "multipart/form-data"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -770,7 +767,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get profile data for the user with the given ID or nickname",
+                "description": "Get profile data for the user with the given ID or nickname or nothing if user is autherization",
                 "consumes": [
                     "application/json"
                 ],
@@ -879,6 +876,64 @@ const docTemplate = `{
             }
         },
         "/profiles/me": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get profile data for the user with the given ID or nickname or nothing if user is autherization",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Get profile data",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User nickname",
+                        "name": "nickname",
+                        "in": "path"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.GetProfileDataResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    }
+                }
+            },
             "patch": {
                 "security": [
                     {
@@ -957,7 +1012,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get profile data for the user with the given ID or nickname",
+                "description": "Get profile data for the user with the given ID or nickname or nothing if user is autherization",
                 "consumes": [
                     "application/json"
                 ],

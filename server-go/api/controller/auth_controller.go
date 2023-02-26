@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 
 	"app/bootstrap"
 	db "app/db/sqlc"
@@ -37,7 +38,7 @@ type AuthResponse struct {
 // @Summary Register
 // @Description Register a new user with email, password, fullname, nickname, and avatar image
 // @Tags Auth
-// @Accept mpfd
+// @Accept multipart/form-data
 // @Produce json
 // @Param email formData string true "Email address of the user"
 // @Param password formData string true "Password for the user account"
@@ -86,7 +87,7 @@ func (ac *AuthController) Register(c *gin.Context) {
 		return
 	}
 
-	arg := db.CreateUserParams{
+	createUserarg := db.CreateUserParams{
 		Email:          request.Email,
 		Fullname:       request.Fullname,
 		HashedPassword: request.Password,
@@ -95,7 +96,7 @@ func (ac *AuthController) Register(c *gin.Context) {
 		AvatarUrl: avatarName,
 	}
 
-	user, err := ac.Store.CreateUser(c, arg)
+	user, err := ac.Store.CreateUser(c, createUserarg)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		return
@@ -122,7 +123,6 @@ type LoginRequest struct {
 // @Summary Login
 // @Description Authenticate a user with email and password
 // @Tags Auth
-// @Accept mpfd
 // @Produce json
 // @Param email formData string true "Email address of the user"
 // @Param password formData string true "Password for the user account"
@@ -134,7 +134,6 @@ type LoginRequest struct {
 // @Router /auth/login [post]
 func (ac *AuthController) Login(c *gin.Context) {
 	var request LoginRequest
-
 	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
@@ -143,12 +142,13 @@ func (ac *AuthController) Login(c *gin.Context) {
 
 	user, err := ac.Store.GetUserByEmail(c, request.Email)
 	if err != nil {
-		c.JSON(http.StatusNotFound, errorResponse("User not found with the given email"))
+		c.JSON(http.StatusNotFound, errorResponse("Wrong login or password"))
 		return
 	}
 
 	if err := util.CheckPassword(request.Password, user.HashedPassword); err != nil {
-		c.JSON(http.StatusUnauthorized, errorResponse(err.Error()))
+		logrus.Info(err)
+		c.JSON(http.StatusUnauthorized, errorResponse("Wrong login or password"))
 		return
 	}
 

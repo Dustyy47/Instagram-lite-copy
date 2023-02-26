@@ -130,14 +130,15 @@ type GetCommentOfPostRequest struct {
 }
 
 type CommentWithLikes struct {
-	db.Comment   `json:"comment"`
-	NumLikes  int64 `json:"numLikes"`
-	IsLikedMe bool  `json:"isLikedMe"`
+	db.Comment `json:"comment"`
+	NumLikes   int64 `json:"numLikes"`
+	IsLikedMe  bool  `json:"isLikedMe"`
 }
 
 type GetCommentsOfPostResponse struct {
 	CommentWithLikes []CommentWithLikes `json:"commentWithLikes"`
 }
+
 // @Summary Get comments of a post
 // @Description Get comments of a post with pagination
 // @Tags Comments
@@ -189,7 +190,7 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 
 		getLikeCommentArg := db.GetLikedCommentParams{
 			CommentID: comment.ID,
-			UserID: userID,
+			UserID:    userID,
 		}
 		_, err = cc.Store.GetLikedComment(c, getLikeCommentArg)
 		// if err = nil => user liked this comment
@@ -198,7 +199,7 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 		}
 
 		getCommentsOfPostResponse.CommentWithLikes[i] = CommentWithLikes{
-			Comment:      comment,
+			Comment:   comment,
 			NumLikes:  numLikes,
 			IsLikedMe: isLikedMe,
 		}

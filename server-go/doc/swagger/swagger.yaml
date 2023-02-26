@@ -142,8 +142,6 @@ info:
 paths:
   /auth/login:
     post:
-      consumes:
-      - multipart/form-data
       description: Authenticate a user with email and password
       parameters:
       - description: Email address of the user
@@ -627,7 +625,8 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get profile data for the user with the given ID or nickname
+      description: Get profile data for the user with the given ID or nickname or
+        nothing if user is autherization
       parameters:
       - description: User nickname
         in: path
@@ -697,6 +696,44 @@ paths:
       tags:
       - Profile
   /profiles/me:
+    get:
+      consumes:
+      - application/json
+      description: Get profile data for the user with the given ID or nickname or
+        nothing if user is autherization
+      parameters:
+      - description: User nickname
+        in: path
+        name: nickname
+        type: string
+      - description: User ID
+        in: path
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.GetProfileDataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get profile data
+      tags:
+      - Profile
     patch:
       consumes:
       - multipart/form-data
@@ -746,7 +783,8 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get profile data for the user with the given ID or nickname
+      description: Get profile data for the user with the given ID or nickname or
+        nothing if user is autherization
       parameters:
       - description: User nickname
         in: path
