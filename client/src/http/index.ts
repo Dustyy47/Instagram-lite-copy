@@ -1,6 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
-const API_URL = process.env.REACT_APP_API_URL + '/api'
+//OLD
+//const API_URL = process.env.REACT_APP_API_URL + '/api'
+const API_URL = process.env.REACT_APP_API_URL + '/v1'
 
 export const $host = axios.create({
     baseURL: API_URL,

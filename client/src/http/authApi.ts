@@ -4,9 +4,12 @@ import { AxiosResponse } from '../models/Http'
 import { ProfileOwnerModel } from './../models/ProfileOwnerModel'
 import { $host } from './index'
 
+const LOGIN_URL = '/auth/login/'
+const REGISTRATION_URL = '/auth/registration'
+
 export const login = async (email: string, password: string) => {
     try {
-        const { data } = await $host.post('/auth/login', { email, password })
+        const { data } = await $host.post(LOGIN_URL, { email, password })
         localStorage.setItem('token', data)
         return jwtDecode<ProfileOwnerModel>(data)
     } catch (e) {
@@ -15,9 +18,9 @@ export const login = async (email: string, password: string) => {
     }
 }
 
-export const registration = async (inputData: any) => {
+export const registration = async (inputData: FormData) => {
     try {
-        const { data } = await $host.post('/auth/registration', inputData)
+        const { data } = await $host.post(REGISTRATION_URL, inputData)
         localStorage.setItem('token', data)
         return jwtDecode<ProfileOwnerModel>(data)
     } catch (e) {

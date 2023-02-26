@@ -6,6 +6,17 @@ export interface AxiosResponse {
     message: string
 }
 
+//REQUESTS BODY
+
+export interface RegistrationBody {
+    email: string
+    password: string
+    fullname: string
+    nickname: string
+    avatarImage: File
+}
+
+//THUNKS
 export interface FetchProfileReturn {
     profileOwnerInfo: ProfileOwnerModel
     posts: PostModel[]

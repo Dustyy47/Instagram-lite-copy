@@ -18,7 +18,8 @@ export function App() {
     const logout = useLogout()
 
     useEffect(() => {
-        window.addEventListener('beforeunload', (event) => {})
+        //TODO Handle exit and enter for online status
+        //window.addEventListener('beforeunload', (event) => {})
         dispatch(fetchUserData())
     }, [])
 
