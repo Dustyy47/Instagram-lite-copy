@@ -12,7 +12,7 @@ definitions:
       accessToken:
         type: string
     type: object
-  controller.CommentWithLikes:
+  controller.CommentWithLike:
     properties:
       comment:
         $ref: '#/definitions/db.Comment'
@@ -42,14 +42,14 @@ definitions:
     properties:
       commentWithLikes:
         items:
-          $ref: '#/definitions/controller.CommentWithLikes'
+          $ref: '#/definitions/controller.CommentWithLike'
         type: array
     type: object
   controller.GetPostsByUserResponse:
     properties:
       postWithLikes:
         items:
-          $ref: '#/definitions/controller.PostWithLikes'
+          $ref: '#/definitions/controller.PostWithLike'
         type: array
     type: object
   controller.GetProfileDataResponse:
@@ -78,7 +78,7 @@ definitions:
       numLikes:
         type: integer
     type: object
-  controller.PostWithLikes:
+  controller.PostWithLike:
     properties:
       isLikedMe:
         type: boolean
@@ -142,6 +142,8 @@ info:
 paths:
   /auth/login:
     post:
+      consumes:
+      - application/json
       description: Authenticate a user with email and password
       parameters:
       - description: Email address of the user

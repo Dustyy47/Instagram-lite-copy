@@ -18,6 +18,9 @@ const docTemplate = `{
         "/auth/login": {
             "post": {
                 "description": "Authenticate a user with email and password",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -1086,7 +1089,7 @@ const docTemplate = `{
                 }
             }
         },
-        "controller.CommentWithLikes": {
+        "controller.CommentWithLike": {
             "type": "object",
             "properties": {
                 "comment": {
@@ -1133,7 +1136,7 @@ const docTemplate = `{
                 "commentWithLikes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/controller.CommentWithLikes"
+                        "$ref": "#/definitions/controller.CommentWithLike"
                     }
                 }
             }
@@ -1144,7 +1147,7 @@ const docTemplate = `{
                 "postWithLikes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/controller.PostWithLikes"
+                        "$ref": "#/definitions/controller.PostWithLike"
                     }
                 }
             }
@@ -1189,7 +1192,7 @@ const docTemplate = `{
                 }
             }
         },
-        "controller.PostWithLikes": {
+        "controller.PostWithLike": {
             "type": "object",
             "properties": {
                 "isLikedMe": {

@@ -9,7 +9,6 @@ import (
 
 	"app/bootstrap"
 	db "app/db/sqlc"
-	"app/internal/tokenutil"
 	"app/internal/util"
 
 	_ "github.com/santosh/gingo/docs"
@@ -97,7 +96,7 @@ func (ac *AuthController) Register(c *gin.Context) {
 		return
 	}
 
-	accessToken, err := tokenutil.CreateAccessToken(&user, ac.Env.AccessTokenSecret, ac.Env.AccessTokenExpiryHour)
+	accessToken, err := util.CreateAccessToken(&user, ac.Env.AccessTokenSecret, ac.Env.AccessTokenExpiryHour)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		return
@@ -118,6 +117,7 @@ type LoginRequest struct {
 // @Summary Login
 // @Description Authenticate a user with email and password
 // @Tags Auth
+// @Accept json
 // @Produce json
 // @Param email formData string true "Email address of the user"
 // @Param password formData string true "Password for the user account"
@@ -147,7 +147,7 @@ func (ac *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	accessToken, err := tokenutil.CreateAccessToken(&user, ac.Env.AccessTokenSecret, ac.Env.AccessTokenExpiryHour)
+	accessToken, err := util.CreateAccessToken(&user, ac.Env.AccessTokenSecret, ac.Env.AccessTokenExpiryHour)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		return

@@ -128,14 +128,14 @@ type GetCommentOfPostRequest struct {
 	Offset int32 `form:"offset" binding:"min=0"`
 }
 
-type CommentWithLikes struct {
+type CommentWithLike struct {
 	db.Comment `json:"comment"`
 	NumLikes   int64 `json:"numLikes"`
 	IsLikedMe  bool  `json:"isLikedMe"`
 }
 
 type GetCommentsOfPostResponse struct {
-	CommentWithLikes []CommentWithLikes `json:"commentWithLikes"`
+	CommentWithLikes []CommentWithLike `json:"commentWithLikes"`
 }
 
 // @Summary Get comments of a post
@@ -173,7 +173,7 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 	}
 
 	getCommentsOfPostResponse := GetCommentsOfPostResponse{
-		CommentWithLikes: make([]CommentWithLikes, len(comments)),
+		CommentWithLikes: make([]CommentWithLike, len(comments)),
 	}
 
 	for i, comment := range comments {
@@ -197,7 +197,7 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 			isLikedMe = true
 		}
 
-		getCommentsOfPostResponse.CommentWithLikes[i] = CommentWithLikes{
+		getCommentsOfPostResponse.CommentWithLikes[i] = CommentWithLike{
 			Comment:   comment,
 			NumLikes:  numLikes,
 			IsLikedMe: isLikedMe,

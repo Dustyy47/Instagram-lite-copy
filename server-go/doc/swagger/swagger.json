@@ -12,6 +12,9 @@
         "/auth/login": {
             "post": {
                 "description": "Authenticate a user with email and password",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -1080,7 +1083,7 @@
                 }
             }
         },
-        "controller.CommentWithLikes": {
+        "controller.CommentWithLike": {
             "type": "object",
             "properties": {
                 "comment": {
@@ -1127,7 +1130,7 @@
                 "commentWithLikes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/controller.CommentWithLikes"
+                        "$ref": "#/definitions/controller.CommentWithLike"
                     }
                 }
             }
@@ -1138,7 +1141,7 @@
                 "postWithLikes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/controller.PostWithLikes"
+                        "$ref": "#/definitions/controller.PostWithLike"
                     }
                 }
             }
@@ -1183,7 +1186,7 @@
                 }
             }
         },
-        "controller.PostWithLikes": {
+        "controller.PostWithLike": {
             "type": "object",
             "properties": {
                 "isLikedMe": {

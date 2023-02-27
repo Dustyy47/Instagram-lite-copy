@@ -1,4 +1,4 @@
-package tokenutil
+package util
 
 import (
 	"fmt"
@@ -39,7 +39,8 @@ func CreateAccessToken(user *db.User, secret string, expiry int) (accessToken st
 
 func IsAuthorized(requestToken string, secret string) (bool, error) {
 	_, err := jwt.Parse(requestToken, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		_, ok := token.Method.(*jwt.SigningMethodHMAC)
+		if !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 

@@ -5,10 +5,10 @@ import (
 	"strconv"
 	"strings"
 
-	"app/domain"
-	"app/internal/tokenutil"
-
 	"github.com/gin-gonic/gin"
+
+	"app/domain"
+	"app/internal/util"
 )
 
 func JwtAuthMiddleware(secret string) gin.HandlerFunc {
@@ -17,24 +17,24 @@ func JwtAuthMiddleware(secret string) gin.HandlerFunc {
 		t := strings.Split(authHeader, " ")
 		if len(t) == 2 {
 			authToken := t[1]
-			
-			authorized, err := tokenutil.IsAuthorized(authToken, secret)
+
+			authorized, err := util.IsAuthorized(authToken, secret)
 			if authorized {
-				userID, err := tokenutil.ExtractIDFromToken(authToken, secret)
+				userIDs, err := util.ExtractIDFromToken(authToken, secret)
 				if err != nil {
 					c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: err.Error()})
 					c.Abort()
 					return
 				}
 
-				userIDInt, err := strconv.ParseInt(userID, 10, 64)
+				userID, err := strconv.ParseInt(userIDs, 10, 64)
 				if err != nil {
 					c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: err.Error()})
 					c.Abort()
 					return
 				}
 
-				c.Set("userID", userIDInt)
+				c.Set("userID", userID)
 				c.Next()
 				return
 			}

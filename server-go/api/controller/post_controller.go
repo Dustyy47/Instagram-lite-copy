@@ -125,14 +125,14 @@ type GetPostsByUserRequest struct {
 	Offset   int32  `form:"offset" binding:"min=0"`
 }
 
-type PostWithLikes struct {
+type PostWithLike struct {
 	db.Post   `json:"post"`
 	NumLikes  int64 `json:"numLikes"`
 	IsLikedMe bool  `json:"isLikedMe"`
 }
 
 type GetPostsByUserResponse struct {
-	PostWithLikes []PostWithLikes `json:"postWithLikes"`
+	PostWithLikes []PostWithLike `json:"postWithLikes"`
 }
 
 // @Summary Get posts by user
@@ -182,7 +182,7 @@ func (pc *PostController) GetPostsByUser(c *gin.Context) {
 	}
 
 	getPostsByUserResponse := GetPostsByUserResponse{
-		PostWithLikes: make([]PostWithLikes, len(posts)),
+		PostWithLikes: make([]PostWithLike, len(posts)),
 	}
 
 	for i, post := range posts {
@@ -206,7 +206,7 @@ func (pc *PostController) GetPostsByUser(c *gin.Context) {
 			isLikedMe = true
 		}
 
-		getPostsByUserResponse.PostWithLikes[i] = PostWithLikes{
+		getPostsByUserResponse.PostWithLikes[i] = PostWithLike{
 			Post:      post,
 			NumLikes:  numLikes,
 			IsLikedMe: isLikedMe,
