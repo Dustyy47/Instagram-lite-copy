@@ -122,12 +122,6 @@ func (cc *CommentController) Remove(c *gin.Context) {
 	c.JSON(http.StatusOK, successResponse("Comment was removed"))
 }
 
-type GetCommentOfPostRequest struct {
-	PostID int64 `form:"postID" binding:"required"`
-	Limit  int32 `form:"limit" binding:"min=0"`
-	Offset int32 `form:"offset" binding:"min=0"`
-}
-
 type CommentWithLike struct {
 	db.Comment `json:"comment"`
 	NumLikes   int64 `json:"numLikes"`
@@ -143,7 +137,7 @@ type GetCommentsOfPostResponse struct {
 // @Tags Comments
 // @Accept json
 // @Produce json
-// @Param postID query int64 true "Post ID"
+// @Param postID path int64 true "Post ID"
 // @Param limit query int32 false "Limit"
 // @Param offset query int32 false "Offset"
 // @Success 200 {object} GetCommentsOfPostResponse
@@ -153,17 +147,34 @@ type GetCommentsOfPostResponse struct {
 // @Router /posts/{postID}/comments [get]
 // @Security ApiKeyAuth
 func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
-	var request GetCommentOfPostRequest
-	err := c.ShouldBind(&request)
+	postID, err := strconv.ParseInt(c.Params.ByName("postID"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+		c.JSON(http.StatusNotFound, errorResponse("Post not found with the given postID"))
 		return
 	}
 
+	limit, err := strconv.Atoi(c.Query("limit"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse("limit is not number"))
+		return
+	}
+	if limit == 0 {
+		limit = cc.Env.DefaultLimitFindUsers
+	}
+
+	offset, err := strconv.Atoi(c.Query("offset"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse("offset is not number"))
+		return
+	}
+	if offset == 0 {
+		offset = cc.Env.DefaultLimitFindUsers
+	}
+
 	listCommentsOfPostArg := db.ListCommentsOfPostParams{
-		PostID: request.PostID,
-		Limit:  request.Limit,
-		Offset: request.Offset,
+		PostID: postID,
+		Limit:  (int32)(limit),
+		Offset: (int32)(offset),
 	}
 
 	comments, err := cc.Store.ListCommentsOfPost(c, listCommentsOfPostArg)

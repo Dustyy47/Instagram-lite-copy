@@ -273,11 +273,6 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 	}
 }
 
-type FindUsersRequest struct {
-	Limit  int32 `form:"limit" binding:"min=0"`
-	Offset int32 `form:"offset" binding:"min=0"`
-}
-
 type FindUsersResponse []struct {
 	UserId    int64
 	NickName  string
@@ -299,23 +294,30 @@ type FindUsersResponse []struct {
 // @Router /profiles/find/{name} [get]
 // @security ApiKeyAuth
 func (pc *ProfileController) FindUsers(c *gin.Context) {
-	var request FindUsersRequest
-	err := c.ShouldBind(&request)
+	limit, err := strconv.Atoi(c.Query("limit"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+		c.JSON(http.StatusBadRequest, errorResponse("limit is not number"))
 		return
 	}
+	if limit == 0 {
+		limit = pc.Env.DefaultLimitFindUsers
+	}
 
-	if request.Limit == 0 {
-		request.Limit = pc.Env.DefaultLimitFindUsers
+	offset, err := strconv.Atoi(c.Query("offset"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse("offset is not number"))
+		return
+	}
+	if offset == 0 {
+		offset = pc.Env.DefaultLimitFindUsers
 	}
 
 	name := c.Param("name")
 
 	findUsersByNicknameArgs := db.FindUsersByNicknameParams{
 		Nickname: name,
-		Limit:    request.Limit,
-		Offset:   request.Offset,
+		Limit:    (int32)(limit),
+		Offset:   (int32)(offset),
 	}
 
 	users, err := pc.Store.FindUsersByNickname(c, findUsersByNicknameArgs)

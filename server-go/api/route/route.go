@@ -15,8 +15,8 @@ func Setup(env *bootstrap.Env, timeout time.Duration, store db.Store, router *gi
 	// CORS
 	//router.Use(middleware.CORSMiddleware())
 
-	router.GET("/ping", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
+	router.GET("/ping", func(с *gin.Context) {
+		с.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})

@@ -273,50 +273,6 @@ paths:
       summary: Create a new conversation
       tags:
       - Conversations
-  /posts/:
-    get:
-      description: Get posts by user with pagination
-      parameters:
-      - description: User ID
-        in: query
-        name: userID
-        required: true
-        type: integer
-      - description: User nickname
-        in: query
-        name: nickname
-        required: true
-        type: string
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      - description: Offset
-        in: query
-        name: offset
-        type: integer
-      responses:
-        "200":
-          description: List of posts with number likes and isLikedMe
-          schema:
-            $ref: '#/definitions/controller.GetPostsByUserResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/controller.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/controller.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/controller.ErrorResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Get posts by user
-      tags:
-      - Posts
   /posts/{postID}:
     delete:
       parameters:
@@ -358,7 +314,7 @@ paths:
       description: Get comments of a post with pagination
       parameters:
       - description: Post ID
-        in: query
+        in: path
         name: postID
         required: true
         type: integer
@@ -571,6 +527,45 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Add a new post
+      tags:
+      - Posts
+  /posts/userID/{userID}:
+    get:
+      description: Get posts by user with pagination
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      responses:
+        "200":
+          description: List of posts with number likes and isLikedMe
+          schema:
+            $ref: '#/definitions/controller.GetPostsByUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get posts by user
       tags:
       - Posts
   /profiles/find/{name}:

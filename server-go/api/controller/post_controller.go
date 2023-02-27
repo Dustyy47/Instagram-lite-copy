@@ -79,7 +79,6 @@ func (pc *PostController) Add(c *gin.Context) {
 // @security ApiKeyAuth
 func (pc *PostController) Remove(c *gin.Context) {
 	var request struct{}
-
 	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
@@ -118,13 +117,6 @@ func (pc *PostController) Remove(c *gin.Context) {
 	c.JSON(http.StatusOK, successResponse("Post was removed"))
 }
 
-type GetPostsByUserRequest struct {
-	UserID   int64  `form:"userID" binding:"required"`
-	Nickname string `form:"nickname" binding:"required"`
-	Limit    int32  `form:"limit" binding:"min=0"`
-	Offset   int32  `form:"offset" binding:"min=0"`
-}
-
 type PostWithLike struct {
 	db.Post   `json:"post"`
 	NumLikes  int64 `json:"numLikes"`
@@ -138,41 +130,50 @@ type GetPostsByUserResponse struct {
 // @Summary Get posts by user
 // @Description Get posts by user with pagination
 // @Tags Posts
-// @Param userID query int64 true "User ID"
-// @Param nickname query string true "User nickname"
+// @Param userID path int64 true "User ID"
 // @Param limit query int false "Limit"
 // @Param offset query int false "Offset"
 // @Success 200 {object} GetPostsByUserResponse "List of posts with number likes and isLikedMe"
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /posts/ [get]
+// @Router /posts/userID/{userID} [get]
 // @security ApiKeyAuth
 func (pc *PostController) GetPostsByUser(c *gin.Context) {
-	var request GetPostsByUserRequest
-	err := c.ShouldBind(&request)
+	limit, err := strconv.Atoi(c.Query("limit"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+		c.JSON(http.StatusBadRequest, errorResponse("limit is not number"))
+		return
+	}
+	if limit == 0 {
+		limit = pc.Env.DefaultLimitFindUsers
+	}
+
+	offset, err := strconv.Atoi(c.Query("offset"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse("offset is not number"))
+		return
+	}
+	if offset == 0 {
+		offset = pc.Env.DefaultLimitFindUsers
+	}
+
+	userID, err := strconv.ParseInt(c.Params.ByName("userID"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusNotFound, errorResponse("User not found with the given userID"))
 		return
 	}
 
-	if request.Limit == 0 {
-		request.Limit = pc.Env.DefaultLimitGetPostsByUser
-	}
-
-	user, err := pc.Store.GetUserByID(c, request.UserID)
+	user, err := pc.Store.GetUserByID(c, userID)
 	if err != nil {
-		user, err = pc.Store.GetUserByNickname(c, request.Nickname)
-		if err != nil {
-			c.JSON(http.StatusNotFound, errorResponse("User not found with the given userID or nickName"))
-			return
-		}
+		c.JSON(http.StatusNotFound, errorResponse("User not found with the given userID"))
+		return
 	}
 
 	listPostOfUserArg := db.ListPostOfUserParams{
 		UserID: user.ID,
-		Limit:  request.Limit,
-		Offset: request.Offset,
+		Limit:  (int32)(limit),
+		Offset: (int32)(offset),
 	}
 
 	posts, err := pc.Store.ListPostOfUser(c, listPostOfUserArg)
