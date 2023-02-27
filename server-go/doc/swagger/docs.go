@@ -608,9 +608,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Number of likes",
+                        "description": "Number of likes and isLikedMe",
                         "schema": {
-                            "type": "integer"
+                            "$ref": "#/definitions/controller.LikeResponse"
                         }
                     },
                     "400": {

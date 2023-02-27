@@ -24,7 +24,7 @@ type AddPostRequest struct {
 	Img *multipart.FileHeader `form:"img" binding:"required"`
 }
 
-// @Summary Add new post
+// @Summary Add a new post
 // @Tags Posts
 // @Accept multipart/form-data
 // @Param title formData string false "Title of the post"

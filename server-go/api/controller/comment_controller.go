@@ -35,7 +35,6 @@ type AddCommentRequest struct {
 // @security ApiKeyAuth
 func (cc *CommentController) Add(c *gin.Context) {
 	var request AddCommentRequest
-
 	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
@@ -213,7 +212,7 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param commentID path int64 true "Comment ID"
-// @Success 200 {object} int "Number of likes"
+// @Success 200 {object} LikeResponse "Number of likes and isLikedMe"
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
@@ -221,7 +220,6 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 // @Security ApiKeyAuth
 func (cc *CommentController) Like(c *gin.Context) {
 	var request struct{}
-
 	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
@@ -247,6 +245,8 @@ func (cc *CommentController) Like(c *gin.Context) {
 		UserID:    userID,
 	}
 
+	var likeRespose LikeResponse
+
 	_, err = cc.Store.GetLikedComment(c, getLikedCommentArg)
 	if err != nil {
 		likeCommentArg := db.LikeCommentParams{
@@ -259,6 +259,8 @@ func (cc *CommentController) Like(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 			return
 		}
+
+		likeRespose.IsLikedMe = true
 	} else {
 		dislikeCommentArg := db.DislikeCommentParams{
 			CommentID: comment.ID,
@@ -270,13 +272,16 @@ func (cc *CommentController) Like(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 			return
 		}
+
+		likeRespose.IsLikedMe = false
 	}
 
-	numberLikes, err := cc.Store.GetNumLikesComment(c, comment.ID)
+	numLikes, err := cc.Store.GetNumLikesComment(c, comment.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		return
 	}
+	likeRespose.NumLikes = numLikes
 
-	c.JSON(http.StatusOK, numberLikes)
+	c.JSON(http.StatusOK, likeRespose)
 }
