@@ -568,7 +568,7 @@ paths:
             $ref: '#/definitions/controller.ErrorResponse'
       security:
       - ApiKeyAuth: []
-      summary: Add new post
+      summary: Add a new post
       tags:
       - Posts
   /profiles/find/{name}:

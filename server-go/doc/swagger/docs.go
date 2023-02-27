@@ -291,7 +291,7 @@ const docTemplate = `{
                 "tags": [
                     "Posts"
                 ],
-                "summary": "Add new post",
+                "summary": "Add a new post",
                 "parameters": [
                     {
                         "type": "string",

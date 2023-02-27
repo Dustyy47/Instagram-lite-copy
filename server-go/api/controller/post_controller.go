@@ -4,12 +4,12 @@ import (
 	"mime/multipart"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 
 	"app/bootstrap"
 	db "app/db/sqlc"
+	"app/internal/util"
 )
 
 type PostController struct {
@@ -37,19 +37,15 @@ type AddPostRequest struct {
 // @security ApiKeyAuth
 func (pc *PostController) Add(c *gin.Context) {
 	var request AddPostRequest
-
 	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 		return
 	}
 
-	var millisecondsUTC string = strconv.FormatInt(time.Now().UTC().UnixNano()/1e6, 10)
-	imgName := millisecondsUTC + "--" + request.Img.Filename
-
-	err = c.SaveUploadedFile(request.Img, "images/"+imgName)
+	imgName, err := util.SaveUploadedFile(c, request.Img, "images/")
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, errorResponse("Failed to save the avatarImage on the server"))
+		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		return
 	}
 
@@ -108,6 +104,11 @@ func (pc *PostController) Remove(c *gin.Context) {
 		return
 	}
 
+	err = util.RemoveFileFromServer("images/" + post.ImageUrl)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		return
+	}
 	err = pc.Store.DeletePost(c, post.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))

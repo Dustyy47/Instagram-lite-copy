@@ -3,8 +3,6 @@ package controller
 import (
 	"mime/multipart"
 	"net/http"
-	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -76,15 +74,11 @@ func (ac *AuthController) Register(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		return
 	}
-
 	request.Password = string(hashedPassword)
 
-	var millisecondsUTC string = strconv.FormatInt(time.Now().UTC().UnixNano()/1e6, 10)
-	avatarName := millisecondsUTC + "--" + request.AvatarImage.Filename
-
-	err = c.SaveUploadedFile(request.AvatarImage, "images/avatars/"+avatarName)
+	avatarName, err := util.SaveUploadedFile(c, request.AvatarImage, "images/avatars/")
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, errorResponse("Error saving avatar image "+err.Error()+" "+avatarName))
+		c.JSON(http.StatusInternalServerError, errorResponse("Error saving image"))
 		return
 	}
 
