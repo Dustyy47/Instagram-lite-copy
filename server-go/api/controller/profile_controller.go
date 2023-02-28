@@ -213,8 +213,8 @@ func (pc *ProfileController) GetFollowings(c *gin.Context) {
 
 	listFollowingrOfUserArg := db.ListFollowingOfUserParams{
 		UserFromID: user.ID,
-		Limit:    (int32)(limit),
-		Offset:   (int32)(offset),
+		Limit:      (int32)(limit),
+		Offset:     (int32)(offset),
 	}
 
 	followings, err := pc.Store.ListFollowingOfUser(c, listFollowingrOfUserArg)
@@ -245,6 +245,13 @@ func (pc *ProfileController) GetFollowings(c *gin.Context) {
 	c.JSON(http.StatusOK, usersResponse)
 }
 
+type UpdateProfileRequest struct {
+	Email       string                `json:"email"`
+	Fullname    string                `json:"fullname"`
+	Nickname    string                `json:"nickname"`
+	AvatarImage *multipart.FileHeader `form:"avatarImage"`
+}
+
 type UpdateProfileResponse struct {
 	UserID    int64  `json:"userID"`
 	Email     string `json:"email"`
@@ -269,20 +276,19 @@ type UpdateProfileResponse struct {
 // @Router /profiles/me [patch]
 // @security ApiKeyAuth
 func (pc *ProfileController) UpdateProfile(c *gin.Context) {
-	var (
-		fullname, email, nickname string
-		avatarImage               *multipart.FileHeader
-		avatarUrl                 string
-		err                       error
-	)
-
-	fullname = c.PostForm("fullname")
-	email = c.PostForm("email")
-	nickname = c.PostForm("nickname")
-	avatarImage, err = c.FormFile("avatarImage")
-	if err != nil && err != http.ErrMissingFile {
-		c.JSON(http.StatusBadRequest, errorResponse("Error uploading avatar image"))
+	var request UpdateProfileRequest
+	err := c.ShouldBind(&request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 		return
+	}
+	// Validate avatar image
+	if request.AvatarImage != nil {
+		err = util.ValidateImage(request.AvatarImage)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+			return
+		}
 	}
 
 	userID := c.GetInt64("userID")
@@ -293,9 +299,10 @@ func (pc *ProfileController) UpdateProfile(c *gin.Context) {
 		return
 	}
 
-	if avatarImage != nil {
-		avatarUrl = fmt.Sprintf("%d--%s", time.Now().Unix(), avatarImage.Filename)
-		err = c.SaveUploadedFile(avatarImage, "images/avatars/"+avatarUrl)
+	var avatarUrl string
+	if request.AvatarImage != nil {
+		avatarUrl = fmt.Sprintf("%d--%s", time.Now().Unix(), request.AvatarImage.Filename)
+		err = c.SaveUploadedFile(request.AvatarImage, "images/avatars/"+avatarUrl)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, errorResponse("Error saving avatar image"))
 			return
@@ -303,16 +310,16 @@ func (pc *ProfileController) UpdateProfile(c *gin.Context) {
 	}
 
 	// Update user information
-	if fullname == "" && email == "" && nickname == "" && avatarUrl == "" {
+	if request.Fullname == "" && request.Email == "" && request.Nickname == "" && avatarUrl == "" {
 		c.JSON(http.StatusBadRequest, errorResponse("No updates provided"))
 		return
 	}
 
 	updateUserArg := db.UpdateUserParams{
 		ID:        user.ID,
-		Fullname:  util.DefaultIfEmpty(fullname, user.Fullname),
-		Email:     util.DefaultIfEmpty(email, user.Email),
-		Nickname:  util.DefaultIfEmpty(nickname, user.Nickname),
+		Fullname:  util.DefaultIfEmpty(request.Fullname, user.Fullname),
+		Email:     util.DefaultIfEmpty(request.Email, user.Email),
+		Nickname:  util.DefaultIfEmpty(request.Nickname, user.Nickname),
 		AvatarUrl: util.DefaultIfEmpty(avatarUrl, user.AvatarUrl),
 	}
 

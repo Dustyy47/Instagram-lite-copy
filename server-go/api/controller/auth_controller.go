@@ -21,9 +21,9 @@ type AuthController struct {
 
 type RegisterRequest struct {
 	Email    string `form:"email" binding:"required,email"`
-	Password string `form:"password" binding:"required"`
-	Fullname string `form:"fullname" binding:"required"`
-	Nickname string `form:"nickname" binding:"required"`
+	Password string `form:"password" binding:"required,min=6,max=25"`
+	Fullname string `form:"fullname" binding:"required,min=3,max=255"`
+	Nickname string `form:"nickname" binding:"required,min=1,max=255"`
 
 	AvatarImage *multipart.FileHeader `form:"avatarImage" binding:"required"`
 }
@@ -52,6 +52,12 @@ func (ac *AuthController) Register(c *gin.Context) {
 	err := c.ShouldBind(&request)
 	if err != nil {
 		logrus.Errorf("%d err: %w", http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
+		return
+	}
+	// Validate avatar image
+	err = util.ValidateImage(request.AvatarImage)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
 		return
 	}
@@ -111,7 +117,7 @@ func (ac *AuthController) Register(c *gin.Context) {
 
 type LoginRequest struct {
 	Email    string `form:"email" binding:"required,email"`
-	Password string `form:"password" binding:"required"`
+	Password string `form:"password" binding:"required,min=6,max=25"`
 }
 
 // @Summary Login
