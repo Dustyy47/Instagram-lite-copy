@@ -80,6 +80,7 @@ func runGinServer(env *bootstrap.Env, timeout time.Duration, store sqlc_db.Store
 	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
 	ginEngine.Use(cors.New(config))
 
+	serveImagesFolder(ginEngine)
 	connectSwaggerToGin(ginEngine)
 
 	router := ginEngine.Group("/v1/")
@@ -87,6 +88,10 @@ func runGinServer(env *bootstrap.Env, timeout time.Duration, store sqlc_db.Store
 
 	logrus.Infof("server running on address: %s", env.ServerAddress)
 	ginEngine.Run(env.ServerAddress)
+}
+
+func serveImagesFolder(ginEngine *gin.Engine) {
+	ginEngine.Static("/images", "./images")
 }
 
 func connectSwaggerToGin(ginEngine *gin.Engine) {
