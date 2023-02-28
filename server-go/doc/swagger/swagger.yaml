@@ -38,13 +38,6 @@ definitions:
       error:
         type: string
     type: object
-  controller.FindUsersResponse:
-    properties:
-      users:
-        items:
-          $ref: '#/definitions/controller.User'
-        type: array
-    type: object
   controller.GetCommentsOfPostResponse:
     properties:
       commentWithLikes:
@@ -122,6 +115,13 @@ definitions:
         type: string
       userID:
         type: integer
+    type: object
+  controller.UsersResponse:
+    properties:
+      users:
+        items:
+          $ref: '#/definitions/controller.User'
+        type: array
     type: object
   db.Comment:
     properties:
@@ -611,7 +611,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.FindUsersResponse'
+            $ref: '#/definitions/controller.UsersResponse'
         "400":
           description: Bad Request
           schema:
@@ -697,6 +697,82 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Toggle follow/unfollow user
+      tags:
+      - Profile
+  /profiles/id/{id}/followers:
+    get:
+      consumes:
+      - application/json
+      description: Get followers of user with the given ID with pagination
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.UsersResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get followers of user
+      tags:
+      - Profile
+  /profiles/id/{id}/followings:
+    get:
+      consumes:
+      - application/json
+      description: Get followings of user with the given ID with pagination
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.UsersResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get followings of user
       tags:
       - Profile
   /profiles/me:

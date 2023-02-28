@@ -111,6 +111,140 @@ func (pc *ProfileController) GetProfileData(c *gin.Context) {
 	c.JSON(http.StatusOK, getProfileDataResponse)
 }
 
+// @Summary Get followers of user
+// @Description Get followers of user with the given ID with pagination
+// @Tags Profile
+// @Accept json
+// @Produce json
+// @Param id path int64 false "User ID"
+// @Param limit query int false "Limit"
+// @Param offset query int false "Offset"
+// @Success 200 {object} UsersResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /profiles/id/{id}/followers [get]
+// @security ApiKeyAuth
+func (pc *ProfileController) GetFollowers(c *gin.Context) {
+	limit, err := strconv.Atoi(c.Query("limit"))
+	if err != nil {
+		limit = pc.Env.DefaultLimitGetPostsByUser
+	}
+	offset, _ := strconv.Atoi(c.Query("offset"))
+
+	ids := c.Params.ByName("id")
+	id, err := strconv.ParseInt(ids, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
+		return
+	}
+
+	user, err := pc.Store.GetUserByID(c, id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
+		return
+	}
+
+	listFollowerOfUserArg := db.ListFollowerOfUserParams{
+		UserToID: user.ID,
+		Limit:    (int32)(limit),
+		Offset:   (int32)(offset),
+	}
+
+	followers, err := pc.Store.ListFollowerOfUser(c, listFollowerOfUserArg)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		return
+	}
+
+	usersResponse := UsersResponse{
+		Users: make([]User, len(followers)),
+	}
+
+	for i, follower := range followers {
+		userFrom, err := pc.Store.GetUserByID(c, follower.UserFromID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+			return
+		}
+
+		usersResponse.Users[i] = User{
+			UserId:    userFrom.ID,
+			Nickname:  userFrom.Nickname,
+			Fullname:  userFrom.Fullname,
+			AvatarUrl: userFrom.AvatarUrl,
+		}
+	}
+
+	c.JSON(http.StatusOK, usersResponse)
+}
+
+// @Summary Get followings of user
+// @Description Get followings of user with the given ID with pagination
+// @Tags Profile
+// @Accept json
+// @Produce json
+// @Param id path int64 false "User ID"
+// @Param limit query int false "Limit"
+// @Param offset query int false "Offset"
+// @Success 200 {object} UsersResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /profiles/id/{id}/followings [get]
+// @security ApiKeyAuth
+func (pc *ProfileController) GetFollowings(c *gin.Context) {
+	limit, err := strconv.Atoi(c.Query("limit"))
+	if err != nil {
+		limit = pc.Env.DefaultLimitGetPostsByUser
+	}
+	offset, _ := strconv.Atoi(c.Query("offset"))
+
+	ids := c.Params.ByName("id")
+	id, err := strconv.ParseInt(ids, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
+		return
+	}
+
+	user, err := pc.Store.GetUserByID(c, id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
+		return
+	}
+
+	listFollowingrOfUserArg := db.ListFollowingOfUserParams{
+		UserFromID: user.ID,
+		Limit:    (int32)(limit),
+		Offset:   (int32)(offset),
+	}
+
+	followings, err := pc.Store.ListFollowingOfUser(c, listFollowingrOfUserArg)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		return
+	}
+
+	usersResponse := UsersResponse{
+		Users: make([]User, len(followings)),
+	}
+
+	for i, following := range followings {
+		userFrom, err := pc.Store.GetUserByID(c, following.UserFromID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+			return
+		}
+
+		usersResponse.Users[i] = User{
+			UserId:    userFrom.ID,
+			Nickname:  userFrom.Nickname,
+			Fullname:  userFrom.Fullname,
+			AvatarUrl: userFrom.AvatarUrl,
+		}
+	}
+
+	c.JSON(http.StatusOK, usersResponse)
+}
+
 type UpdateProfileResponse struct {
 	UserID    int64  `json:"userID"`
 	Email     string `json:"email"`
@@ -273,7 +407,7 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 	}
 }
 
-type FindUsersResponse struct {
+type UsersResponse struct {
 	Users []User `json:"users"`
 }
 
@@ -292,7 +426,7 @@ type User struct {
 // @Param name path string true "User nickname"
 // @Param limit query int false "Limit"
 // @Param offset query int false "Offset"
-// @Success 200 {object} FindUsersResponse
+// @Success 200 {object} UsersResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /profiles/find/{name} [get]
@@ -318,12 +452,12 @@ func (pc *ProfileController) FindUsers(c *gin.Context) {
 		return
 	}
 
-	findUsersResponse := FindUsersResponse{
+	usersResponse := UsersResponse{
 		Users: make([]User, len(users)),
 	}
 
 	for i, user := range users {
-		findUsersResponse.Users[i] = User{
+		usersResponse.Users[i] = User{
 			UserId:    user.ID,
 			Nickname:  user.Nickname,
 			Fullname:  user.Fullname,
@@ -331,5 +465,5 @@ func (pc *ProfileController) FindUsers(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, findUsersResponse)
+	c.JSON(http.StatusOK, usersResponse)
 }
