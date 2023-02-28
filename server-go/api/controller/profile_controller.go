@@ -273,11 +273,15 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 	}
 }
 
-type FindUsersResponse []struct {
-	UserId    int64
-	NickName  string
-	FullName  string
-	AvatarUrl string
+type FindUsersResponse struct {
+	Users []User `json:"users"`
+}
+
+type User struct {
+	UserId    int64  `json:"userID"`
+	Nickname  string `json:"nickname"`
+	Fullname  string `json:"fullname"`
+	AvatarUrl string `json:"avatarUrl"`
 }
 
 // @Summary Find users by nickname
@@ -296,21 +300,9 @@ type FindUsersResponse []struct {
 func (pc *ProfileController) FindUsers(c *gin.Context) {
 	limit, err := strconv.Atoi(c.Query("limit"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, errorResponse("limit is not number"))
-		return
-	}
-	if limit == 0 {
 		limit = pc.Env.DefaultLimitFindUsers
 	}
-
-	offset, err := strconv.Atoi(c.Query("offset"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, errorResponse("offset is not number"))
-		return
-	}
-	if offset == 0 {
-		offset = pc.Env.DefaultLimitFindUsers
-	}
+	offset, _ := strconv.Atoi(c.Query("offset"))
 
 	name := c.Param("name")
 
@@ -326,19 +318,18 @@ func (pc *ProfileController) FindUsers(c *gin.Context) {
 		return
 	}
 
-	findUsersResponse := make(FindUsersResponse, len(users))
+	findUsersResponse := FindUsersResponse{
+		Users: make([]User, len(users)),
+	}
+
 	for i, user := range users {
-		findUsersResponse[i] = struct {
-			UserId    int64
-			NickName  string
-			FullName  string
-			AvatarUrl string
-		}{
+		findUsersResponse.Users[i] = User{
 			UserId:    user.ID,
-			NickName:  user.Nickname,
-			FullName:  user.Fullname,
+			Nickname:  user.Nickname,
+			Fullname:  user.Fullname,
 			AvatarUrl: user.AvatarUrl,
 		}
 	}
+
 	c.JSON(http.StatusOK, findUsersResponse)
 }

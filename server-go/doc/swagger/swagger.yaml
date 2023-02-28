@@ -38,6 +38,13 @@ definitions:
       error:
         type: string
     type: object
+  controller.FindUsersResponse:
+    properties:
+      users:
+        items:
+          $ref: '#/definitions/controller.User'
+        type: array
+    type: object
   controller.GetCommentsOfPostResponse:
     properties:
       commentWithLikes:
@@ -47,7 +54,7 @@ definitions:
     type: object
   controller.GetPostsByUserResponse:
     properties:
-      postWithLikes:
+      postsWithLikes:
         items:
           $ref: '#/definitions/controller.PostWithLike'
         type: array
@@ -97,6 +104,17 @@ definitions:
       avatarUrl:
         type: string
       email:
+        type: string
+      fullname:
+        type: string
+      nickname:
+        type: string
+      userID:
+        type: integer
+    type: object
+  controller.User:
+    properties:
+      avatarUrl:
         type: string
       fullname:
         type: string
@@ -593,18 +611,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              properties:
-                avatarUrl:
-                  type: string
-                fullName:
-                  type: string
-                nickName:
-                  type: string
-                userId:
-                  type: integer
-              type: object
-            type: array
+            $ref: '#/definitions/controller.FindUsersResponse'
         "400":
           description: Bad Request
           schema:

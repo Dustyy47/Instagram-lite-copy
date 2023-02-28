@@ -117,14 +117,14 @@ func (pc *PostController) Remove(c *gin.Context) {
 	c.JSON(http.StatusOK, successResponse("Post was removed"))
 }
 
+type GetPostsByUserResponse struct {
+	PostsWithLikes []PostWithLike `json:"postsWithLikes"`
+}
+
 type PostWithLike struct {
 	db.Post   `json:"post"`
 	NumLikes  int64 `json:"numLikes"`
 	IsLikedMe bool  `json:"isLikedMe"`
-}
-
-type GetPostsByUserResponse struct {
-	PostWithLikes []PostWithLike `json:"postWithLikes"`
 }
 
 // @Summary Get posts by user
@@ -142,36 +142,24 @@ type GetPostsByUserResponse struct {
 func (pc *PostController) GetPostsByUser(c *gin.Context) {
 	limit, err := strconv.Atoi(c.Query("limit"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, errorResponse("limit is not number"))
-		return
+		limit = pc.Env.DefaultLimitGetPostsByUser
 	}
-	if limit == 0 {
-		limit = pc.Env.DefaultLimitFindUsers
-	}
+	offset, _ := strconv.Atoi(c.Query("offset"))
 
-	offset, err := strconv.Atoi(c.Query("offset"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, errorResponse("offset is not number"))
-		return
-	}
-	if offset == 0 {
-		offset = pc.Env.DefaultLimitFindUsers
-	}
-
-	userID, err := strconv.ParseInt(c.Params.ByName("userID"), 10, 64)
+	authorID, err := strconv.ParseInt(c.Params.ByName("userID"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusNotFound, errorResponse("User not found with the given userID"))
 		return
 	}
 
-	user, err := pc.Store.GetUserByID(c, userID)
+	author, err := pc.Store.GetUserByID(c, authorID)
 	if err != nil {
 		c.JSON(http.StatusNotFound, errorResponse("User not found with the given userID"))
 		return
 	}
 
 	listPostOfUserArg := db.ListPostOfUserParams{
-		UserID: user.ID,
+		UserID: author.ID,
 		Limit:  (int32)(limit),
 		Offset: (int32)(offset),
 	}
@@ -183,8 +171,10 @@ func (pc *PostController) GetPostsByUser(c *gin.Context) {
 	}
 
 	getPostsByUserResponse := GetPostsByUserResponse{
-		PostWithLikes: make([]PostWithLike, len(posts)),
+		PostsWithLikes: make([]PostWithLike, len(posts)),
 	}
+
+	userID := c.GetInt64("userID")
 
 	for i, post := range posts {
 		numLikes, err := pc.Store.GetNumLikesPost(c, post.ID)
@@ -194,8 +184,6 @@ func (pc *PostController) GetPostsByUser(c *gin.Context) {
 		}
 
 		isLikedMe := false
-
-		userID := c.GetInt64("userID")
 
 		getLikePostArg := db.GetLikedPostParams{
 			PostID: post.ID,
@@ -207,7 +195,7 @@ func (pc *PostController) GetPostsByUser(c *gin.Context) {
 			isLikedMe = true
 		}
 
-		getPostsByUserResponse.PostWithLikes[i] = PostWithLike{
+		getPostsByUserResponse.PostsWithLikes[i] = PostWithLike{
 			Post:      post,
 			NumLikes:  numLikes,
 			IsLikedMe: isLikedMe,

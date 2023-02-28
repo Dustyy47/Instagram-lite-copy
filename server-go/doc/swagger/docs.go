@@ -721,24 +721,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "avatarUrl": {
-                                        "type": "string"
-                                    },
-                                    "fullName": {
-                                        "type": "string"
-                                    },
-                                    "nickName": {
-                                        "type": "string"
-                                    },
-                                    "userId": {
-                                        "type": "integer"
-                                    }
-                                }
-                            }
+                            "$ref": "#/definitions/controller.FindUsersResponse"
                         }
                     },
                     "400": {
@@ -1123,6 +1106,17 @@ const docTemplate = `{
                 }
             }
         },
+        "controller.FindUsersResponse": {
+            "type": "object",
+            "properties": {
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controller.User"
+                    }
+                }
+            }
+        },
         "controller.GetCommentsOfPostResponse": {
             "type": "object",
             "properties": {
@@ -1137,7 +1131,7 @@ const docTemplate = `{
         "controller.GetPostsByUserResponse": {
             "type": "object",
             "properties": {
-                "postWithLikes": {
+                "postsWithLikes": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/controller.PostWithLike"
@@ -1214,6 +1208,23 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "email": {
+                    "type": "string"
+                },
+                "fullname": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "userID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controller.User": {
+            "type": "object",
+            "properties": {
+                "avatarUrl": {
                     "type": "string"
                 },
                 "fullname": {

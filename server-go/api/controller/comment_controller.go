@@ -122,14 +122,14 @@ func (cc *CommentController) Remove(c *gin.Context) {
 	c.JSON(http.StatusOK, successResponse("Comment was removed"))
 }
 
+type GetCommentsOfPostResponse struct {
+	CommentsWithLikes []CommentWithLike `json:"commentWithLikes"`
+}
+
 type CommentWithLike struct {
 	db.Comment `json:"comment"`
 	NumLikes   int64 `json:"numLikes"`
 	IsLikedMe  bool  `json:"isLikedMe"`
-}
-
-type GetCommentsOfPostResponse struct {
-	CommentWithLikes []CommentWithLike `json:"commentWithLikes"`
 }
 
 // @Summary Get comments of a post
@@ -155,21 +155,9 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 
 	limit, err := strconv.Atoi(c.Query("limit"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, errorResponse("limit is not number"))
-		return
+		limit = cc.Env.DefaultLimitGetCommentsOfPost
 	}
-	if limit == 0 {
-		limit = cc.Env.DefaultLimitFindUsers
-	}
-
-	offset, err := strconv.Atoi(c.Query("offset"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, errorResponse("offset is not number"))
-		return
-	}
-	if offset == 0 {
-		offset = cc.Env.DefaultLimitFindUsers
-	}
+	offset, _ := strconv.Atoi(c.Query("offset"))
 
 	listCommentsOfPostArg := db.ListCommentsOfPostParams{
 		PostID: postID,
@@ -184,8 +172,10 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 	}
 
 	getCommentsOfPostResponse := GetCommentsOfPostResponse{
-		CommentWithLikes: make([]CommentWithLike, len(comments)),
+		CommentsWithLikes: make([]CommentWithLike, len(comments)),
 	}
+
+	userID := c.GetInt64("userID")
 
 	for i, comment := range comments {
 		numLikes, err := cc.Store.GetNumLikesComment(c, comment.ID)
@@ -195,8 +185,6 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 		}
 
 		isLikedMe := false
-
-		userID := c.GetInt64("userID")
 
 		getLikeCommentArg := db.GetLikedCommentParams{
 			CommentID: comment.ID,
@@ -208,7 +196,7 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 			isLikedMe = true
 		}
 
-		getCommentsOfPostResponse.CommentWithLikes[i] = CommentWithLike{
+		getCommentsOfPostResponse.CommentsWithLikes[i] = CommentWithLike{
 			Comment:   comment,
 			NumLikes:  numLikes,
 			IsLikedMe: isLikedMe,
