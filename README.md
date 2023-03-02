@@ -12,21 +12,26 @@ Hello world! It\`s my first MERN project. The main task was to create a simple c
     - React-router-dom
     - Axios
   - *Server*:
-    - express node js
-    - mongoose (to work with Mongodb)
-    - Go
+    - Go, Gin
     - PostgreSQL
+    - Swagger documentation
+    - sqlc
+    - Protobuf
     
 :heavy_check_mark: **What is done** :heavy_check_mark::
   - Auth (Login and Registration) through jwt and auto-enter at coming back
   - Profile page (opportunities to find users by search bar, follow user and watch his followers and follows)
   - Posts (opportunities to create post, like other posts and send comments)
+  - Comments (oportunities to create, delete, like)
+  - Chat on server side
+  - Swagger documentation
+
 
 :zap: **In progress** :zap:: 
   - Adaptive design
-  - Rewriting the server in go
 
 :bulb: **What planned** :bulb::
+  - Deploy
   - Adaptive design
   - Editing post
   - Comments update (add oportunities to delete, edit, like and answer to comment)
