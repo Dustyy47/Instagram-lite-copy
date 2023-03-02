@@ -130,6 +130,7 @@ type CommentWithLike struct {
 	db.Comment `json:"comment"`
 	NumLikes   int64 `json:"numLikes"`
 	IsLikedMe  bool  `json:"isLikedMe"`
+	Author     `json:"author"`
 }
 
 // @Summary Get comments of a post
@@ -178,6 +179,19 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 	userID := c.GetInt64("userID")
 
 	for i, comment := range comments {
+		authorComment, err := cc.Store.GetUserByID(c, comment.UserID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+			return
+		}
+
+		author := Author{
+			UserID:    authorComment.ID,
+			Nickname:  authorComment.Nickname,
+			Fullname:  authorComment.Fullname,
+			AvatarUrl: authorComment.AvatarUrl,
+		}
+
 		numLikes, err := cc.Store.GetNumLikesComment(c, comment.ID)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
@@ -200,6 +214,7 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 			Comment:   comment,
 			NumLikes:  numLikes,
 			IsLikedMe: isLikedMe,
+			Author:    author,
 		}
 	}
 

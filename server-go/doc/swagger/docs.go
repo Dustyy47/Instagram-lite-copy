@@ -830,7 +830,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.SuccessResponse"
+                            "$ref": "#/definitions/controller.ToggleFollowResponse"
                         }
                     },
                     "400": {
@@ -1185,9 +1185,29 @@ const docTemplate = `{
                 }
             }
         },
+        "controller.Author": {
+            "type": "object",
+            "properties": {
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "fullname": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "userID": {
+                    "type": "integer"
+                }
+            }
+        },
         "controller.CommentWithLike": {
             "type": "object",
             "properties": {
+                "author": {
+                    "$ref": "#/definitions/controller.Author"
+                },
                 "comment": {
                     "$ref": "#/definitions/db.Comment"
                 },
@@ -1260,6 +1280,9 @@ const docTemplate = `{
                 "fullname": {
                     "type": "string"
                 },
+                "isFollowed": {
+                    "type": "boolean"
+                },
                 "isUserProfile": {
                     "type": "boolean"
                 },
@@ -1307,6 +1330,14 @@ const docTemplate = `{
             "properties": {
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "controller.ToggleFollowResponse": {
+            "type": "object",
+            "properties": {
+                "numFollowers": {
+                    "type": "integer"
                 }
             }
         },

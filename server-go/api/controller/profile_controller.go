@@ -31,6 +31,8 @@ type GetProfileDataResponse struct {
 	NumFollowing int64 `json:"numFollowing"`
 
 	IsUserProfile bool `json:"isUserProfile"`
+
+	IsFollowed bool `json:"isFollowed"`
 }
 
 // @Summary Get profile data
@@ -95,7 +97,15 @@ func (pc *ProfileController) GetProfileData(c *gin.Context) {
 	}
 
 	userID := c.GetInt64("userID")
-	isUserProfile := userID == user.ID
+	isUserProfile := (userID == user.ID)
+
+	getFollowerArg := db.GetFollowerParams{
+		UserFromID: userID,
+		UserToID:   user.ID,
+	}
+
+	_, err = pc.Store.GetFollower(c, getFollowerArg)
+	isFollowed := (err == nil)
 
 	getProfileDataResponse := GetProfileDataResponse{
 		UserID:        user.ID,
@@ -106,6 +116,7 @@ func (pc *ProfileController) GetProfileData(c *gin.Context) {
 		NumFollowers:  numFollowers,
 		NumFollowing:  numFollowing,
 		IsUserProfile: isUserProfile,
+		IsFollowed:    isFollowed,
 	}
 
 	c.JSON(http.StatusOK, getProfileDataResponse)
@@ -131,8 +142,7 @@ func (pc *ProfileController) GetFollowers(c *gin.Context) {
 	}
 	offset, _ := strconv.Atoi(c.Query("offset"))
 
-	ids := c.Params.ByName("id")
-	id, err := strconv.ParseInt(ids, 10, 64)
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
 		return
@@ -168,7 +178,7 @@ func (pc *ProfileController) GetFollowers(c *gin.Context) {
 		}
 
 		usersResponse.Users[i] = User{
-			UserId:    userFrom.ID,
+			UserID:    userFrom.ID,
 			Nickname:  userFrom.Nickname,
 			Fullname:  userFrom.Fullname,
 			AvatarUrl: userFrom.AvatarUrl,
@@ -235,7 +245,7 @@ func (pc *ProfileController) GetFollowings(c *gin.Context) {
 		}
 
 		usersResponse.Users[i] = User{
-			UserId:    userFrom.ID,
+			UserID:    userFrom.ID,
 			Nickname:  userFrom.Nickname,
 			Fullname:  userFrom.Fullname,
 			AvatarUrl: userFrom.AvatarUrl,
@@ -339,13 +349,17 @@ func (pc *ProfileController) UpdateProfile(c *gin.Context) {
 	c.JSON(http.StatusOK, updateProfileResponse)
 }
 
+type ToggleFollowResponse struct {
+	NumFollowers int64 `json:"numFollowers"`
+}
+
 // @Summary Toggle follow/unfollow user
 // @Description Toggle follow/unfollow user by user ID
 // @Tags Profile
 // @Accept  json
 // @Produce  json
 // @Param id path int64 true "User ID to follow/unfollow"
-// @Success 200 {object} SuccessResponse
+// @Success 200 {object} ToggleFollowResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
@@ -383,7 +397,7 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 	}
 
 	_, err = pc.Store.GetFollower(c, getFollowerArg)
-	isFollowing := err == nil
+	isFollowing := (err == nil)
 
 	if isFollowing { // then unfollow
 		deleteFollowerArg := db.DeleteFollowerParams{
@@ -396,8 +410,6 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 			return
 		}
-
-		c.JSON(http.StatusOK, successResponse("Unfollowed successfully"))
 	} else { // follow
 		createFollowerArg := db.CreateFollowerParams{
 			UserFromID: userID,
@@ -409,20 +421,19 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 			return
 		}
-
-		c.JSON(http.StatusOK, successResponse("Followed successfully"))
 	}
-}
 
-type UsersResponse struct {
-	Users []User `json:"users"`
-}
+	numFollowers, err := pc.Store.GetNumFollowers(c, userIDToFollow)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		return
+	}
 
-type User struct {
-	UserId    int64  `json:"userID"`
-	Nickname  string `json:"nickname"`
-	Fullname  string `json:"fullname"`
-	AvatarUrl string `json:"avatarUrl"`
+	toggleFollowResponse := ToggleFollowResponse{
+		NumFollowers: numFollowers,
+	}
+
+	c.JSON(http.StatusOK, toggleFollowResponse)
 }
 
 // @Summary Find users by nickname
@@ -465,7 +476,7 @@ func (pc *ProfileController) FindUsers(c *gin.Context) {
 
 	for i, user := range users {
 		usersResponse.Users[i] = User{
-			UserId:    user.ID,
+			UserID:    user.ID,
 			Nickname:  user.Nickname,
 			Fullname:  user.Fullname,
 			AvatarUrl: user.AvatarUrl,

@@ -12,8 +12,21 @@ definitions:
       accessToken:
         type: string
     type: object
+  controller.Author:
+    properties:
+      avatarUrl:
+        type: string
+      fullname:
+        type: string
+      nickname:
+        type: string
+      userID:
+        type: integer
+    type: object
   controller.CommentWithLike:
     properties:
+      author:
+        $ref: '#/definitions/controller.Author'
       comment:
         $ref: '#/definitions/db.Comment'
       isLikedMe:
@@ -60,6 +73,8 @@ definitions:
         type: string
       fullname:
         type: string
+      isFollowed:
+        type: boolean
       isUserProfile:
         type: boolean
       nickname:
@@ -91,6 +106,11 @@ definitions:
     properties:
       message:
         type: string
+    type: object
+  controller.ToggleFollowResponse:
+    properties:
+      numFollowers:
+        type: integer
     type: object
   controller.UpdateProfileResponse:
     properties:
@@ -681,7 +701,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.SuccessResponse'
+            $ref: '#/definitions/controller.ToggleFollowResponse'
         "400":
           description: Bad Request
           schema:
