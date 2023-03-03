@@ -14,6 +14,7 @@ Hello world! It\`s my first MERN project. The main task was to create a simple c
   - *Server*:
     - Go, Gin
     - PostgreSQL
+    - WebSocket Gorrila
     - Swagger documentation
     - sqlc
     - Protobuf
@@ -31,10 +32,11 @@ Hello world! It\`s my first MERN project. The main task was to create a simple c
   - Adaptive design
 
 :bulb: **What planned** :bulb::
-  - Deploy
+  - Deploy beta version
+  - Refactoring server-go
   - Adaptive design
   - Editing post
-  - Comments update (add oportunities to delete, edit, like and answer to comment)
+  - Comments update (add oportunities to edit and answer to comment)
   - Newsline
   - Chat
   - Dark theme

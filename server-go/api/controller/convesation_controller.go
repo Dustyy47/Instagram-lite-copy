@@ -30,7 +30,7 @@ type CreateConversationRequest struct {
 	SecondUserID int64 `form:"secondUserID" binding:"required"`
 }
 
-type CreateConversationResponce struct {
+type CreateConversationResponse struct {
 	ConversationID int64 `json:"conversationID"`
 }
 
@@ -38,7 +38,7 @@ type CreateConversationResponce struct {
 // @Description Create a new conversation with the user specified in the request body. The authenticated user must be one of the users in the conversation.
 // @Tags Conversations
 // @Param body body CreateConversationRequest true "Request body"
-// @Success 200 {object} CreateConversationResponce
+// @Success 200 {object} CreateConversationResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 401 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
