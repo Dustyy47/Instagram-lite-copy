@@ -721,7 +721,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.FindUsersResponse"
+                            "$ref": "#/definitions/controller.UsersResponse"
                         }
                     },
                     "400": {
@@ -1194,6 +1194,9 @@ const docTemplate = `{
                 "fullname": {
                     "type": "string"
                 },
+                "isActiveUserFollowing": {
+                    "type": "boolean"
+                },
                 "nickname": {
                     "type": "string"
                 },
@@ -1263,17 +1266,6 @@ const docTemplate = `{
                 }
             }
         },
-        "controller.FindUsersResponse": {
-            "type": "object",
-            "properties": {
-                "usersWithIsActiveUserFollowing": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/controller.UserWithIsActiveUserFollowing"
-                    }
-                }
-            }
-        },
         "controller.GetCommentsOfPostResponse": {
             "type": "object",
             "properties": {
@@ -1308,15 +1300,15 @@ const docTemplate = `{
                 "numFollowing": {
                     "type": "integer"
                 },
-                "userWithIsActiveUserFollowing": {
-                    "$ref": "#/definitions/controller.UserWithIsActiveUserFollowing"
+                "owner": {
+                    "$ref": "#/definitions/controller.User"
                 }
             }
         },
         "controller.LikeResponse": {
             "type": "object",
             "properties": {
-                "isLikedMe": {
+                "isActiveUserLiked": {
                     "type": "boolean"
                 },
                 "numLikes": {
@@ -1386,22 +1378,14 @@ const docTemplate = `{
                 "fullname": {
                     "type": "string"
                 },
+                "isActiveUserFollowing": {
+                    "type": "boolean"
+                },
                 "nickname": {
                     "type": "string"
                 },
                 "userID": {
                     "type": "integer"
-                }
-            }
-        },
-        "controller.UserWithIsActiveUserFollowing": {
-            "type": "object",
-            "properties": {
-                "isActiveUserFollowing": {
-                    "type": "boolean"
-                },
-                "user": {
-                    "$ref": "#/definitions/controller.User"
                 }
             }
         },

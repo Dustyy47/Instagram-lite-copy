@@ -256,7 +256,7 @@ func (pc *PostController) Like(c *gin.Context) {
 			return
 		}
 
-		likeRespose.IsLikedMe = true
+		likeRespose.IsActiveUserLiked = true
 	} else {
 		dislikePostParams := db.DislikePostParams{
 			PostID: post.ID,
@@ -269,7 +269,7 @@ func (pc *PostController) Like(c *gin.Context) {
 			return
 		}
 
-		likeRespose.IsLikedMe = false
+		likeRespose.IsActiveUserLiked = false
 	}
 
 	numLikes, err := pc.Store.GetNumLikesPost(c, post.ID)

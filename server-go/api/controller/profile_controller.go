@@ -20,7 +20,7 @@ type ProfileController struct {
 }
 
 type GetProfileDataResponse struct {
-	UserWithIsActiveUserFollowing `json:"userWithIsActiveUserFollowing"`
+	Owner User `json:"owner"`
 
 	NumFollowers int64 `json:"numFollowers"`
 	NumFollowing int64 `json:"numFollowing"`
@@ -101,18 +101,17 @@ func (pc *ProfileController) GetProfileData(c *gin.Context) {
 	isActiveUserFollowing := (err == nil)
 
 	getProfileDataResponse := GetProfileDataResponse{
-		UserWithIsActiveUserFollowing: UserWithIsActiveUserFollowing{
-			User : User {
-				UserID:        user.ID,
-				Nickname:      user.Nickname,
-				Fullname:      user.Fullname,
-				AvatarUrl:     user.AvatarUrl,
-			},
+		Owner: User{
+			UserID:                user.ID,
+			Nickname:              user.Nickname,
+			Fullname:              user.Fullname,
+			AvatarUrl:             user.AvatarUrl,
 			IsActiveUserFollowing: isActiveUserFollowing,
 		},
-		
-		NumFollowers:  numFollowers,
-		NumFollowing:  numFollowing,
+
+		NumFollowers: numFollowers,
+		NumFollowing: numFollowing,
+
 		IsUserProfile: isUserProfile,
 	}
 
@@ -435,10 +434,6 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 	c.JSON(http.StatusOK, toggleFollowResponse)
 }
 
-type FindUsersResponse struct {
-	UsersWithIsActiveUserFollowing []UserWithIsActiveUserFollowing `json:"usersWithIsActiveUserFollowing"`
-}
-
 // @Summary Find users by nickname
 // @Description Find users by nickname with pagination
 // @Tags Profile
@@ -447,7 +442,7 @@ type FindUsersResponse struct {
 // @Param name path string true "User nickname"
 // @Param limit query int false "Limit"
 // @Param offset query int false "Offset"
-// @Success 200 {object} FindUsersResponse
+// @Success 200 {object} UsersResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /profiles/find/{name} [get]
@@ -473,8 +468,8 @@ func (pc *ProfileController) FindUsers(c *gin.Context) {
 		return
 	}
 
-	findUsersResponse := FindUsersResponse{
-		UsersWithIsActiveUserFollowing: make([]UserWithIsActiveUserFollowing, len(foundUsers)),
+	findUsersResponse := UsersResponse{
+		Users: make([]User, len(foundUsers)),
 	}
 
 	userID := c.GetInt64("userID")
@@ -487,13 +482,11 @@ func (pc *ProfileController) FindUsers(c *gin.Context) {
 		_, err = pc.Store.GetFollower(c, getFollowerArg)
 		isActiveUserFollowing := (err == nil)
 
-		findUsersResponse.UsersWithIsActiveUserFollowing[i] = UserWithIsActiveUserFollowing{
-			User: User{
-				UserID:    foundUser.ID,
-				Nickname:  foundUser.Nickname,
-				Fullname:  foundUser.Fullname,
-				AvatarUrl: foundUser.AvatarUrl,
-			},
+		findUsersResponse.Users[i] = User{
+			UserID:                foundUser.ID,
+			Nickname:              foundUser.Nickname,
+			Fullname:              foundUser.Fullname,
+			AvatarUrl:             foundUser.AvatarUrl,
 			IsActiveUserFollowing: isActiveUserFollowing,
 		}
 	}

@@ -246,13 +246,6 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 // @Router /posts/{postID}/comments/{commentID}/like [put]
 // @Security ApiKeyAuth
 func (cc *CommentController) Like(c *gin.Context) {
-	var request struct{}
-	err := c.ShouldBind(&request)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
-		return
-	}
-
 	commentID, err := strconv.ParseInt(c.Params.ByName("commentID"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusNotFound, errorResponse(err.Error()))
@@ -287,7 +280,7 @@ func (cc *CommentController) Like(c *gin.Context) {
 			return
 		}
 
-		likeRespose.IsLikedMe = true
+		likeRespose.IsActiveUserLiked = true
 	} else {
 		dislikeCommentArg := db.DislikeCommentParams{
 			CommentID: comment.ID,
@@ -300,7 +293,7 @@ func (cc *CommentController) Like(c *gin.Context) {
 			return
 		}
 
-		likeRespose.IsLikedMe = false
+		likeRespose.IsActiveUserLiked = false
 	}
 
 	numLikes, err := cc.Store.GetNumLikesComment(c, comment.ID)
