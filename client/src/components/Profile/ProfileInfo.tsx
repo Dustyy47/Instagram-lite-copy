@@ -1,70 +1,95 @@
+import { getCorrectAvatarUrl } from 'helpers/getCorrectUrl'
+import { getFollowers, getFollowings } from 'http/profileApi'
+import { Status } from 'models/LoadingStatus'
 import { memo, useCallback, useState } from 'react'
+import { useAppSelector } from 'store/hooks'
+import { getProfileInfo } from 'store/selectors/profileSelectors'
 import { getLabel, LabelsType } from '../../helpers/getCorrectLabel'
-import { getProfileOwnerInfo } from '../../http/profileApi'
-import { Status } from '../../models/LoadingStatus'
-import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
-import { Loading } from '../UI/Loading/Loading'
+import { UserItemModel } from '../../models/ProfileOwnerModel'
 import { Modal } from '../Modal/Modal'
+import { Loading } from '../UI/Loading/Loading'
 import { UsersList } from '../UsersList/UsersList'
 import styles from './ProfileInfo.module.scss'
 
+interface UsersModal {
+    title: string
+    users: UserItemModel[]
+    isOpen: boolean
+    absenceText: string
+    loadingStatus: Status
+}
 interface ProfileInfoProps {
-    profileOwnerInfo: ProfileOwnerModel
     className?: string
 }
 
-export const ProfileInfo = memo(function ProfileInfo({ profileOwnerInfo, className }: ProfileInfoProps) {
-    const { fullName, avatarUrl, email, subscribes = [], subscribers = [] } = profileOwnerInfo
-    const [users, setUsers] = useState<ProfileOwnerModel[] | []>([])
-    const [title, setTitle] = useState('')
-    const [isModalOpen, setModalOpen] = useState(false)
-    const [absenceText, setAbsenceText] = useState('')
-    const [status, setStatus] = useState(Status.loading)
+export const ProfileInfo = memo(function ProfileInfo({ className }: ProfileInfoProps) {
+    const { fullname, avatarUrl, email, numFollowers, numFollowing, userID } = useAppSelector(getProfileInfo) || {}
+    const [modalInfo, setModalInfo] = useState<UsersModal>({
+        title: '',
+        users: [],
+        isOpen: false,
+        absenceText: '',
+        loadingStatus: Status.loading,
+    })
 
-    async function openModal(usersIds: string[], title: string, absenceText: string) {
-        try {
-            setUsers([])
-            setModalOpen(true)
-            setTitle(title)
-            setAbsenceText(absenceText)
-            setStatus(Status.loading)
-            const usersData: ProfileOwnerModel[] = []
-            for (const userId of usersIds) {
-                const userData = await getProfileOwnerInfo(userId)
-                if (userData) usersData.push(userData)
-            }
-            setStatus(Status.idle)
-            setUsers([...usersData])
-        } catch (e) {}
+    async function openModal(type: 'followers' | 'followings') {
+        let fetchUsersCallback: (id: number) => Promise<UserItemModel[] | undefined> = async () => await []
+        if (type === 'followers') {
+            fetchUsersCallback = getFollowers
+            setModalInfo((prev) => ({
+                ...prev,
+                title: 'Подписчики',
+                absenceText: 'Нет подписчиков',
+                loadingStatus: Status.loading,
+            }))
+        } else if (type === 'followings') {
+            fetchUsersCallback = getFollowings
+            setModalInfo((prev) => ({
+                ...prev,
+                title: 'Подписки',
+                absenceText: 'Нет подписок',
+                loadingStatus: Status.loading,
+            }))
+        }
+
+        const users = await fetchUsersCallback(userID || -1)
+        if (!users) {
+            setModalInfo((prev) => ({ ...prev, loadingStatus: Status.error }))
+            return
+        }
+
+        setModalInfo((prev) => ({
+            ...prev,
+            isOpen: true,
+            loadingStatus: Status.idle,
+            users,
+        }))
     }
 
     const closeModal = useCallback(() => {
-        setModalOpen(false)
+        setModalInfo((prev) => ({ ...prev, isOpen: false }))
     }, [])
 
     return (
         <div className={`${styles.wrapper} ${className}`}>
-            <img className={styles.avatar} src={avatarUrl} alt="avatar" />
+            <img className={styles.avatar} src={getCorrectAvatarUrl(avatarUrl)} alt="avatar" />
             <div className={styles.content}>
                 <div>
-                    <h3 className={styles.name}>{fullName}</h3>
+                    <h3 className={styles.name}>{fullname}</h3>
                     <p className={styles.email}>{email}</p>
                 </div>
                 <div className={styles.subscribesWrapper}>
-                    <p
-                        onClick={() => openModal(subscribers, 'Подписчики', 'Нет подписчиков')}
-                        className={styles.subscribers}
-                    >
-                        {getLabel(subscribers?.length || 0, LabelsType.subscribers)}
+                    <p onClick={() => openModal('followers')} className={styles.subscribers}>
+                        {getLabel(numFollowers || 0, LabelsType.subscribers)}
                     </p>
-                    <p onClick={() => openModal(subscribes, 'Подписки', 'Нет подписок')} className={styles.subscribes}>
-                        {getLabel(subscribes?.length || 0, LabelsType.subscribes)}
+                    <p onClick={() => openModal('followings')} className={styles.subscribes}>
+                        {getLabel(numFollowing || 0, LabelsType.subscribes)}
                     </p>
                 </div>
             </div>
-            <Modal className={styles.modal} isActive={isModalOpen} setActive={closeModal}>
-                <UsersList users={users} title={title}>
-                    {status === Status.loading ? <Loading /> : absenceText}
+            <Modal className={styles.modal} isActive={modalInfo.isOpen} setActive={closeModal}>
+                <UsersList users={modalInfo.users} title={modalInfo.title}>
+                    {modalInfo.loadingStatus === Status.loading ? <Loading /> : modalInfo.absenceText}
                 </UsersList>
             </Modal>
         </div>

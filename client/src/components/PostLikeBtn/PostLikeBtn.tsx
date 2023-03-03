@@ -1,23 +1,21 @@
-import { usePostLikes } from 'hooks/useLikes'
-import { PostModel } from 'models/PostModel'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
-import { fetchLikePost } from 'store/slices/userSlice'
+import { likesActions } from 'store/slices/likesSlice'
 import { LikeBtn } from '../UI/LikeBtn/LikeBtn'
 
 interface PostLikeButtonProps {
-    post: PostModel
+    postID: number
     className?: string
 }
 
-export function PostLikeButton({ post, className }: PostLikeButtonProps) {
-    const { likesCount, userLiked } = usePostLikes(post)
+export function PostLikeButton({ postID, className }: PostLikeButtonProps) {
+    const { isLikedMe, numLikes } = useAppSelector((state) => state.likes.likes['post'][postID]) || {}
     const isGuest = useAppSelector((state) => state.user.isGuest)
     const dispatch = useAppDispatch()
 
     function like(e: React.MouseEvent) {
         if (isGuest) return
         e.stopPropagation()
-        dispatch(fetchLikePost(post._id))
+        dispatch(likesActions.fetchLikePost(postID))
     }
-    return <LikeBtn isLiked={userLiked} onLike={like} likesCount={likesCount} className={className || ''} />
+    return <LikeBtn isLikedMe={isLikedMe} onLike={like} numLikes={numLikes} className={className || ''} />
 }

@@ -12,7 +12,9 @@ import { SelectedPostContent } from './SelectedPostContent'
 import { SelectedPostHeader } from './SelectedPostHeader'
 
 export function SelectedPost() {
-    const { isOpen, post } = useAppSelector((state) => state.extendedPost)
+    const { isOpen, post: postWithLikes } = useAppSelector((state) => state.extendedPost)
+    const post = postWithLikes?.data
+
     const dispatch = useAppDispatch()
 
     const [areCommentsOpen, setCommentsOpen] = useState(false)
@@ -24,6 +26,9 @@ export function SelectedPost() {
     }
 
     function renderMobile() {
+        if (!post) {
+            return null
+        }
         return (
             <Modal isActive={isOpen} setActive={toggle} className={styles.modal}>
                 <>
@@ -31,10 +36,10 @@ export function SelectedPost() {
                         <SelectedPostHeader>
                             <Back onClick={() => toggle(false)} className={styles.closeButton} />
                         </SelectedPostHeader>
-                        <img className={styles.photo} src={post.imageUrl} alt="" />
+                        <img className={styles.photo} src={post?.image_url} alt="" />
                         <SelectedPostContent>
                             <>
-                                <PostLikeButton className={styles.likeBtn} post={post} />
+                                <PostLikeButton className={styles.likeBtn} postID={post.id} />
                                 <FaRegComment onClick={() => setCommentsOpen(true)} className={styles.commentsButton} />
                             </>
                         </SelectedPostContent>
@@ -56,13 +61,16 @@ export function SelectedPost() {
     }
 
     function renderDesktop() {
+        if (!post) {
+            return null
+        }
         return (
             <Modal isActive={isOpen} setActive={toggle} className={styles.modal}>
                 <div className={styles.wrapper}>
-                    <img className={styles.photo} src={post.imageUrl} alt="" />
+                    <img className={styles.photo} src={post.image_url} alt="" />
                     <div className={styles.info}>
                         <SelectedPostHeader>
-                            <PostLikeButton className={styles.likeBtn} post={post} />
+                            <PostLikeButton className={styles.likeBtn} postID={post.id} />
                         </SelectedPostHeader>
                         <div className={styles.container}>
                             <SelectedPostContent />

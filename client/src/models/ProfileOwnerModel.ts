@@ -1,10 +1,12 @@
 export interface ProfileOwnerModel {
-    _id?: string
-    email?: string
-    nickName?: string
-    fullName?: string
-    avatarUrl?: string
-    subscribes?: string[]
-    subscribers?: string[]
-    isUserProfile?: boolean
+    userID: number
+    email: string
+    nickname: string
+    fullname: string
+    avatarUrl: string
+    numFollowing: number
+    numFollowers: number
+    isUserProfile: boolean
 }
+
+export type UserItemModel = Pick<ProfileOwnerModel, 'userID' | 'nickname' | 'avatarUrl' | 'fullname'>

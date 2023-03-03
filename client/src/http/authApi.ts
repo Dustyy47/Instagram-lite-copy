@@ -1,17 +1,23 @@
 import { AxiosError } from 'axios'
 import jwtDecode from 'jwt-decode'
 import { AxiosResponse } from '../models/Http'
-import { ProfileOwnerModel } from './../models/ProfileOwnerModel'
 import { $host } from './index'
 
-const LOGIN_URL = '/auth/login/'
-const REGISTRATION_URL = '/auth/registration'
+interface AuthDataResponse {
+    accessToken: string
+}
+
+interface AuthTokenDecoded {
+    exp: number
+    id: string
+    nickname: string
+}
 
 export const login = async (email: string, password: string) => {
     try {
-        const { data } = await $host.post(LOGIN_URL, { email, password })
-        localStorage.setItem('token', data)
-        return jwtDecode<ProfileOwnerModel>(data)
+        const { data } = await $host.post<AuthDataResponse>('/auth/login', { email, password })
+        localStorage.setItem('token', data.accessToken)
+        return jwtDecode<AuthTokenDecoded>(data.accessToken)
     } catch (e) {
         console.log(e)
         throw new Error((e as AxiosError<AxiosResponse>)?.response?.data?.message)
@@ -20,16 +26,12 @@ export const login = async (email: string, password: string) => {
 
 export const registration = async (inputData: FormData) => {
     try {
-        const { data } = await $host.post(REGISTRATION_URL, inputData)
-        localStorage.setItem('token', data)
-        return jwtDecode<ProfileOwnerModel>(data)
+        const { data } = await $host.post<AuthDataResponse>('/auth/registration', inputData)
+        localStorage.setItem('token', data.accessToken)
+        return jwtDecode<AuthTokenDecoded>(data.accessToken)
     } catch (e) {
         console.log(e)
-        const errors = (e as AxiosError<AxiosResponse>)?.response?.data
-        let errorMessage = ''
-        if (Array.isArray(errors)) {
-            errors.forEach((error) => (errorMessage += error.message))
-        } else errorMessage = errors?.message ? errors.message : ''
+        let errorMessage = (e as AxiosError<AxiosResponse>)?.response?.data.error
         throw new Error(errorMessage)
     }
 }

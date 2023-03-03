@@ -1,15 +1,15 @@
 import { BiExit } from 'react-icons/bi'
 import { useLogout } from '../../hooks/useLogout'
 import { useAppSelector } from '../../store/hooks'
-import { Button } from '../UI/Button/Button'
 import { Search } from '../Search/Search'
+import { Button } from '../UI/Button/Button'
 import { AccountLabel } from './AccountLabel'
 import styles from './Header.module.scss'
 
 export function Header() {
     const logout = useLogout()
 
-    const userId = useAppSelector((state) => state.user.userId)
+    const { isGuest } = useAppSelector((state) => state.user)
 
     return (
         <>
@@ -22,7 +22,7 @@ export function Header() {
                                 <Search className={styles.search} />
                             </li>
                             <li>
-                                {userId && (
+                                {!isGuest && (
                                     <Button className={styles.exitButton} onClick={logout}>
                                         <p className={styles.exitText}>Выйти</p>
                                         <BiExit className={styles.exitIcon}></BiExit>

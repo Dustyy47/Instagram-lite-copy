@@ -5,15 +5,15 @@ import { useUserAuthRedirect } from '../../hooks/useUserAuthRedirect'
 import { checks, useFormValidator, useValidator, Validation } from '../../hooks/validators'
 import { login } from '../../http/authApi'
 import { REGISTER_ROUTE } from '../../routes'
-import { Button } from '../UI/Button/Button'
 import { HideIcon } from '../HideIcon/HideIcon'
+import { Button } from '../UI/Button/Button'
 import { Input } from '../UI/Input/Input'
 import styles from './Auth.module.scss'
 
 export function Login() {
     const profileRedirect = useUserAuthRedirect()
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('dusteex@yandex.ru')
+    const [password, setPassword] = useState('123456')
     const [error, setError] = useState('')
 
     function resetFields() {
@@ -26,7 +26,7 @@ export function Login() {
         try {
             const response = await login(email, password)
             setError('')
-            profileRedirect(response.nickName || '')
+            profileRedirect(response.nickname || '')
         } catch (e) {
             let err = e as Error
             console.log(err.message)

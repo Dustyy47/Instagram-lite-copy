@@ -1,10 +1,11 @@
+import { WithLikes } from 'models/Generics'
 import { AnyFunction } from '../../models/CallbacksTypes'
 import { CommentModel } from '../../models/CommentModel'
 import { Comment } from './Comment/Comment'
 import styles from './Comments.module.scss'
 
 interface CommentsProps {
-    comments: CommentModel[]
+    comments: WithLikes<CommentModel>[]
     onCommentAvatarClicked?: AnyFunction
     className?: string
 }
@@ -19,7 +20,7 @@ export function Comments({ comments, onCommentAvatarClicked, className }: Commen
     return (
         <div className={`${styles.wrapper} ${className || ''}`}>
             {comments?.map((comment) => (
-                <Comment onAvatarClicked={onCommentAvatarClicked} key={comment._id} commentInfo={comment} />
+                <Comment onAvatarClicked={onCommentAvatarClicked} key={comment.data.id} comment={comment} />
             ))}
         </div>
     )

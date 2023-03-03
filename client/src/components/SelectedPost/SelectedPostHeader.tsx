@@ -9,13 +9,14 @@ interface SelectedPostHeaderProps {
 
 export function SelectedPostHeader({ children }: SelectedPostHeaderProps) {
     const author = useAppSelector((state) => state.extendedPost.author)
-    const { avatarUrl, nickName } = author
+    if (!author) return null
+    const { avatarUrl, nickname } = author
 
     return (
         <div className={styles.header}>
             <div className={styles.profileInfo}>
                 <Avatar url={avatarUrl || ''} />
-                <p className={styles.nickName}>{nickName}</p>
+                <p className={styles.nickName}>{nickname}</p>
             </div>
             <div className={styles.headerButtons}>
                 {children}

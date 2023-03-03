@@ -1,3 +1,4 @@
+import { UserItemModel } from 'models/ProfileOwnerModel'
 import React, { useCallback, useRef, useState } from 'react'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import { searchUsers } from '../../http/profileApi'
@@ -6,7 +7,7 @@ import { UsersList } from '../UsersList/UsersList'
 import styles from './Search.module.scss'
 
 const SEARCH_TIME = 333
-const USERS_PER_PAGE = 7
+const USERS_PER_PAGE = 5
 
 interface SearchProps {
     className?: string
@@ -14,7 +15,7 @@ interface SearchProps {
 
 export function Search({ className }: SearchProps) {
     const [areUsersHidden, setUsersHidden] = useState(true)
-    const [users, setUsers] = useState([])
+    const [users, setUsers] = useState<UserItemModel[]>([])
     const [isLoading, setLoading] = useState(false)
     let page = useRef(0)
     let timer = useRef<NodeJS.Timeout>()
@@ -33,9 +34,9 @@ export function Search({ className }: SearchProps) {
         if (input.current?.value) setUsersHidden(false)
     }
 
-    const fetchUsers = async (limit: number, skip: number) => {
-        const foundUsers = await searchUsers(input.current?.value || '', limit, skip)
-        if (foundUsers?.length > 0) {
+    const fetchUsers = async (limit: number, offset: number) => {
+        const foundUsers = await searchUsers(input.current?.value || '', limit, offset)
+        if (foundUsers && foundUsers.length > 0) {
             setUsers((prevState) => {
                 return (prevState = prevState.concat(foundUsers))
             })
@@ -80,12 +81,18 @@ export function Search({ className }: SearchProps) {
             >
                 <BiSearchAlt2 style={{ fontSize: 32, fill: '#ededed', margin: '0 15px' }} />
             </Input>
-            <div onScroll={handleScroll} className={`${styles.users} ${areUsersHidden ? styles.hidden : ''}`}>
-                <UsersList isLoading={isLoading} users={users} title={''}>
-                    <>
-                        <p>Пользователей с таким именем не существует</p>
+            <div>
+                <UsersList
+                    isLoading={isLoading}
+                    users={users}
+                    title={''}
+                    onScroll={handleScroll}
+                    className={`${styles.users} ${areUsersHidden ? styles.hidden : ''}`}
+                >
+                    <div className={styles.fallbackMessage}>
                         <p>🙁</p>
-                    </>
+                        <p>Пользователей с таким именем не существует</p>
+                    </div>
                 </UsersList>
             </div>
         </div>

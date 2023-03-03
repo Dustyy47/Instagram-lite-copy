@@ -1,24 +1,26 @@
 import { ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
+import { UserItemModel } from '../../models/ProfileOwnerModel'
 import { Loading } from '../UI/Loading/Loading'
 import { UserInfo } from './UserInfo'
+import styles from './UsersList.module.scss'
 
-interface UsersListProps {
-    users: ProfileOwnerModel[]
+interface UsersListProps extends Omit<React.HTMLProps<HTMLDivElement>, 'onClick'> {
+    users: UserItemModel[]
     title: string
-    onClick?: (user: ProfileOwnerModel) => any
+    onClick?: (user: UserItemModel) => any
     isLoading?: boolean
     children?: ReactElement | string
 }
 
 //TODO REMOVE INLINE STYLES
 
-export function UsersList({ users, title, onClick, isLoading, children }: UsersListProps) {
+export function UsersList({ users, title, onClick, isLoading, children, className }: UsersListProps) {
     const navigate = useNavigate()
 
-    const handleClickToUser = (user: ProfileOwnerModel) => {
-        navigate('/profile/' + user.nickName)
+    const handleClickToUser = (user: UserItemModel) => {
+        if (onClick) onClick(user)
+        navigate('/profile/' + user.nickname)
     }
 
     if (isLoading) {
@@ -26,17 +28,13 @@ export function UsersList({ users, title, onClick, isLoading, children }: UsersL
     }
 
     return (
-        <div>
-            <h3>{title}</h3>
-            <ul>
+        <div className={`${styles.wrapper} ${className}`}>
+            <h3 className={styles.title}>{title}</h3>
+            <ul className={styles.list}>
                 {users.length > 0 ? (
                     users.map((user) => (
-                        <li>
-                            <UserInfo
-                                onClick={onClick ? () => onClick(user) : () => handleClickToUser(user)}
-                                key={user._id}
-                                user={user}
-                            />
+                        <li key={user.userID}>
+                            <UserInfo onClick={() => handleClickToUser(user)} key={user.userID} user={user} />
                         </li>
                     ))
                 ) : (

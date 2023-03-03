@@ -29,13 +29,7 @@ export function SelectedPostComments() {
         if (commentsStatus === Status.error) {
             return <h5>Ошибка, что-то пошло не так...</h5>
         }
-        return (
-            <Comments
-                className={styles.commentsWrapper}
-                onCommentAvatarClicked={handleAvatarClick}
-                comments={comments}
-            />
-        )
+        return <Comments className={styles.commentsWrapper} onCommentAvatarClicked={handleAvatarClick} comments={comments} />
     }
 
     function sendComment(message: string) {

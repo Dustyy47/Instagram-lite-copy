@@ -1,18 +1,13 @@
 import { useNavigate } from 'react-router-dom'
+import { useAppSelector } from 'store/hooks'
 import { Status } from '../models/LoadingStatus'
-import { useCombinedSelector } from './useCombinedSelector'
 
 export function useProfileNavigate() {
-    const { loadingStatus, avatarUrl, nickName, fullName } = useCombinedSelector('user', [
-        'loadingStatus',
-        'avatarUrl',
-        'nickName',
-        'fullName',
-    ])
-
+    const { userProfile, entranceLoadingStatus, isGuest } = useAppSelector((state) => state.user)
+    const { avatarUrl, fullname, nickname } = userProfile || {}
     const navigate = useNavigate()
     function generateData() {
-        if (loadingStatus === Status.loading) {
+        if (entranceLoadingStatus === Status.loading) {
             return {
                 avatarUrl: '',
                 userName: '',
@@ -20,11 +15,11 @@ export function useProfileNavigate() {
                 isGuest: false,
             }
         }
-        if (avatarUrl !== '')
+        if (!isGuest)
             return {
                 avatarUrl: avatarUrl,
-                userName: fullName,
-                link: `/profile/${nickName}`,
+                userName: fullname,
+                link: `/profile/${nickname}`,
                 isGuest: false,
             }
         return {

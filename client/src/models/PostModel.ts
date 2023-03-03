@@ -1,10 +1,16 @@
 export interface PostModel {
-    likes: string[]
-    _id: string
-    imageUrl: string
-    title: string
+    //likes: string[]
+    // _id: string
+    // imageUrl: string
+    // title: string
+    // description: string
+    // postedBy: string
+    created_at: string
     description: string
-    postedBy: string
+    id: number
+    image_url: string
+    title: string
+    user_id: number
 }
 
 export interface ExtendedPostModel {
