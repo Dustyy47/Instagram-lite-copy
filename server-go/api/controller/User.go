@@ -1,9 +1,14 @@
 package controller
 
-type Author User;
-	
+type Author User
+
 type UsersResponse struct {
 	Users []User `json:"users"`
+}
+
+type UserWithIsActiveUserFollowing struct {
+	User                  `json:"user"`
+	IsActiveUserFollowing bool `json:"isActiveUserFollowing"`
 }
 
 type User struct {

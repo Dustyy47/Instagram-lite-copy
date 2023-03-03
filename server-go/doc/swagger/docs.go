@@ -183,7 +183,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.CreateConversationResponce"
+                            "$ref": "#/definitions/controller.CreateConversationResponse"
                         }
                     },
                     "400": {
@@ -721,7 +721,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.UsersResponse"
+                            "$ref": "#/definitions/controller.FindUsersResponse"
                         }
                     },
                     "400": {
@@ -1202,14 +1202,31 @@ const docTemplate = `{
                 }
             }
         },
-        "controller.CommentWithLike": {
+        "controller.Comment": {
             "type": "object",
             "properties": {
                 "author": {
                     "$ref": "#/definitions/controller.Author"
                 },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "post_id": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "controller.CommentWithLike": {
+            "type": "object",
+            "properties": {
                 "comment": {
-                    "$ref": "#/definitions/db.Comment"
+                    "$ref": "#/definitions/controller.Comment"
                 },
                 "isLikedMe": {
                     "type": "boolean"
@@ -1230,7 +1247,7 @@ const docTemplate = `{
                 }
             }
         },
-        "controller.CreateConversationResponce": {
+        "controller.CreateConversationResponse": {
             "type": "object",
             "properties": {
                 "conversationID": {
@@ -1243,6 +1260,17 @@ const docTemplate = `{
             "properties": {
                 "error": {
                     "type": "string"
+                }
+            }
+        },
+        "controller.FindUsersResponse": {
+            "type": "object",
+            "properties": {
+                "usersWithIsActiveUserFollowing": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controller.UserWithIsActiveUserFollowing"
+                    }
                 }
             }
         },
@@ -1336,6 +1364,9 @@ const docTemplate = `{
         "controller.ToggleFollowResponse": {
             "type": "object",
             "properties": {
+                "isActiveUserFollowing": {
+                    "type": "boolean"
+                },
                 "numFollowers": {
                     "type": "integer"
                 }
@@ -1375,6 +1406,17 @@ const docTemplate = `{
                 },
                 "userID": {
                     "type": "integer"
+                }
+            }
+        },
+        "controller.UserWithIsActiveUserFollowing": {
+            "type": "object",
+            "properties": {
+                "isActiveUserFollowing": {
+                    "type": "boolean"
+                },
+                "user": {
+                    "$ref": "#/definitions/controller.User"
                 }
             }
         },

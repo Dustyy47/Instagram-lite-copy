@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -127,10 +128,17 @@ type GetCommentsOfPostResponse struct {
 }
 
 type CommentWithLike struct {
-	db.Comment `json:"comment"`
-	NumLikes   int64 `json:"numLikes"`
-	IsLikedMe  bool  `json:"isLikedMe"`
-	Author     `json:"author"`
+	Comment   `json:"comment"`
+	NumLikes  int64 `json:"numLikes"`
+	IsLikedMe bool  `json:"isLikedMe"`
+}
+
+type Comment struct {
+	ID        int64     `json:"id"`
+	PostID    int64     `json:"post_id"`
+	Text      string    `json:"text"`
+	CreatedAt time.Time `json:"created_at"`
+	Author    `json:"author"`
 }
 
 // @Summary Get comments of a post
@@ -211,10 +219,15 @@ func (cc *CommentController) GetCommentsOfPost(c *gin.Context) {
 		}
 
 		getCommentsOfPostResponse.CommentsWithLikes[i] = CommentWithLike{
-			Comment:   comment,
+			Comment: Comment{
+				ID:        comment.ID,
+				PostID:    comment.PostID,
+				Text:      comment.Text,
+				CreatedAt: comment.CreatedAt,
+				Author:    author,
+			},
 			NumLikes:  numLikes,
 			IsLikedMe: isLikedMe,
-			Author:    author,
 		}
 	}
 

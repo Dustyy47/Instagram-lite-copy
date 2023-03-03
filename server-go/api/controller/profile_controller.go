@@ -350,7 +350,8 @@ func (pc *ProfileController) UpdateProfile(c *gin.Context) {
 }
 
 type ToggleFollowResponse struct {
-	NumFollowers int64 `json:"numFollowers"`
+	NumFollowers          int64 `json:"numFollowers"`
+	IsActiveUserFollowing bool  `json:"isActiveUserFollowing"`
 }
 
 // @Summary Toggle follow/unfollow user
@@ -397,9 +398,9 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 	}
 
 	_, err = pc.Store.GetFollower(c, getFollowerArg)
-	isFollowing := (err == nil)
+	isActiveUserFollowing := (err == nil)
 
-	if isFollowing { // then unfollow
+	if isActiveUserFollowing { // then unfollow
 		deleteFollowerArg := db.DeleteFollowerParams{
 			UserFromID: userID,
 			UserToID:   userIDToFollow,
@@ -430,10 +431,15 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 	}
 
 	toggleFollowResponse := ToggleFollowResponse{
-		NumFollowers: numFollowers,
+		NumFollowers:          numFollowers,
+		IsActiveUserFollowing: !isActiveUserFollowing,
 	}
 
 	c.JSON(http.StatusOK, toggleFollowResponse)
+}
+
+type FindUsersResponse struct {
+	UsersWithIsActiveUserFollowing []UserWithIsActiveUserFollowing `json:"usersWithIsActiveUserFollowing"`
 }
 
 // @Summary Find users by nickname
@@ -444,7 +450,7 @@ func (pc *ProfileController) ToggleFollow(c *gin.Context) {
 // @Param name path string true "User nickname"
 // @Param limit query int false "Limit"
 // @Param offset query int false "Offset"
-// @Success 200 {object} UsersResponse
+// @Success 200 {object} FindUsersResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
 // @Router /profiles/find/{name} [get]
@@ -464,24 +470,36 @@ func (pc *ProfileController) FindUsers(c *gin.Context) {
 		Offset:   (int32)(offset),
 	}
 
-	users, err := pc.Store.FindUsersByNickname(c, findUsersByNicknameArgs)
+	foundUsers, err := pc.Store.FindUsersByNickname(c, findUsersByNicknameArgs)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		return
 	}
 
-	usersResponse := UsersResponse{
-		Users: make([]User, len(users)),
+	findUsersResponse := FindUsersResponse{
+		UsersWithIsActiveUserFollowing: make([]UserWithIsActiveUserFollowing, len(foundUsers)),
 	}
 
-	for i, user := range users {
-		usersResponse.Users[i] = User{
-			UserID:    user.ID,
-			Nickname:  user.Nickname,
-			Fullname:  user.Fullname,
-			AvatarUrl: user.AvatarUrl,
+	userID := c.GetInt64("userID")
+	for i, foundUser := range foundUsers {
+		getFollowerArg := db.GetFollowerParams{
+			UserFromID: userID,
+			UserToID:   foundUser.ID,
+		}
+
+		_, err = pc.Store.GetFollower(c, getFollowerArg)
+		isActiveUserFollowing := (err == nil)
+
+		findUsersResponse.UsersWithIsActiveUserFollowing[i] = UserWithIsActiveUserFollowing{
+			User: User{
+				UserID:    foundUser.ID,
+				Nickname:  foundUser.Nickname,
+				Fullname:  foundUser.Fullname,
+				AvatarUrl: foundUser.AvatarUrl,
+			},
+			IsActiveUserFollowing: isActiveUserFollowing,
 		}
 	}
 
-	c.JSON(http.StatusOK, usersResponse)
+	c.JSON(http.StatusOK, findUsersResponse)
 }

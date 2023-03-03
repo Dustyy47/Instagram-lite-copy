@@ -23,12 +23,23 @@ definitions:
       userID:
         type: integer
     type: object
-  controller.CommentWithLike:
+  controller.Comment:
     properties:
       author:
         $ref: '#/definitions/controller.Author'
+      created_at:
+        type: string
+      id:
+        type: integer
+      post_id:
+        type: integer
+      text:
+        type: string
+    type: object
+  controller.CommentWithLike:
+    properties:
       comment:
-        $ref: '#/definitions/db.Comment'
+        $ref: '#/definitions/controller.Comment'
       isLikedMe:
         type: boolean
       numLikes:
@@ -41,7 +52,7 @@ definitions:
     required:
     - secondUserID
     type: object
-  controller.CreateConversationResponce:
+  controller.CreateConversationResponse:
     properties:
       conversationID:
         type: integer
@@ -50,6 +61,13 @@ definitions:
     properties:
       error:
         type: string
+    type: object
+  controller.FindUsersResponse:
+    properties:
+      usersWithIsActiveUserFollowing:
+        items:
+          $ref: '#/definitions/controller.UserWithIsActiveUserFollowing'
+        type: array
     type: object
   controller.GetCommentsOfPostResponse:
     properties:
@@ -109,6 +127,8 @@ definitions:
     type: object
   controller.ToggleFollowResponse:
     properties:
+      isActiveUserFollowing:
+        type: boolean
       numFollowers:
         type: integer
     type: object
@@ -135,6 +155,13 @@ definitions:
         type: string
       userID:
         type: integer
+    type: object
+  controller.UserWithIsActiveUserFollowing:
+    properties:
+      isActiveUserFollowing:
+        type: boolean
+      user:
+        $ref: '#/definitions/controller.User'
     type: object
   controller.UsersResponse:
     properties:
@@ -289,7 +316,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.CreateConversationResponce'
+            $ref: '#/definitions/controller.CreateConversationResponse'
         "400":
           description: Bad Request
           schema:
@@ -631,7 +658,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.UsersResponse'
+            $ref: '#/definitions/controller.FindUsersResponse'
         "400":
           description: Bad Request
           schema:
