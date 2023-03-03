@@ -20,7 +20,7 @@ export function AccountLabel({ className }: AccountLabelProps) {
 
     return (
         <div onClick={handleClick} className={`${styles.userInfo} ${className}`}>
-            <Avatar url={data.avatarUrl}></Avatar>
+            <Avatar url={data.avatarUrl || ''}></Avatar>
             <span className={styles.userName}>{data.userName}</span>
         </div>
     )

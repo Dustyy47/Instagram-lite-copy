@@ -1,6 +1,5 @@
 import { memo, useMemo } from 'react'
 import { RiAddCircleLine, RiChat4Line, RiUserFollowLine, RiUserUnfollowLine } from 'react-icons/ri'
-import { getIsUserSubscribed } from '../../helpers/getUserSubscribed'
 import { useCombinedSelector } from '../../hooks/useCombinedSelector'
 import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
 import { useAppSelector } from '../../store/hooks'
@@ -16,12 +15,13 @@ interface ProfileButtonsProps {
 export const ProfileButtons = memo(function ProfileButtons({ setCreatingPost, toggleSubscribe }: ProfileButtonsProps) {
     const { subscribes, isGuest } = useCombinedSelector('user', ['subscribes', 'isGuest'])
     let { profileOwnerInfo } = useAppSelector((state) => state.profile)
-    const { _id: profileOwnerId = '', isUserProfile = false } = profileOwnerInfo as ProfileOwnerModel
+    const { userID: profileOwnerId = 0, isUserProfile = false } = profileOwnerInfo as ProfileOwnerModel
 
     let isUserSubscribedOnProfile
 
     isUserSubscribedOnProfile = useMemo(() => {
-        return getIsUserSubscribed(subscribes, isGuest, profileOwnerId)
+        return false
+        //return getIsUserSubscribed(subscribes, isGuest, profileOwnerId)
     }, [subscribes, isGuest, profileOwnerId])
 
     return isUserProfile ? (

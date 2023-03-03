@@ -15,7 +15,7 @@ export function NavBar({}: NavBarProps) {
             <nav className={styles.wrapper}>
                 <li className={styles.listItem}></li>
                 <li className={styles.listItem + ' ' + styles.avatarItem} onClick={navigateToProfile}>
-                    <Avatar className={styles.icon} url={data.avatarUrl}></Avatar>
+                    <Avatar className={styles.icon} url={data.avatarUrl || ''}></Avatar>
                 </li>
                 <li className={styles.listItem} onClick={logout}>
                     {!data.isGuest && <RiLogoutBoxRLine className={styles.icon} />}

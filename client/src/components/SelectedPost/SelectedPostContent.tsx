@@ -12,10 +12,10 @@ export function SelectedPostContent({ children }: SelectedPostContentProps) {
     return (
         <div className={styles.content}>
             <div className={styles.contentHeader}>
-                <h3 className={styles.title}>{post.title}</h3>
+                <h3 className={styles.title}>{post?.data.title}</h3>
                 <div className={styles.buttons}>{children}</div>
             </div>
-            <p className={styles.description}>{post.description}</p>
+            <p className={styles.description}>{post?.data.description}</p>
         </div>
     )
 }

@@ -3,7 +3,7 @@ import { authRoutes, publicRoutes, RouteModel } from './routes'
 import { useAppSelector } from './store/hooks'
 
 export function RoutesManager() {
-    const nickName = useAppSelector((state) => state.user.nickName)
+    const { nickname } = useAppSelector((state) => state.user.userProfile) || {}
 
     function getRoutes(routes: RouteModel[]) {
         return routes.map((route) => {
@@ -13,16 +13,10 @@ export function RoutesManager() {
 
     return (
         <Routes>
-            {nickName ? getRoutes(authRoutes) : getRoutes(publicRoutes)}
+            {nickname ? getRoutes(authRoutes) : getRoutes(publicRoutes)}
             <Route
                 path="*"
-                element={
-                    nickName ? (
-                        <Navigate replace to={`/profile/${nickName}`} />
-                    ) : (
-                        <Navigate replace to="/auth/login" />
-                    )
-                }
+                element={nickname ? <Navigate replace to={`/profile/${nickname}`} /> : <Navigate replace to="/auth/login" />}
             />
         </Routes>
     )

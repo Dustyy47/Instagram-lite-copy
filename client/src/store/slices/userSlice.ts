@@ -1,21 +1,24 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { resetState } from '../../helpers/resetState'
-import { likePost } from '../../http/postsApi'
-import { getUserInfo, subscribe } from '../../http/profileApi'
+import { getUserInfo } from '../../http/profileApi'
 import { Status } from '../../models/LoadingStatus'
 import { State } from '../../models/State'
+import { subscribe } from './../../http/profileApi'
+import { ProfileOwnerModel } from './../../models/ProfileOwnerModel'
 
-export const fetchUserData = createAsyncThunk('user/getData', async () => {
-    return await getUserInfo()
-})
+export const fetchUserData = createAsyncThunk<ProfileOwnerModel, undefined, { rejectValue: number }>(
+    'user/getData',
+    async (_, { rejectWithValue }) => {
+        const response = await getUserInfo()
+        if (!response) {
+            return rejectWithValue(404)
+        }
+        return response
+    }
+)
 
-export const fetchLikePost = createAsyncThunk('user/likePost', async (postId: string) => {
-    await likePost(postId)
-    return postId
-})
-
-export const fetchSubscribe = createAsyncThunk('user/subscribe', async (profileId: string) => {
-    const wasSubscribed = await subscribe(profileId)
+export const fetchSubscribe = createAsyncThunk('user/subscribe', async (profileId: number) => {
+    const wasSubscribed = await subscribe(profileId.toString())
     return {
         wasSubscribed,
         profileId,
@@ -23,25 +26,15 @@ export const fetchSubscribe = createAsyncThunk('user/subscribe', async (profileI
 })
 
 interface UserState extends State {
+    userProfile: ProfileOwnerModel | null
     isGuest: boolean
-    userId: string
     entranceLoadingStatus: Status
-    likedPosts: string[]
-    subscribes: string[]
-    avatarUrl: string
-    nickName: string
-    fullName: string
 }
 
 const initialState: UserState = {
+    userProfile: null,
     isGuest: true,
-    userId: '',
     entranceLoadingStatus: Status.loading,
-    likedPosts: [],
-    subscribes: [],
-    avatarUrl: '',
-    nickName: '',
-    fullName: '',
 }
 
 const userSlice = createSlice({
@@ -53,44 +46,25 @@ const userSlice = createSlice({
             state.entranceLoadingStatus = Status.idle
         },
     },
-    extraReducers: {
-        [fetchUserData.fulfilled.type]: (state, action) => {
+    extraReducers: (builder) => {
+        builder.addCase(fetchUserData.fulfilled, (state, action) => {
             try {
                 // jwt expired or user deleted
-                if (!action.payload) {
-                    resetState(state, initialState)
-                    state.entranceLoadingStatus = Status.error
-                    return
-                }
                 state.entranceLoadingStatus = Status.idle
-                const { likedPosts, nickName, subscribes, avatarUrl, fullName, userId } = action.payload
-                state.likedPosts = likedPosts
-                state.nickName = nickName
-                state.userId = userId
-                state.subscribes = subscribes
-                state.avatarUrl = avatarUrl
-                state.fullName = fullName
+                state.userProfile = action.payload
                 state.isGuest = false
             } catch (e) {
                 state.entranceLoadingStatus = Status.error
             }
-        },
-        [fetchLikePost.fulfilled.type]: (state, action) => {
-            let postIndex = state.likedPosts.indexOf(action.payload)
-            if (postIndex === -1) {
-                state.likedPosts.push(action.payload)
-            } else {
-                state.likedPosts.splice(postIndex, 1)
-            }
-        },
-        [fetchSubscribe.fulfilled.type]: (state, action) => {
-            const { wasSubscribed, profileId } = action.payload
-            if (wasSubscribed) {
-                state.subscribes = state.subscribes.filter((id) => id !== profileId)
-            } else {
-                state.subscribes.push(profileId)
-            }
-        },
+        })
+        // .addCase(fetchSubscribe.fulfilled,(state,action)=>{
+        //     const { wasSubscribed, profileId } = action.payload
+        //     if (wasSubscribed) {
+        //         state.subscribes = state.subscribes.filter((id) => id !== profileId)
+        //     } else {
+        //         state.subscribes.push(profileId)
+        //     }
+        // })
     },
 })
 

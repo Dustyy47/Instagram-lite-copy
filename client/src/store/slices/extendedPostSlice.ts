@@ -1,40 +1,46 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { wrapToWithLike } from 'helpers/wrapToWithLikes'
+import { WithLikes } from 'models/Generics'
 import { getComments } from '../../http/postsApi'
-import { getProfileOwnerInfo } from '../../http/profileApi'
+import { getProfileInfo } from '../../http/profileApi'
 import { FetchLoadExtendedPostReturn } from '../../models/Http'
 import { sendComment } from './../../http/postsApi'
 import { CommentModel } from './../../models/CommentModel'
 import { Status } from './../../models/LoadingStatus'
 import { PostModel } from './../../models/PostModel'
-import { ProfileOwnerModel } from './../../models/ProfileOwnerModel'
+import { ProfileOwnerModel, UserItemModel } from './../../models/ProfileOwnerModel'
 import { AppDispatch, RootState } from './../index'
 
-export const fetchOpenPost = createAsyncThunk<FetchLoadExtendedPostReturn, PostModel, { dispatch: AppDispatch }>(
-    'extendedPost/open',
-    async (post, { dispatch }) => {
-        dispatch(extendedPostActions.setPost(post))
-        const comments = await getComments(post._id)
-        const author = (await getProfileOwnerInfo(post.postedBy)) as ProfileOwnerModel
-        return {
-            comments,
-            author,
-        }
+export const fetchOpenPost = createAsyncThunk<
+    FetchLoadExtendedPostReturn,
+    WithLikes<PostModel>,
+    { dispatch: AppDispatch; rejectValue: number }
+>('extendedPost/open', async (post, { dispatch, rejectWithValue }) => {
+    dispatch(extendedPostActions.setPost(post))
+    const comments: WithLikes<CommentModel>[] | undefined = await getComments(post.data.id)
+    if (!comments) return rejectWithValue(404)
+    const author = (await getProfileInfo({ userID: post.data.user_id })) as ProfileOwnerModel
+    return {
+        comments,
+        author,
     }
-)
+})
 
-export const fetchSendComment = createAsyncThunk<CommentModel, string, { state: RootState }>(
+export const fetchSendComment = createAsyncThunk<CommentModel, string, { state: RootState; rejectValue: number }>(
     'extendedPost/send',
-    async (comment, { getState }) => {
-        const newComment = (await sendComment(comment, getState().extendedPost.post._id)) as CommentModel
+    async (comment, { getState, rejectWithValue }) => {
+        const responseComment = await sendComment(comment, getState().extendedPost.post?.data.id || 0)
+        if (!responseComment) return rejectWithValue(400)
+        const newComment: CommentModel = { ...responseComment, author: getState().user.userProfile as UserItemModel }
         return newComment
     }
 )
 
 interface ExtendedPostState {
-    comments: CommentModel[]
+    comments: WithLikes<CommentModel>[]
     commentsStatus: Status
-    post: PostModel
-    author: Pick<ProfileOwnerModel, 'avatarUrl' | 'nickName'>
+    post: WithLikes<PostModel> | null
+    author: Pick<ProfileOwnerModel, 'avatarUrl' | 'nickname'> | null
     isOpen: boolean
 }
 
@@ -42,8 +48,8 @@ const initialState: ExtendedPostState = {
     isOpen: false,
     commentsStatus: Status.loading,
     comments: [],
-    author: {},
-    post: { _id: '', imageUrl: '', title: '', description: '', likes: [], postedBy: '' },
+    author: null,
+    post: null,
 }
 
 const extendedPostSlice = createSlice({
@@ -53,12 +59,11 @@ const extendedPostSlice = createSlice({
         toggle(state, action: PayloadAction<boolean>) {
             state.isOpen = action.payload
         },
-        setPost(state, action: PayloadAction<PostModel>) {
+        setPost(state, action: PayloadAction<WithLikes<PostModel>>) {
             state.post = action.payload
         },
         reset(state) {
-            state.post = { ...initialState.post }
-            state.author = { ...initialState.author }
+            state = { ...initialState }
             state.comments = [...initialState.comments]
         },
     },
@@ -76,7 +81,7 @@ const extendedPostSlice = createSlice({
                 state.commentsStatus = Status.loading
             })
             .addCase(fetchSendComment.fulfilled, (state, action) => {
-                state.comments.push(action.payload)
+                state.comments.push(wrapToWithLike<CommentModel>(action.payload))
                 state.commentsStatus = Status.idle
             })
             .addCase(fetchSendComment.pending, (state) => {

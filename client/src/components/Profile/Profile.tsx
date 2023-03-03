@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { extendedPostActions } from 'store/slices/extendedPostSlice'
-import { getCorrectAvatarUrl, getPostsWithCorrectImage } from '../../helpers/getCorrectUrl'
-import { useCombinedSelector } from '../../hooks/useCombinedSelector'
+import { getPostsWithCorrectImage } from '../../helpers/getCorrectUrl'
 import { Status } from '../../models/LoadingStatus'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { fetchProfileData } from '../../store/slices/profileSlice'
@@ -19,25 +18,21 @@ import { ProfileInfo } from './ProfileInfo'
 export function Profile() {
     const [isCreatingPost, setCreatingPost] = useState(false)
     const isGuest = useAppSelector((state) => state.user.isGuest)
-    const { profileOwnerInfo, loadingStatus, posts } = useCombinedSelector('profile', [
-        'profileOwnerInfo',
-        'loadingStatus',
-        'posts',
-    ])
+    const { profileOwnerInfo, loadingStatus, posts } = useAppSelector((state) => state.profile)
 
     const dispatch = useAppDispatch()
-    const { id: pathProfileId = '' } = useParams<string>()
+    const { nickname: pathProfileId = '' } = useParams<string>()
 
     useEffect(() => {
-        dispatch(fetchProfileData(pathProfileId))
+        dispatch(fetchProfileData({ nickname: pathProfileId }))
         dispatch(extendedPostActions.reset())
     }, [pathProfileId, dispatch])
 
     const toggleSubscribe = useCallback(
         async function () {
-            dispatch(fetchSubscribe(profileOwnerInfo._id))
+            dispatch(fetchSubscribe(profileOwnerInfo?.userID || 0))
         },
-        [profileOwnerInfo._id]
+        [profileOwnerInfo?.userID]
     )
 
     if (loadingStatus === Status.loading) {
@@ -52,26 +47,13 @@ export function Profile() {
         <section className={styles.page}>
             <div className={styles.wrapper}>
                 <div className={styles.header}>
-                    <ProfileInfo
-                        profileOwnerInfo={{
-                            ...profileOwnerInfo,
-                            avatarUrl: getCorrectAvatarUrl(profileOwnerInfo.avatarUrl),
-                        }}
-                        className={styles.profileInfo}
-                    />
+                    <ProfileInfo className={styles.profileInfo} />
                     {!isGuest && <ProfileButtons setCreatingPost={setCreatingPost} toggleSubscribe={toggleSubscribe} />}
                 </div>
                 <PostsList posts={getPostsWithCorrectImage(posts)} />
                 {/* <PostsList posts={getPostsMock(20)} /> */}
             </div>
             <SelectedPost />
-            {/* <ExtendedPost
-                authorInfo={profileOwnerInfo}
-                postInfo={extendedPostData}
-                setActive={closeExtendedPost}
-                onLike={() => {}}
-                isLiked={isPostLiked(extendedPostData?.postData._id, likedPosts)}
-            /> */}
             <CreatingPost isActive={isCreatingPost} setActive={setCreatingPost} />
         </section>
     )

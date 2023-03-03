@@ -17,8 +17,8 @@ interface RegistrationFormFields {
     email: string
     password: string
     passwordConfirm: string
-    fullName: string
-    nickName: string
+    Fullname: string
+    nickname: string
     error: string
     avatarImage: File | undefined
     isPasswordHidden: boolean
@@ -29,8 +29,8 @@ const initialData: RegistrationFormFields = {
     email: '',
     password: '',
     passwordConfirm: '',
-    fullName: '',
-    nickName: '',
+    Fullname: '',
+    nickname: '',
     error: '',
     avatarImage: undefined,
     isPasswordHidden: true,
@@ -44,8 +44,8 @@ export function Registration() {
         email,
         password,
         passwordConfirm,
-        fullName,
-        nickName,
+        Fullname,
+        nickname,
         error,
         avatarImage,
         isPasswordHidden,
@@ -59,11 +59,11 @@ export function Registration() {
             const data = new FormData()
             data.append('email', email)
             data.append('password', password)
-            data.append('fullName', fullName)
+            data.append('fullname', Fullname)
             data.append('avatarImage', avatarImage as File)
-            data.append('nickName', nickName)
+            data.append('nickname', nickname)
             const response = await registration(data)
-            profileRedirect(response.nickName as string)
+            profileRedirect(response.nickname)
         } catch (e) {
             const err = e as Error
             console.log(err.message)
@@ -117,8 +117,8 @@ export function Registration() {
             </div>
             <Input
                 validator={userNameValidator}
-                onChange={(value) => setData({ ...data, fullName: value })}
-                value={fullName}
+                onChange={(value) => setData({ ...data, Fullname: value })}
+                value={Fullname}
                 name="Имя"
                 validationMessageClassName={styles.validationMessage}
                 groupClassName={styles.authInputGroup}
@@ -135,8 +135,8 @@ export function Registration() {
             </Input>
             <Input
                 validator={nickNameValidator}
-                onChange={(value) => setData({ ...data, nickName: value })}
-                value={nickName}
+                onChange={(value) => setData({ ...data, nickname: value })}
+                value={nickname}
                 name="Псевдоним"
                 validationMessageClassName={styles.validationMessage}
                 groupClassName={styles.authInputGroup}

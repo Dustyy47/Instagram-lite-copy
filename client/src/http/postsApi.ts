@@ -1,36 +1,44 @@
 import { AxiosError } from 'axios'
+import { PostModel } from 'models/PostModel'
+import { UserItemModel } from 'models/ProfileOwnerModel'
+import { LikesMeta } from 'store/slices/likesSlice'
 import { $authHost } from '.'
-import { CommentModel } from '../models/CommentModel'
+import { CommentModel } from './../models/CommentModel'
+import { WithLikes } from './../models/Generics'
 
 export const addPost = async (formData: FormData) => {
     try {
-        const { data } = await $authHost.post('/profile/posts', formData)
-        console.log(data, 'add post response')
-        return data.post
+        const { data } = await $authHost.post<PostModel>('/posts/create', formData)
+        return data
+    } catch (e) {
+        console.log((e as AxiosError).request.response)
+        return undefined
+    }
+}
+
+export type LikePostResponse = Omit<LikesMeta, 'id'>
+
+export const likePost = async (postId: number) => {
+    try {
+        const { data } = await $authHost.put<LikePostResponse>(`/posts/${postId}/like`)
+        return data
+    } catch (e) {
+        console.log((e as AxiosError).request.response)
+        return undefined
+    }
+}
+
+export const deletePost = async (postId: number) => {
+    try {
+        await $authHost.delete(`posts/${postId}`)
     } catch (e) {
         console.log((e as AxiosError).request.response)
     }
 }
 
-export const likePost = async (postId: string) => {
+export const sendComment = async (text: string, postId: number) => {
     try {
-        await $authHost.put(`/profile/posts/${postId}/like`)
-    } catch (e) {
-        console.log((e as AxiosError).request.response)
-    }
-}
-
-export const deletePost = async (postId: string) => {
-    try {
-        await $authHost.delete(`/profile/posts/${postId}`)
-    } catch (e) {
-        console.log((e as AxiosError).request.response)
-    }
-}
-
-export const sendComment = async (text: string, postId: string): Promise<CommentModel | undefined> => {
-    try {
-        const { data } = await $authHost.put<CommentModel>(`/profile/posts/${postId}/comment`, {
+        const { data } = await $authHost.post<Omit<CommentModel, 'author'>>(`/posts/${postId}/comments/create`, {
             text,
         })
         return data
@@ -40,11 +48,48 @@ export const sendComment = async (text: string, postId: string): Promise<Comment
     }
 }
 
-export const getComments = async (postId: string) => {
+interface GetPostsRequestQuery {
+    userID: number
+    limit?: number
+    offset?: number
+}
+
+interface GetPostResponse extends WithLikes<PostModel> {
+    post: PostModel
+}
+
+export const getPosts = async ({ limit = 12, offset = 0, userID }: GetPostsRequestQuery) => {
     try {
-        const { data: comment } = await $authHost.get(`/profile/posts/${postId}/comments`)
-        return comment
+        const { data } = await $authHost.get<{ postsWithLikes: GetPostResponse[] }>(`/posts/userID/${userID}`, {
+            params: { limit, offset },
+        })
+        return data.postsWithLikes.map((post) => {
+            post.data = post.post
+            return post
+        })
     } catch (e) {
         console.log((e as AxiosError).request.response)
+        return undefined
+    }
+}
+
+interface GetCommentResponse extends WithLikes<CommentModel> {
+    comment: CommentModel
+    author: UserItemModel
+}
+
+export const getComments = async (postId: number) => {
+    try {
+        const { data } = await $authHost.get<{ commentWithLikes: GetCommentResponse[] }>(`/posts/${postId}/comments`, {
+            params: { limit: 10, offset: 0 },
+        })
+        const comments = data.commentWithLikes.map((comment) => {
+            comment.data = { ...comment.comment, author: comment.author }
+            return comment
+        })
+        return comments
+    } catch (e) {
+        console.log((e as AxiosError).request.response)
+        return undefined
     }
 }
