@@ -20,19 +20,12 @@ type ProfileController struct {
 }
 
 type GetProfileDataResponse struct {
-	UserID   int64  `json:"userID"`
-	Email    string `json:"email"`
-	Nickname string `json:"nickname"`
-	Fullname string `json:"fullname"`
-
-	AvatarURL string `json:"avatarUrl"`
+	UserWithIsActiveUserFollowing `json:"userWithIsActiveUserFollowing"`
 
 	NumFollowers int64 `json:"numFollowers"`
 	NumFollowing int64 `json:"numFollowing"`
 
 	IsUserProfile bool `json:"isUserProfile"`
-
-	IsFollowed bool `json:"isFollowed"`
 }
 
 // @Summary Get profile data
@@ -105,18 +98,22 @@ func (pc *ProfileController) GetProfileData(c *gin.Context) {
 	}
 
 	_, err = pc.Store.GetFollower(c, getFollowerArg)
-	isFollowed := (err == nil)
+	isActiveUserFollowing := (err == nil)
 
 	getProfileDataResponse := GetProfileDataResponse{
-		UserID:        user.ID,
-		Email:         user.Email,
-		Nickname:      user.Nickname,
-		Fullname:      user.Fullname,
-		AvatarURL:     user.AvatarUrl,
+		UserWithIsActiveUserFollowing: UserWithIsActiveUserFollowing{
+			User : User {
+				UserID:        user.ID,
+				Nickname:      user.Nickname,
+				Fullname:      user.Fullname,
+				AvatarUrl:     user.AvatarUrl,
+			},
+			IsActiveUserFollowing: isActiveUserFollowing,
+		},
+		
 		NumFollowers:  numFollowers,
 		NumFollowing:  numFollowing,
 		IsUserProfile: isUserProfile,
-		IsFollowed:    isFollowed,
 	}
 
 	c.JSON(http.StatusOK, getProfileDataResponse)
@@ -142,13 +139,13 @@ func (pc *ProfileController) GetFollowers(c *gin.Context) {
 	}
 	offset, _ := strconv.Atoi(c.Query("offset"))
 
-	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	userID, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
 		return
 	}
 
-	user, err := pc.Store.GetUserByID(c, id)
+	user, err := pc.Store.GetUserByID(c, userID)
 	if err != nil {
 		c.JSON(http.StatusNotFound, errorResponse("Profile not found"))
 		return
@@ -238,17 +235,17 @@ func (pc *ProfileController) GetFollowings(c *gin.Context) {
 	}
 
 	for i, following := range followings {
-		userFrom, err := pc.Store.GetUserByID(c, following.UserFromID)
+		userTo, err := pc.Store.GetUserByID(c, following.UserToID)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 			return
 		}
 
 		usersResponse.Users[i] = User{
-			UserID:    userFrom.ID,
-			Nickname:  userFrom.Nickname,
-			Fullname:  userFrom.Fullname,
-			AvatarUrl: userFrom.AvatarUrl,
+			UserID:    userTo.ID,
+			Nickname:  userTo.Nickname,
+			Fullname:  userTo.Fullname,
+			AvatarUrl: userTo.AvatarUrl,
 		}
 	}
 

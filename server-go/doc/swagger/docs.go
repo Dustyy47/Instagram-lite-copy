@@ -1299,23 +1299,8 @@ const docTemplate = `{
         "controller.GetProfileDataResponse": {
             "type": "object",
             "properties": {
-                "avatarUrl": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "fullname": {
-                    "type": "string"
-                },
-                "isFollowed": {
-                    "type": "boolean"
-                },
                 "isUserProfile": {
                     "type": "boolean"
-                },
-                "nickname": {
-                    "type": "string"
                 },
                 "numFollowers": {
                     "type": "integer"
@@ -1323,8 +1308,8 @@ const docTemplate = `{
                 "numFollowing": {
                     "type": "integer"
                 },
-                "userID": {
-                    "type": "integer"
+                "userWithIsActiveUserFollowing": {
+                    "$ref": "#/definitions/controller.UserWithIsActiveUserFollowing"
                 }
             }
         },
