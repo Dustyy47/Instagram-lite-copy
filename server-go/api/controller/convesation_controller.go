@@ -82,6 +82,49 @@ func (cc *ConversationController) Create(c *gin.Context) {
 	c.JSON(http.StatusOK, createdConversation.ID)
 }
 
+type GetConversationsResponse struct {
+	Conversations []db.Conversation `json:"conversations"`
+}
+
+// @Summary Get conversations
+// @Description Get conversations with pagination for the authenticated user
+// @Tags Conversations
+// @Accept json
+// @Produce json
+// @Param limit query int false "Limit"
+// @Param offset query int false "Offset"
+// @Success 200 {object} GetConversationsResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /conversations [get]
+// @security ApiKeyAuth
+func (cc *ConversationController) GetConversations(c *gin.Context) {
+	limit, err := strconv.Atoi(c.Query("limit"))
+	if err != nil {
+		limit = cc.Env.DefaultLimitGetConversations
+	}
+	offset, _ := strconv.Atoi(c.Query("offset"))
+
+	userID := c.GetInt64("userID")
+	getConversationsParams := db.ListConversationsOfUserParams{
+		UserFirstID: userID,
+		Limit:  (int32)(limit),
+		Offset: (int32)(offset),
+	}
+
+	conversations, err := cc.Store.ListConversationsOfUser(c, getConversationsParams)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		return
+	}
+
+	getConversationsResponse := GetConversationsResponse{
+		Conversations: conversations,
+	}
+
+	c.JSON(http.StatusOK, getConversationsResponse)
+}
+
 type message struct {
 	UserID    int64     `json:"userID"`
 	Text      string    `json:"text"`

@@ -71,6 +71,13 @@ definitions:
           $ref: '#/definitions/controller.CommentWithLike'
         type: array
     type: object
+  controller.GetConversationsResponse:
+    properties:
+      conversations:
+        items:
+          $ref: '#/definitions/db.Conversation'
+        type: array
+    type: object
   controller.GetPostsByUserResponse:
     properties:
       postsWithLikes:
@@ -161,6 +168,17 @@ definitions:
       text:
         type: string
       user_id:
+        type: integer
+    type: object
+  db.Conversation:
+    properties:
+      id:
+        type: integer
+      last_msg_created_at:
+        type: string
+      user_first_id:
+        type: integer
+      user_second_id:
         type: integer
     type: object
   db.Post:
@@ -281,6 +299,40 @@ paths:
       summary: Register
       tags:
       - Auth
+  /conversations:
+    get:
+      consumes:
+      - application/json
+      description: Get conversations with pagination for the authenticated user
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.GetConversationsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get conversations
+      tags:
+      - Conversations
   /conversations/create:
     post:
       description: Create a new conversation with the user specified in the request
@@ -518,7 +570,7 @@ paths:
         type: integer
       responses:
         "200":
-          description: Number of likes and isLikedMe
+          description: OK
           schema:
             $ref: '#/definitions/controller.LikeResponse'
         "400":
@@ -593,7 +645,7 @@ paths:
         type: integer
       responses:
         "200":
-          description: List of posts with number likes and isLikedMe
+          description: OK
           schema:
             $ref: '#/definitions/controller.GetPostsByUserResponse'
         "400":

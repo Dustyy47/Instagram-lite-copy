@@ -156,6 +156,60 @@ const docTemplate = `{
                 }
             }
         },
+        "/conversations": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get conversations with pagination for the authenticated user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Conversations"
+                ],
+                "summary": "Get conversations",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.GetConversationsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/conversations/create": {
             "post": {
                 "security": [
@@ -305,7 +359,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "List of posts with number likes and isLikedMe",
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/controller.GetPostsByUserResponse"
                         }
@@ -652,7 +706,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Number of likes and isLikedMe",
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/controller.LikeResponse"
                         }
@@ -1277,6 +1331,17 @@ const docTemplate = `{
                 }
             }
         },
+        "controller.GetConversationsResponse": {
+            "type": "object",
+            "properties": {
+                "conversations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/db.Conversation"
+                    }
+                }
+            }
+        },
         "controller.GetPostsByUserResponse": {
             "type": "object",
             "properties": {
@@ -1416,6 +1481,23 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "db.Conversation": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "last_msg_created_at": {
+                    "type": "string"
+                },
+                "user_first_id": {
+                    "type": "integer"
+                },
+                "user_second_id": {
                     "type": "integer"
                 }
             }

@@ -21,6 +21,7 @@ type Env struct {
 	DefaultLimitFindUsers         int `mapstructure:"DEFAULT_LIMIT_FIND_USERS"`
 	DefaultLimitGetPostsByUser    int `mapstructure:"DEFAULT_LIMIT_GET_POSTS_BY_USER"`
 	DefaultLimitGetCommentsOfPost int `mapstructure:"DEFAULT_LIMIT_GET_COMMENT_OF_POST"`
+	DefaultLimitGetConversations  int `mapstructure:"DEFAULT_LIMIT_GET_CONVERSATIONS"`
 }
 
 func NewEnv() *Env {

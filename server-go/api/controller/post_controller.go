@@ -133,7 +133,7 @@ type PostWithLike struct {
 // @Param userID path int64 true "User ID"
 // @Param limit query int false "Limit"
 // @Param offset query int false "Offset"
-// @Success 200 {object} GetPostsByUserResponse "List of posts with number likes and isLikedMe"
+// @Success 200 {object} GetPostsByUserResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
@@ -208,7 +208,7 @@ func (pc *PostController) GetPostsByUser(c *gin.Context) {
 // @Summary Like or dislike a post
 // @Tags Posts
 // @Param postID path int true "Post ID"
-// @Success 200 {object} LikeResponse "Number of likes and isLikedMe"
+// @Success 200 {object} LikeResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
