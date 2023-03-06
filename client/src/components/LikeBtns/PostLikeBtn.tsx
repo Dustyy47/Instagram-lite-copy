@@ -8,7 +8,7 @@ interface PostLikeButtonProps {
 }
 
 export function PostLikeButton({ postID, className }: PostLikeButtonProps) {
-    const { isLikedMe, numLikes } = useAppSelector((state) => state.likes.likes['post'][postID]) || {}
+    const { isActiveUserLiked: isLikedMe, numLikes } = useAppSelector((state) => state.likes.likes['post'][postID]) || {}
     const isGuest = useAppSelector((state) => state.user.isGuest)
     const dispatch = useAppDispatch()
 
@@ -17,5 +17,5 @@ export function PostLikeButton({ postID, className }: PostLikeButtonProps) {
         e.stopPropagation()
         dispatch(likesActions.fetchLikePost(postID))
     }
-    return <LikeBtn isLikedMe={isLikedMe} onLike={like} numLikes={numLikes} className={className || ''} />
+    return <LikeBtn isLikedMe={isLikedMe} onLike={like} numLikes={numLikes} classNames={{ wrapper: className || '' }} />
 }

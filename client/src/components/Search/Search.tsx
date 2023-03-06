@@ -1,4 +1,4 @@
-import { UserItemModel } from 'models/ProfileOwnerModel'
+import { UserModel } from 'models/ProfileOwnerModel'
 import React, { useCallback, useRef, useState } from 'react'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import { searchUsers } from '../../http/profileApi'
@@ -15,7 +15,7 @@ interface SearchProps {
 
 export function Search({ className }: SearchProps) {
     const [areUsersHidden, setUsersHidden] = useState(true)
-    const [users, setUsers] = useState<UserItemModel[]>([])
+    const [users, setUsers] = useState<UserModel[]>([])
     const [isLoading, setLoading] = useState(false)
     let page = useRef(0)
     let timer = useRef<NodeJS.Timeout>()

@@ -3,27 +3,25 @@ import { wrapToWithLike } from 'helpers/wrapToWithLikes'
 import { WithLikes } from 'models/Generics'
 import { getComments } from '../../http/postsApi'
 import { getProfileInfo } from '../../http/profileApi'
-import { FetchLoadExtendedPostReturn } from '../../models/Http'
 import { sendComment } from './../../http/postsApi'
 import { CommentModel } from './../../models/CommentModel'
 import { Status } from './../../models/LoadingStatus'
 import { PostModel } from './../../models/PostModel'
-import { ProfileOwnerModel, UserItemModel } from './../../models/ProfileOwnerModel'
+import { UserModel } from './../../models/ProfileOwnerModel'
 import { AppDispatch, RootState } from './../index'
 
 export const fetchOpenPost = createAsyncThunk<
-    FetchLoadExtendedPostReturn,
+    WithLikes<CommentModel>[],
     WithLikes<PostModel>,
-    { dispatch: AppDispatch; rejectValue: number }
->('extendedPost/open', async (post, { dispatch, rejectWithValue }) => {
-    dispatch(extendedPostActions.setPost(post))
-    const comments: WithLikes<CommentModel>[] | undefined = await getComments(post.data.id)
+    { dispatch: AppDispatch; rejectValue: number; state: RootState }
+>('extendedPost/open', async (post, { dispatch, rejectWithValue, getState }) => {
+    const authorProfile = await getProfileInfo({ userID: post.data.user_id })
+    if (!authorProfile) return rejectWithValue(404)
+    const isActiveUserPost = getState().user.profile?.owner.userID === post.data.user_id
+    dispatch(extendedPostActions.setPost({ post, author: authorProfile.owner, isActiveUserPost }))
+    const comments = await getComments(post.data.id)
     if (!comments) return rejectWithValue(404)
-    const author = (await getProfileInfo({ userID: post.data.user_id })) as ProfileOwnerModel
-    return {
-        comments,
-        author,
-    }
+    return comments
 })
 
 export const fetchSendComment = createAsyncThunk<CommentModel, string, { state: RootState; rejectValue: number }>(
@@ -31,21 +29,25 @@ export const fetchSendComment = createAsyncThunk<CommentModel, string, { state: 
     async (comment, { getState, rejectWithValue }) => {
         const responseComment = await sendComment(comment, getState().extendedPost.post?.data.id || 0)
         if (!responseComment) return rejectWithValue(400)
-        const newComment: CommentModel = { ...responseComment, author: getState().user.userProfile as UserItemModel }
+        const newComment: CommentModel = { ...responseComment, author: getState().user.profile?.owner as UserModel }
         return newComment
     }
 )
+
+type PostAuthor = Pick<UserModel, 'avatarUrl' | 'nickname'>
 
 interface ExtendedPostState {
     comments: WithLikes<CommentModel>[]
     commentsStatus: Status
     post: WithLikes<PostModel> | null
-    author: Pick<ProfileOwnerModel, 'avatarUrl' | 'nickname'> | null
+    isActiveUserPost: boolean
+    author: PostAuthor | null
     isOpen: boolean
 }
 
 const initialState: ExtendedPostState = {
     isOpen: false,
+    isActiveUserPost: false,
     commentsStatus: Status.loading,
     comments: [],
     author: null,
@@ -59,20 +61,21 @@ const extendedPostSlice = createSlice({
         toggle(state, action: PayloadAction<boolean>) {
             state.isOpen = action.payload
         },
-        setPost(state, action: PayloadAction<WithLikes<PostModel>>) {
-            state.post = action.payload
+        setPost(state, action: PayloadAction<{ post: WithLikes<PostModel>; author: PostAuthor; isActiveUserPost: boolean }>) {
+            state.post = action.payload.post
+            state.author = action.payload.author
+            state.isActiveUserPost = action.payload.isActiveUserPost
         },
         reset(state) {
-            state = { ...initialState }
-            state.comments = [...initialState.comments]
+            state.isOpen = false
+            state.author = null
+            state.post = null
         },
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchOpenPost.fulfilled, (state, action) => {
-                const { comments, author } = action.payload
-                state.author = author
-                state.comments = comments
+                state.comments = action.payload
                 state.isOpen = true
                 state.commentsStatus = Status.idle
             })

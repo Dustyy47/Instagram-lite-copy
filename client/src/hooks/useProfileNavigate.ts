@@ -3,8 +3,8 @@ import { useAppSelector } from 'store/hooks'
 import { Status } from '../models/LoadingStatus'
 
 export function useProfileNavigate() {
-    const { userProfile, entranceLoadingStatus, isGuest } = useAppSelector((state) => state.user)
-    const { avatarUrl, fullname, nickname } = userProfile || {}
+    const { profile: userProfile, entranceLoadingStatus, isGuest } = useAppSelector((state) => state.user)
+    const { avatarUrl, fullname, nickname } = userProfile?.owner || {}
     const navigate = useNavigate()
     function generateData() {
         if (entranceLoadingStatus === Status.loading) {

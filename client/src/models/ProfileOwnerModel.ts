@@ -1,12 +1,14 @@
-export interface ProfileOwnerModel {
+export interface ProfileModel {
+    owner: UserModel
+    isUserProfile: boolean
+    numFollowing: number
+    numFollowers: number
+}
+
+export interface UserModel {
     userID: number
-    email: string
     nickname: string
     fullname: string
     avatarUrl: string
-    numFollowing: number
-    numFollowers: number
-    isUserProfile: boolean
+    isActiveUserFollowing?: boolean
 }
-
-export type UserItemModel = Pick<ProfileOwnerModel, 'userID' | 'nickname' | 'avatarUrl' | 'fullname'>

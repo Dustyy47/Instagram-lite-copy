@@ -11,7 +11,7 @@ export function useInitLikes<T extends PostModel | CommentModel>(target: WithLik
     const likesMeta: LikesMeta = useMemo(
         () => ({
             id: target.data.id,
-            isLikedMe: target.isLikedMe,
+            isActiveUserLiked: target.isLikedMe,
             numLikes: target.numLikes,
         }),
         [target.data.id]

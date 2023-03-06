@@ -1,10 +1,10 @@
-import { PostLikeButton } from 'components/PostLikeBtn/PostLikeBtn'
+import { PostLikeButton } from 'components/LikeBtns/PostLikeBtn'
 import { useInitLikes } from 'hooks/useInitLikes'
 import { WithLikes } from 'models/Generics'
 import { useRef } from 'react'
 import { PostModel } from '../../models/PostModel'
 import { useAppDispatch } from '../../store/hooks'
-import { fetchOpenPost } from '../../store/slices/extendedPostSlice'
+import { extendedPostActions, fetchOpenPost } from '../../store/slices/extendedPostSlice'
 import styles from './Post.module.scss'
 
 interface PostProps {
@@ -18,6 +18,7 @@ export function Post({ post }: PostProps) {
     const loadingRef = useRef(true)
 
     function handleClick() {
+        dispatch(extendedPostActions.reset())
         dispatch(fetchOpenPost(post))
     }
 

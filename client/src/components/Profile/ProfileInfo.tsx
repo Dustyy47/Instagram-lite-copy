@@ -5,7 +5,7 @@ import { memo, useCallback, useState } from 'react'
 import { useAppSelector } from 'store/hooks'
 import { getProfileInfo } from 'store/selectors/profileSelectors'
 import { getLabel, LabelsType } from '../../helpers/getCorrectLabel'
-import { UserItemModel } from '../../models/ProfileOwnerModel'
+import { UserModel } from '../../models/ProfileOwnerModel'
 import { Modal } from '../Modal/Modal'
 import { Loading } from '../UI/Loading/Loading'
 import { UsersList } from '../UsersList/UsersList'
@@ -13,7 +13,7 @@ import styles from './ProfileInfo.module.scss'
 
 interface UsersModal {
     title: string
-    users: UserItemModel[]
+    users: UserModel[]
     isOpen: boolean
     absenceText: string
     loadingStatus: Status
@@ -23,7 +23,8 @@ interface ProfileInfoProps {
 }
 
 export const ProfileInfo = memo(function ProfileInfo({ className }: ProfileInfoProps) {
-    const { fullname, avatarUrl, email, numFollowers, numFollowing, userID } = useAppSelector(getProfileInfo) || {}
+    const { owner, numFollowers, numFollowing } = useAppSelector(getProfileInfo) || {}
+    const { fullname, avatarUrl, nickname, userID } = owner || {}
     const [modalInfo, setModalInfo] = useState<UsersModal>({
         title: '',
         users: [],
@@ -33,7 +34,7 @@ export const ProfileInfo = memo(function ProfileInfo({ className }: ProfileInfoP
     })
 
     async function openModal(type: 'followers' | 'followings') {
-        let fetchUsersCallback: (id: number) => Promise<UserItemModel[] | undefined> = async () => await []
+        let fetchUsersCallback: (id: number) => Promise<UserModel[] | undefined> = async () => await []
         if (type === 'followers') {
             fetchUsersCallback = getFollowers
             setModalInfo((prev) => ({
@@ -76,7 +77,7 @@ export const ProfileInfo = memo(function ProfileInfo({ className }: ProfileInfoP
             <div className={styles.content}>
                 <div>
                     <h3 className={styles.name}>{fullname}</h3>
-                    <p className={styles.email}>{email}</p>
+                    <p className={styles.email}>{nickname}</p>
                 </div>
                 <div className={styles.subscribesWrapper}>
                     <p onClick={() => openModal('followers')} className={styles.subscribers}>
