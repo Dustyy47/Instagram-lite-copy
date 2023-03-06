@@ -89,7 +89,7 @@
 }
 
 .sendForm {
-    height: 7rem;
+    //height: 7rem;
     background: white;
     position: absolute;
     bottom: 0rem;
@@ -124,7 +124,7 @@
 }
 
 .commentInput {
-    max-height: 100%;
+    max-height: 7rem;
     min-height: 50%;
     height: fit-content;
     width: 100%;
@@ -188,8 +188,8 @@
         & > div {
             display: block;
         }
-        .commentInput > input {
-            width: 90%;
+        .formLeftWrapper {
+            width: 85%;
         }
         .sendBtnIcon {
             display: inline-block;

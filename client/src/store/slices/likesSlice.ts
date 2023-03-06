@@ -1,18 +1,27 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { likePost } from 'http/postsApi'
+import { likeComment, likePost } from 'http/postsApi'
 
 const fetchLikePost = createAsyncThunk<LikesMeta, number, { rejectValue: number }>(
     'likes/likePost',
     async (postId, { rejectWithValue }) => {
         const response = await likePost(postId)
         if (!response) return rejectWithValue(400)
-        return { id: postId, isLikedMe: response.isLikedMe, numLikes: response.numLikes }
+        return { id: postId, isActiveUserLiked: response.isActiveUserLiked, numLikes: response.numLikes }
+    }
+)
+
+const fetchLikeComment = createAsyncThunk<LikesMeta, { postID: number; commentID: number }, { rejectValue: number }>(
+    'likes/likeComment',
+    async ({ postID, commentID }, { rejectWithValue }) => {
+        const response = await likeComment(postID, commentID)
+        if (!response) return rejectWithValue(400)
+        return { id: commentID, isActiveUserLiked: response.isActiveUserLiked, numLikes: response.numLikes }
     }
 )
 
 export interface LikesMeta {
     id: number
-    isLikedMe: boolean
+    isActiveUserLiked: boolean
     numLikes: number
 }
 
@@ -42,8 +51,12 @@ export const likesSlice = createSlice({
             const { id } = action.payload
             state.likes['post'][id] = action.payload
         })
+        builder.addCase(fetchLikeComment.fulfilled, (state, action) => {
+            const { id } = action.payload
+            state.likes['comment'][id] = action.payload
+        })
     },
 })
 
 export const likesReducer = likesSlice.reducer
-export const likesActions = { ...likesSlice.actions, fetchLikePost }
+export const likesActions = { ...likesSlice.actions, fetchLikePost, fetchLikeComment }

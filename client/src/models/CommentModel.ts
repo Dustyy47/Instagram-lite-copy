@@ -1,13 +1,13 @@
-import { UserItemModel } from 'models/ProfileOwnerModel'
+import { UserModel } from 'models/ProfileOwnerModel'
 
 export interface CommentModel {
     text: string
     id: number
-    post_id: string
-    user_id: string
+    post_id: number
+    user_id: number
     created_at: string
     //updatedAt: string
-    author: UserItemModel
+    author: UserModel
 }
 
 export interface CommentWithLikesModel {

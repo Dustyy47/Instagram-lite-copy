@@ -1,6 +1,5 @@
 import { AxiosError } from 'axios'
 import { PostModel } from 'models/PostModel'
-import { UserItemModel } from 'models/ProfileOwnerModel'
 import { LikesMeta } from 'store/slices/likesSlice'
 import { $authHost } from '.'
 import { CommentModel } from './../models/CommentModel'
@@ -16,11 +15,21 @@ export const addPost = async (formData: FormData) => {
     }
 }
 
-export type LikePostResponse = Omit<LikesMeta, 'id'>
+export type LikeResponse = Omit<LikesMeta, 'id'>
 
 export const likePost = async (postId: number) => {
     try {
-        const { data } = await $authHost.put<LikePostResponse>(`/posts/${postId}/like`)
+        const { data } = await $authHost.put<LikeResponse>(`/posts/${postId}/like`)
+        return data
+    } catch (e) {
+        console.log((e as AxiosError).request.response)
+        return undefined
+    }
+}
+
+export const likeComment = async (postID: number, commentID: number) => {
+    try {
+        const { data } = await $authHost.put<LikeResponse>(`/posts/${postID}/comments/${commentID}/like`)
         return data
     } catch (e) {
         console.log((e as AxiosError).request.response)
@@ -75,7 +84,6 @@ export const getPosts = async ({ limit = 12, offset = 0, userID }: GetPostsReque
 
 interface GetCommentResponse extends WithLikes<CommentModel> {
     comment: CommentModel
-    author: UserItemModel
 }
 
 export const getComments = async (postId: number) => {
@@ -84,10 +92,10 @@ export const getComments = async (postId: number) => {
             params: { limit: 10, offset: 0 },
         })
         const comments = data.commentWithLikes.map((comment) => {
-            comment.data = { ...comment.comment, author: comment.author }
+            comment.data = { ...comment.comment }
             return comment
         })
-        return comments
+        return comments as WithLikes<CommentModel>[]
     } catch (e) {
         console.log((e as AxiosError).request.response)
         return undefined

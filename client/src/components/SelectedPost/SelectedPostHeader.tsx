@@ -2,6 +2,7 @@ import { ReactElement } from 'react'
 import { useAppSelector } from '../../store/hooks'
 import { Avatar } from '../Avatar/Avatar'
 import styles from './SelectedPost.module.scss'
+import { SelectedPostMenu } from './SelectedPostMenu'
 
 interface SelectedPostHeaderProps {
     children?: ReactElement
@@ -9,6 +10,9 @@ interface SelectedPostHeaderProps {
 
 export function SelectedPostHeader({ children }: SelectedPostHeaderProps) {
     const author = useAppSelector((state) => state.extendedPost.author)
+    const post = useAppSelector((state) => state.extendedPost.post)
+    const isActiveUserPost = useAppSelector((state) => state.extendedPost.isActiveUserPost)
+
     if (!author) return null
     const { avatarUrl, nickname } = author
 
@@ -20,16 +24,7 @@ export function SelectedPostHeader({ children }: SelectedPostHeaderProps) {
             </div>
             <div className={styles.headerButtons}>
                 {children}
-
-                {/* <div className={styles.menuToggleWrapper}>
-                    <HiOutlineDotsVertical className={styles.menuToggleButton} onClick={() => {}} />
-                    <DropDown
-                        className={styles.menu}
-                        setActive={setMenuOpen}
-                        items={menuItems}
-                        isActive={isMenuOpen}
-                    ></DropDown>
-                </div> */}
+                {isActiveUserPost && <SelectedPostMenu postData={post?.data} />}
             </div>
         </div>
     )

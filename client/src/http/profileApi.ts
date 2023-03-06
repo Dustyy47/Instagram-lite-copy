@@ -1,14 +1,20 @@
 import { AxiosError } from 'axios'
-import { ProfileOwnerModel } from 'models/ProfileOwnerModel'
+import { ProfileModel } from 'models/ProfileOwnerModel'
 import { $authHost } from '.'
-import { UserItemModel } from './../models/ProfileOwnerModel'
+import { UserModel } from './../models/ProfileOwnerModel'
 
-export const subscribe = async (id: string) => {
+export interface SubscribeResponse {
+    isActiveUserFollowing: boolean
+    numFollowers: number
+}
+
+export const follow = async (id: number) => {
     try {
-        const { data } = await $authHost.put(`/profiles/id/${id}/follow`)
-        return data.wasSubscribed
+        const { data } = await $authHost.put<SubscribeResponse>(`/profiles/id/${id}/follow`)
+        return data
     } catch (e) {
         console.log((e as AxiosError).request.response)
+        return undefined
     }
 }
 
@@ -23,7 +29,7 @@ export const getProfileInfo = async ({ userID, nickname }: GetProfileInfoRequest
         if (userID) path += `id/${userID}`
         else if (nickname) path += `nickname/${nickname}`
         else return undefined
-        const { data } = await $authHost.get<ProfileOwnerModel>(path)
+        const { data } = await $authHost.get<ProfileModel>(path)
         return data
     } catch (e) {
         console.log((e as AxiosError).request.response)
@@ -33,7 +39,7 @@ export const getProfileInfo = async ({ userID, nickname }: GetProfileInfoRequest
 
 export const getUserInfo = async () => {
     try {
-        const { data } = await $authHost.get<ProfileOwnerModel>(`profiles/me`)
+        const { data } = await $authHost.get<ProfileModel>(`profiles/me`)
         return data
     } catch (e) {
         console.log((e as AxiosError).request.response)
@@ -43,7 +49,7 @@ export const getUserInfo = async () => {
 
 export const getFollowers = async (id: number) => {
     try {
-        const { data } = await $authHost.get<{ users: UserItemModel[] }>(`profiles/id/${id}/followers`, { params: { limit: 5 } })
+        const { data } = await $authHost.get<{ users: UserModel[] }>(`profiles/id/${id}/followers`, { params: { limit: 5 } })
         return data.users
     } catch (e) {
         return undefined
@@ -52,19 +58,31 @@ export const getFollowers = async (id: number) => {
 
 export const getFollowings = async (id: number) => {
     try {
-        const { data } = await $authHost.get<{ users: UserItemModel[] }>(`profiles/id/${id}/followings`, { params: { limit: 5 } })
+        const { data } = await $authHost.get<{ users: UserModel[] }>(`profiles/id/${id}/followings`, { params: { limit: 5 } })
         return data.users
     } catch (e) {
         return undefined
     }
 }
 
+interface SearchUserResponse {
+    isActiveUserFollowing: boolean
+    user: UserModel
+}
+
 export const searchUsers = async (nickname: string, limit: number, offset: number) => {
     try {
-        const { data } = await $authHost.get<{ users: UserItemModel[] }>(`profiles/find/${nickname}`, {
-            params: { limit, offset },
-        })
-        return data.users
+        const { data } = await $authHost.get<{ usersWithIsActiveUserFollowing: SearchUserResponse[] }>(
+            `profiles/find/${nickname}`,
+            {
+                params: { limit, offset },
+            }
+        )
+        const foundUsers = data.usersWithIsActiveUserFollowing.map((user) => ({
+            ...user.user,
+            isActiveUserFollowing: user.isActiveUserFollowing,
+        }))
+        return foundUsers
     } catch (e) {
         console.log((e as AxiosError).request.response)
         return undefined

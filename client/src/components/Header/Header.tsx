@@ -17,22 +17,22 @@ export function Header() {
                 <div className={styles.wrapper}>
                     <AccountLabel className={styles.label} />
                     <nav>
-                        <ul className={styles.list}>
-                            <li>
-                                <Search className={styles.search} />
-                            </li>
-                            <li>
-                                {!isGuest && (
+                        {!isGuest && (
+                            <ul className={styles.list}>
+                                <li>
+                                    <Search className={styles.search} />
+                                </li>
+                                <li>
                                     <Button className={styles.exitButton} onClick={logout}>
                                         <p className={styles.exitText}>Выйти</p>
                                         <BiExit className={styles.exitIcon}></BiExit>
                                     </Button>
-                                )}
-                            </li>
-                        </ul>
+                                </li>
+                            </ul>
+                        )}
                     </nav>
                 </div>
-                <Search className={styles.mobileSearch} />
+                {!isGuest && <Search className={styles.mobileSearch} />}
             </header>
         </>
     )

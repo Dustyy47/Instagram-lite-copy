@@ -1,7 +1,7 @@
 import { CommentModel } from './CommentModel'
 import { WithLikes } from './Generics'
 import { PostModel } from './PostModel'
-import { ProfileOwnerModel } from './ProfileOwnerModel'
+import { ProfileModel, UserModel } from './ProfileOwnerModel'
 
 export interface AxiosResponse {
     message: string
@@ -20,11 +20,11 @@ export interface RegistrationBody {
 
 //THUNKS
 export interface FetchProfileReturn {
-    profileOwnerInfo: ProfileOwnerModel
+    profileOwnerInfo: ProfileModel
     posts: WithLikes<PostModel>[]
 }
 
 export interface FetchLoadExtendedPostReturn {
     comments: WithLikes<CommentModel>[]
-    author: ProfileOwnerModel
+    author: UserModel
 }

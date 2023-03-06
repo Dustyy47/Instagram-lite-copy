@@ -3,7 +3,7 @@ import { authRoutes, publicRoutes, RouteModel } from './routes'
 import { useAppSelector } from './store/hooks'
 
 export function RoutesManager() {
-    const { nickname } = useAppSelector((state) => state.user.userProfile) || {}
+    const { nickname } = useAppSelector((state) => state.user.profile?.owner) || {}
 
     function getRoutes(routes: RouteModel[]) {
         return routes.map((route) => {

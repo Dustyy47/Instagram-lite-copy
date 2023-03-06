@@ -20,7 +20,7 @@ export const login = async (email: string, password: string) => {
         return jwtDecode<AuthTokenDecoded>(data.accessToken)
     } catch (e) {
         console.log(e)
-        throw new Error((e as AxiosError<AxiosResponse>)?.response?.data?.message)
+        throw new Error((e as AxiosError<AxiosResponse>)?.response?.data?.error)
     }
 }
 

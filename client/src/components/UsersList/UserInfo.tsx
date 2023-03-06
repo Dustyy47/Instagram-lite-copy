@@ -1,9 +1,9 @@
-import { UserItemModel } from '../../models/ProfileOwnerModel'
+import { UserModel } from '../../models/ProfileOwnerModel'
 import { Avatar } from '../Avatar/Avatar'
 import styles from './UsersList.module.scss'
 
 interface UsersListItemProps {
-    user: UserItemModel
+    user: UserModel
     onClick: React.MouseEventHandler
 }
 

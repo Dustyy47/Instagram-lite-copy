@@ -1,7 +1,5 @@
-import { memo, useMemo } from 'react'
+import { memo } from 'react'
 import { RiAddCircleLine, RiChat4Line, RiUserFollowLine, RiUserUnfollowLine } from 'react-icons/ri'
-import { useCombinedSelector } from '../../hooks/useCombinedSelector'
-import { ProfileOwnerModel } from '../../models/ProfileOwnerModel'
 import { useAppSelector } from '../../store/hooks'
 import { Button } from '../UI/Button/Button'
 import styles from './ProfileButtons.module.scss'
@@ -13,16 +11,8 @@ interface ProfileButtonsProps {
 }
 
 export const ProfileButtons = memo(function ProfileButtons({ setCreatingPost, toggleSubscribe }: ProfileButtonsProps) {
-    const { subscribes, isGuest } = useCombinedSelector('user', ['subscribes', 'isGuest'])
-    let { profileOwnerInfo } = useAppSelector((state) => state.profile)
-    const { userID: profileOwnerId = 0, isUserProfile = false } = profileOwnerInfo as ProfileOwnerModel
-
-    let isUserSubscribedOnProfile
-
-    isUserSubscribedOnProfile = useMemo(() => {
-        return false
-        //return getIsUserSubscribed(subscribes, isGuest, profileOwnerId)
-    }, [subscribes, isGuest, profileOwnerId])
+    let { profileInfo } = useAppSelector((state) => state.profile)
+    const { owner, isUserProfile = false } = profileInfo || {}
 
     return isUserProfile ? (
         <Button className={styles.button} onClick={() => setCreatingPost(true)}>
@@ -35,7 +25,7 @@ export const ProfileButtons = memo(function ProfileButtons({ setCreatingPost, to
                 <span className={styles.buttonText}>Чат</span>
                 <RiChat4Line className={styles.buttonIcon} />{' '}
             </Button>
-            {isUserSubscribedOnProfile ? (
+            {owner?.isActiveUserFollowing ? (
                 <Button className={styles.unfollowButton + ' ' + styles.button} onClick={toggleSubscribe}>
                     <span className={styles.buttonText}>Подписан</span>
                     <RiUserFollowLine className={styles.buttonIcon} />

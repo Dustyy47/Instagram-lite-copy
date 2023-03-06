@@ -1,14 +1,14 @@
 import { ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { UserItemModel } from '../../models/ProfileOwnerModel'
+import { UserModel } from '../../models/ProfileOwnerModel'
 import { Loading } from '../UI/Loading/Loading'
 import { UserInfo } from './UserInfo'
 import styles from './UsersList.module.scss'
 
 interface UsersListProps extends Omit<React.HTMLProps<HTMLDivElement>, 'onClick'> {
-    users: UserItemModel[]
+    users: UserModel[]
     title: string
-    onClick?: (user: UserItemModel) => any
+    onClick?: (user: UserModel) => any
     isLoading?: boolean
     children?: ReactElement | string
 }
@@ -18,13 +18,17 @@ interface UsersListProps extends Omit<React.HTMLProps<HTMLDivElement>, 'onClick'
 export function UsersList({ users, title, onClick, isLoading, children, className }: UsersListProps) {
     const navigate = useNavigate()
 
-    const handleClickToUser = (user: UserItemModel) => {
+    const handleClickToUser = (user: UserModel) => {
         if (onClick) onClick(user)
         navigate('/profile/' + user.nickname)
     }
 
     if (isLoading) {
-        return <Loading />
+        return (
+            <div className={`${styles.wrapper} ${className}`}>
+                <Loading />
+            </div>
+        )
     }
 
     return (

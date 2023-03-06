@@ -5,4 +5,4 @@ export const getFollowingsAndFollowers = (state: RootState) => ({
     followings: state.profile.followings,
 })
 
-export const getProfileInfo = (state: RootState) => state.profile.profileOwnerInfo
+export const getProfileInfo = (state: RootState) => state.profile.profileInfo

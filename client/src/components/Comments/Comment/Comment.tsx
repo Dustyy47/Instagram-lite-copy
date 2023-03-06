@@ -1,3 +1,4 @@
+import { CommentLikeBtn } from 'components/LikeBtns/CommentLikeBtn'
 import { getPassedTime } from 'helpers/formatTime'
 import { useInitLikes } from 'hooks/useInitLikes'
 import { WithLikes } from 'models/Generics'
@@ -12,7 +13,7 @@ interface CommentProps {
 }
 
 export function Comment({ comment, onAvatarClicked }: CommentProps) {
-    const { text, author, created_at } = comment.data
+    const { text, author, created_at, post_id, id } = comment.data
     useInitLikes<CommentModel>(comment, 'comment')
 
     return (
@@ -21,7 +22,10 @@ export function Comment({ comment, onAvatarClicked }: CommentProps) {
             <div className={styles.infoWrapper}>
                 <div className={styles.header}>
                     <span className={styles.nickName}>{author?.nickname}</span>
-                    <span className={styles.passedTime}>{getPassedTime(created_at)}</span>
+                    <div className={styles.headerRight}>
+                        <span className={styles.passedTime}>{getPassedTime(created_at)}</span>
+                        <CommentLikeBtn postID={post_id} commentID={id} />
+                    </div>
                 </div>
                 <p className={styles.text}>{text}</p>
             </div>

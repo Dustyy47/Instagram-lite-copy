@@ -4,8 +4,7 @@ import { extendedPostActions } from 'store/slices/extendedPostSlice'
 import { getPostsWithCorrectImage } from '../../helpers/getCorrectUrl'
 import { Status } from '../../models/LoadingStatus'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { fetchProfileData } from '../../store/slices/profileSlice'
-import { fetchSubscribe } from '../../store/slices/userSlice'
+import { fetchFollow, fetchProfile } from '../../store/slices/profileSlice'
 import { NotFound } from '../Errors/NotFound'
 import { CreatingPost } from '../Posts/CreatingPost'
 import { PostsList } from '../Posts/PostsList'
@@ -18,21 +17,22 @@ import { ProfileInfo } from './ProfileInfo'
 export function Profile() {
     const [isCreatingPost, setCreatingPost] = useState(false)
     const isGuest = useAppSelector((state) => state.user.isGuest)
-    const { profileOwnerInfo, loadingStatus, posts } = useAppSelector((state) => state.profile)
+    const { profileInfo, loadingStatus, posts } = useAppSelector((state) => state.profile)
+    const { owner } = profileInfo || {}
 
     const dispatch = useAppDispatch()
     const { nickname: pathProfileId = '' } = useParams<string>()
 
     useEffect(() => {
-        dispatch(fetchProfileData({ nickname: pathProfileId }))
+        dispatch(fetchProfile({ nickname: pathProfileId }))
         dispatch(extendedPostActions.reset())
     }, [pathProfileId, dispatch])
 
     const toggleSubscribe = useCallback(
         async function () {
-            dispatch(fetchSubscribe(profileOwnerInfo?.userID || 0))
+            dispatch(fetchFollow(owner?.userID || 0))
         },
-        [profileOwnerInfo?.userID]
+        [owner?.userID]
     )
 
     if (loadingStatus === Status.loading) {

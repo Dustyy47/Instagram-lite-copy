@@ -1,5 +1,7 @@
 .wrapper {
     width: 95%;
+    min-height: 15%;
+    max-height: 30%;
     box-shadow: var(--lightShadow);
     background: white;
     border-radius: 5px;
@@ -7,14 +9,13 @@
     align-items: top;
     margin-bottom: 10px;
     padding: 10px;
-    min-height: 60px;
-    overflow-y: auto;
+    overflow-y: hidden;
     overflow-x: hidden;
 }
 
 .infoWrapper {
     position: relative;
-    width: 100%;
+    width: 90%;
 }
 
 .nickName {
@@ -25,11 +26,18 @@
 }
 
 .avatar {
-    width: 40px;
-    height: 40px;
+    width: 8%;
+    aspect-ratio: 1;
+    height: fit-content;
 }
 
 .text {
+    width: 90%;
+    height: 90%;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
     font-size: 13px;
     line-height: 14px;
     position: relative;
@@ -39,10 +47,17 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
+
+    &Right {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 90px;
+    }
 }
 
 .passedTime {
-    color: grey;
+    color: var(--subText);
     font-size: 13px;
 }
 

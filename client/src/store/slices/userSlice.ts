@@ -3,10 +3,9 @@ import { resetState } from '../../helpers/resetState'
 import { getUserInfo } from '../../http/profileApi'
 import { Status } from '../../models/LoadingStatus'
 import { State } from '../../models/State'
-import { subscribe } from './../../http/profileApi'
-import { ProfileOwnerModel } from './../../models/ProfileOwnerModel'
+import { ProfileModel } from './../../models/ProfileOwnerModel'
 
-export const fetchUserData = createAsyncThunk<ProfileOwnerModel, undefined, { rejectValue: number }>(
+export const fetchUserData = createAsyncThunk<ProfileModel, undefined, { rejectValue: number }>(
     'user/getData',
     async (_, { rejectWithValue }) => {
         const response = await getUserInfo()
@@ -17,22 +16,14 @@ export const fetchUserData = createAsyncThunk<ProfileOwnerModel, undefined, { re
     }
 )
 
-export const fetchSubscribe = createAsyncThunk('user/subscribe', async (profileId: number) => {
-    const wasSubscribed = await subscribe(profileId.toString())
-    return {
-        wasSubscribed,
-        profileId,
-    }
-})
-
 interface UserState extends State {
-    userProfile: ProfileOwnerModel | null
+    profile: ProfileModel | null
     isGuest: boolean
     entranceLoadingStatus: Status
 }
 
 const initialState: UserState = {
-    userProfile: null,
+    profile: null,
     isGuest: true,
     entranceLoadingStatus: Status.loading,
 }
@@ -47,16 +38,15 @@ const userSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchUserData.fulfilled, (state, action) => {
-            try {
-                // jwt expired or user deleted
+        builder
+            .addCase(fetchUserData.fulfilled, (state, action) => {
                 state.entranceLoadingStatus = Status.idle
-                state.userProfile = action.payload
+                state.profile = action.payload
                 state.isGuest = false
-            } catch (e) {
+            })
+            .addCase(fetchUserData.rejected, (state, action) => {
                 state.entranceLoadingStatus = Status.error
-            }
-        })
+            })
         // .addCase(fetchSubscribe.fulfilled,(state,action)=>{
         //     const { wasSubscribed, profileId } = action.payload
         //     if (wasSubscribed) {
