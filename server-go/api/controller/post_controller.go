@@ -108,6 +108,7 @@ func (pc *PostController) Remove(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 		return
 	}
+
 	err = pc.Store.DeletePost(c, post.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))

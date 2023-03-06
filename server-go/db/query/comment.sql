@@ -22,3 +22,7 @@ OFFSET $3;
 -- name: DeleteComment :exec
 DELETE FROM comments
 WHERE id = $1;
+
+-- name: DeleteCommentsByPostID :exec
+DELETE FROM comments
+where post_id = $1;
