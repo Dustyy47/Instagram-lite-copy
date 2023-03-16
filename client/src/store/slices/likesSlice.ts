@@ -59,4 +59,4 @@ export const likesSlice = createSlice({
 })
 
 export const likesReducer = likesSlice.reducer
-export const likesActions = { ...likesSlice.actions, fetchLikePost, fetchLikeComment }
+export const likesActions = { ...likesSlice.actions, likePost: fetchLikePost, likeComment: fetchLikeComment }

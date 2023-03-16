@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { userActions } from 'store/slices/userSlice'
 import { Header } from './components/Header/Header'
 import { NavBar } from './components/NavBar/NavBar'
 import { Loading } from './components/UI/Loading/Loading'
@@ -6,7 +7,6 @@ import { useLogout } from './hooks/useLogout'
 import { Status } from './models/LoadingStatus'
 import { RoutesManager } from './RoutesManager'
 import { useAppDispatch, useAppSelector } from './store/hooks'
-import { fetchUserData } from './store/slices/userSlice'
 
 //TODO Написать useDebounce и отрефакторить вцелом Search
 //TODO Добавить Loader в модальное окно подписок и подписчиков
@@ -20,7 +20,7 @@ export function App() {
     useEffect(() => {
         //TODO Handle exit and enter for online status
         //window.addEventListener('beforeunload', (event) => {})
-        dispatch(fetchUserData())
+        dispatch(userActions.getData())
     }, [])
 
     function renderApplication() {

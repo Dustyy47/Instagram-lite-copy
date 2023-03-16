@@ -6,7 +6,7 @@ import { shallowEqual } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
 import { getSelectedPostInitialInfo } from 'store/selectors/selectedPostSelectors'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { extendedPostActions } from '../../store/slices/extendedPostSlice'
+import { selectedPostActions } from '../../store/slices/selectedPostSlice'
 import { Modal } from '../Modal/Modal'
 import styles from './SelectedPost.module.scss'
 import { SelectedPostComments } from './SelectedPostComments'
@@ -22,7 +22,7 @@ export function SelectedPost() {
     const isMobile = useMediaQuery({ query: '(max-width: 600px)' })
 
     function close() {
-        dispatch(extendedPostActions.toggle(false))
+        dispatch(selectedPostActions.toggle(false))
     }
 
     function renderMobile() {

@@ -1,5 +1,5 @@
 import { SendMessageBar } from 'components/SendMessageBar/SendMessageBar'
-import { extendedPostActions, fetchSendComment } from 'store/slices/extendedPostSlice'
+import { selectedPostActions } from 'store/slices/selectedPostSlice'
 import { Status } from '../../models/LoadingStatus'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { Comments } from '../Comments/Comments'
@@ -18,7 +18,7 @@ const barClassNames = {
 }
 
 export function SelectedPostComments() {
-    const { comments, commentsStatus } = useAppSelector((state) => state.extendedPost)
+    const { comments, commentsStatus } = useAppSelector((state) => state.selectedPost)
     const isGuest = useAppSelector((state) => state.user.isGuest)
     const dispatch = useAppDispatch()
 
@@ -33,11 +33,11 @@ export function SelectedPostComments() {
     }
 
     function sendComment(message: string) {
-        dispatch(fetchSendComment(message))
+        dispatch(selectedPostActions.sendComment(message))
     }
 
     function handleAvatarClick() {
-        dispatch(extendedPostActions.toggle(false))
+        dispatch(selectedPostActions.toggle(false))
     }
 
     return (

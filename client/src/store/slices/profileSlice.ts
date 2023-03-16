@@ -4,13 +4,13 @@ import { WithLikes } from 'models/Generics'
 import { addPost, deletePost } from '../../http/postsApi'
 import { follow, getProfileInfo, GetProfileInfoRequestParams, SubscribeResponse } from '../../http/profileApi'
 import { Status } from '../../models/LoadingStatus'
+import { ProfileModel } from '../../models/ProfileOwnerModel'
 import { State } from '../../models/State'
 import { getPosts } from './../../http/postsApi'
 import { PostModel } from './../../models/PostModel'
-import { ProfileModel } from './../../models/ProfileOwnerModel'
 import { AppDispatch } from './../index'
 
-export const fetchProfile = createAsyncThunk<
+const fetchProfile = createAsyncThunk<
     WithLikes<PostModel>[],
     GetProfileInfoRequestParams,
     { rejectValue: number; dispatch: AppDispatch }
@@ -28,13 +28,13 @@ export const fetchProfile = createAsyncThunk<
     return posts
 })
 
-export const fetchDeletePost = createAsyncThunk('profile/deletePost', async (postId: number) => {
+const fetchDeletePost = createAsyncThunk('profile/deletePost', async (postId: number) => {
     await deletePost(postId)
     const payload: Pick<PostModel, 'id'> = { id: postId }
     return payload
 })
 
-export const fetchAddPost = createAsyncThunk<PostModel, FormData, { rejectValue: number }>(
+const fetchAddPost = createAsyncThunk<PostModel, FormData, { rejectValue: number }>(
     'profile/addPost',
     async (postData, { rejectWithValue }) => {
         const newPost = await addPost(postData)
@@ -43,7 +43,7 @@ export const fetchAddPost = createAsyncThunk<PostModel, FormData, { rejectValue:
     }
 )
 
-export const fetchFollow = createAsyncThunk<SubscribeResponse, number, { rejectValue: number }>(
+const fetchFollow = createAsyncThunk<SubscribeResponse, number, { rejectValue: number }>(
     'profile/follow',
     async (profileId, { rejectWithValue }) => {
         const data = await follow(profileId)
@@ -107,4 +107,10 @@ const profileSlice = createSlice({
 })
 
 export const profileSliceReducer = profileSlice.reducer
-export const profileActions = profileSlice.actions
+export const profileActions = {
+    ...profileSlice.actions,
+    getData: fetchProfile,
+    deletePost: fetchDeletePost,
+    addPost: fetchAddPost,
+    follow: fetchFollow,
+}

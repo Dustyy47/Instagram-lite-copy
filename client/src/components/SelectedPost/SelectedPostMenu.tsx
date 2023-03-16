@@ -5,8 +5,8 @@ import { useMemo, useRef, useState } from 'react'
 import { HiOutlineDotsVertical } from 'react-icons/hi'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { useAppDispatch } from 'store/hooks'
-import { extendedPostActions } from 'store/slices/extendedPostSlice'
-import { fetchDeletePost } from 'store/slices/profileSlice'
+import { profileActions } from 'store/slices/profileSlice'
+import { selectedPostActions } from 'store/slices/selectedPostSlice'
 import styles from './SelectedPost.module.scss'
 
 interface SelectedPostMenuProps {
@@ -25,8 +25,8 @@ export function SelectedPostMenu({ postData }: SelectedPostMenuProps) {
                 text: 'Удалить',
                 icon: <RiDeleteBinLine />,
                 callback: () => {
-                    dispatch(extendedPostActions.toggle(false))
-                    dispatch(fetchDeletePost(postData?.id || 0))
+                    dispatch(selectedPostActions.toggle(false))
+                    dispatch(profileActions.deletePost(postData?.id || 0))
                 },
             },
         ]

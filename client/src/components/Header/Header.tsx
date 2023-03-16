@@ -10,7 +10,6 @@ export function Header() {
     const logout = useLogout()
 
     const { isGuest } = useAppSelector((state) => state.user)
-
     return (
         <>
             <header className={styles.header}>

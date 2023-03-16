@@ -9,7 +9,6 @@ export function Back({ onClick, className }: BackProps) {
     return (
         <button onClick={onClick} className={className}>
             <MdOutlineArrowBack />
-            Назад
         </button>
     )
 }

@@ -15,7 +15,7 @@ export function PostLikeButton({ postID, className }: PostLikeButtonProps) {
     function like(e: React.MouseEvent) {
         if (isGuest) return
         e.stopPropagation()
-        dispatch(likesActions.fetchLikePost(postID))
+        dispatch(likesActions.likePost(postID))
     }
     return <LikeBtn isLikedMe={isLikedMe} onLike={like} numLikes={numLikes} classNames={{ wrapper: className || '' }} />
 }

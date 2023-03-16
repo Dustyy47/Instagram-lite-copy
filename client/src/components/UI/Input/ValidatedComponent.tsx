@@ -2,9 +2,8 @@ import { combineCallbacks } from 'helpers/combineCallbacks'
 import { Validator } from 'hooks/validators/useValidator'
 import { cloneElement, useEffect } from 'react'
 
-interface ValidatedComponentV2 {
+interface ValidatedComponentProps {
     children: React.ReactElement
-    //inputRef: React.MutableRefObject<HTMLInputElement | HTMLTextAreaElement | null>
     validator: Validator
     isHiddenBeforeBlur?: boolean
     isHiddenPermanently?: boolean
@@ -20,7 +19,7 @@ export function ValidatedComponent({
     isHiddenPermanently = false,
     isHiddenBeforeBlur = true,
     classNames,
-}: ValidatedComponentV2) {
+}: ValidatedComponentProps) {
     function handleBlur() {
         validator?.setIsHidden(isHiddenPermanently)
     }

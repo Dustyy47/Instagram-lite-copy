@@ -2,10 +2,10 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { resetState } from '../../helpers/resetState'
 import { getUserInfo } from '../../http/profileApi'
 import { Status } from '../../models/LoadingStatus'
+import { ProfileModel } from '../../models/ProfileOwnerModel'
 import { State } from '../../models/State'
-import { ProfileModel } from './../../models/ProfileOwnerModel'
 
-export const fetchUserData = createAsyncThunk<ProfileModel, undefined, { rejectValue: number }>(
+const fetchUserData = createAsyncThunk<ProfileModel, undefined, { rejectValue: number }>(
     'user/getData',
     async (_, { rejectWithValue }) => {
         const response = await getUserInfo()
@@ -59,4 +59,4 @@ const userSlice = createSlice({
 })
 
 export const userSliceReducer = userSlice.reducer
-export const userActions = { ...userSlice.actions }
+export const userActions = { ...userSlice.actions, getData: fetchUserData }

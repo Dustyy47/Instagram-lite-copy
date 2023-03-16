@@ -1,33 +1,32 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { wrapToWithLike } from 'helpers/wrapToWithLikes'
 import { WithLikes } from 'models/Generics'
-import { getComments } from '../../http/postsApi'
+import { getComments, sendComment } from '../../http/postsApi'
 import { getProfileInfo } from '../../http/profileApi'
-import { sendComment } from './../../http/postsApi'
-import { CommentModel } from './../../models/CommentModel'
-import { Status } from './../../models/LoadingStatus'
-import { PostModel } from './../../models/PostModel'
-import { UserModel } from './../../models/ProfileOwnerModel'
-import { AppDispatch, RootState } from './../index'
+import { CommentModel } from '../../models/CommentModel'
+import { Status } from '../../models/LoadingStatus'
+import { PostModel } from '../../models/PostModel'
+import { UserModel } from '../../models/ProfileOwnerModel'
+import { AppDispatch, RootState } from '../index'
 
-export const fetchOpenPost = createAsyncThunk<
+const fetchOpenPost = createAsyncThunk<
     WithLikes<CommentModel>[],
     WithLikes<PostModel>,
     { dispatch: AppDispatch; rejectValue: number; state: RootState }
->('extendedPost/open', async (post, { dispatch, rejectWithValue, getState }) => {
+>('selectedPost/open', async (post, { dispatch, rejectWithValue, getState }) => {
     const authorProfile = await getProfileInfo({ userID: post.data.user_id })
     if (!authorProfile) return rejectWithValue(404)
     const isActiveUserPost = getState().user.profile?.owner.userID === post.data.user_id
-    dispatch(extendedPostActions.setPost({ post, author: authorProfile.owner, isActiveUserPost }))
+    dispatch(selectedPostActions.setPost({ post, author: authorProfile.owner, isActiveUserPost }))
     const comments = await getComments(post.data.id)
     if (!comments) return rejectWithValue(404)
     return comments
 })
 
-export const fetchSendComment = createAsyncThunk<CommentModel, string, { state: RootState; rejectValue: number }>(
-    'extendedPost/send',
+const fetchSendComment = createAsyncThunk<CommentModel, string, { state: RootState; rejectValue: number }>(
+    'selectedPost/send',
     async (comment, { getState, rejectWithValue }) => {
-        const responseComment = await sendComment(comment, getState().extendedPost.post?.data.id || 0)
+        const responseComment = await sendComment(comment, getState().selectedPost.post?.data.id || 0)
         if (!responseComment) return rejectWithValue(400)
         const newComment: CommentModel = { ...responseComment, author: getState().user.profile?.owner as UserModel }
         return newComment
@@ -54,7 +53,7 @@ const initialState: ExtendedPostState = {
     post: null,
 }
 
-const extendedPostSlice = createSlice({
+const selectedPostSlice = createSlice({
     name: 'extendedPost',
     initialState,
     reducers: {
@@ -93,5 +92,5 @@ const extendedPostSlice = createSlice({
     },
 })
 
-export const extendedPostSliceReducer = extendedPostSlice.reducer
-export const extendedPostActions = extendedPostSlice.actions
+export const selectedPostSliceReducer = selectedPostSlice.reducer
+export const selectedPostActions = { ...selectedPostSlice.actions, openPost: fetchOpenPost, sendComment: fetchSendComment }

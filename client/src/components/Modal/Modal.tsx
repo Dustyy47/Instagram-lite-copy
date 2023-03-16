@@ -23,7 +23,6 @@ export function Modal({
     shouldFixBody = true,
 }: ModalProps) {
     let scrollBeforeOpen = useRef(0)
-
     useEffect(() => {
         if (!shouldFixBody) return
         if (isActive) {
