@@ -53,3 +53,8 @@ Hello world! It\`s my first MERN project. The main task was to create a simple c
   - **\*OPTIMIZE\*** - Improving the performance, efficiency, or scalability of the code
   - **\*PROTO\*** - Proto
   - **\*SWAGGER\*** - Swagger
+
+**Profile**
+![profile](./README_ASSETS/profile.png)
+**Post**
+![post](./README_ASSETS/post_.jpg)
