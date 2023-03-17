@@ -47,7 +47,6 @@ type CreateConversationResponse struct {
 // @security ApiKeyAuth
 func (cc *ConversationController) Create(c *gin.Context) {
 	var request CreateConversationRequest
-
 	err := c.ShouldBind(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorResponse(err.Error()))
@@ -55,7 +54,6 @@ func (cc *ConversationController) Create(c *gin.Context) {
 	}
 
 	userID := c.GetInt64("userID")
-
 	user, err := cc.Store.GetUserByID(c, userID)
 	if err != nil {
 		c.JSON(http.StatusNotAcceptable, "You don't have access")
@@ -108,8 +106,8 @@ func (cc *ConversationController) GetConversations(c *gin.Context) {
 	userID := c.GetInt64("userID")
 	getConversationsParams := db.ListConversationsOfUserParams{
 		UserFirstID: userID,
-		Limit:  (int32)(limit),
-		Offset: (int32)(offset),
+		Limit:       (int32)(limit),
+		Offset:      (int32)(offset),
 	}
 
 	conversations, err := cc.Store.ListConversationsOfUser(c, getConversationsParams)
@@ -138,9 +136,15 @@ func (cc *ConversationController) Run(c *gin.Context) {
 		return
 	}
 
-	_, err = cc.Store.GetConverstionByID(c, conversationID)
+	conversation, err := cc.Store.GetConverstionByID(c, conversationID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, fmt.Sprintf("Conversation not found by id: %d", conversationID))
+		c.JSON(http.StatusNotFound, fmt.Sprintf("Conversation not found by id: %d", conversationID))
+		return
+	}
+
+	userID := c.GetInt64("userID")
+	if conversation.UserFirstID != userID && conversation.UserSecondID != userID {
+		c.JSON(http.StatusForbidden, fmt.Sprintf("No access"))
 		return
 	}
 
