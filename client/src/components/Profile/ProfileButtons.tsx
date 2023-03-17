@@ -10,7 +10,12 @@ import styles from './ProfileButtons.module.scss'
 interface ProfileButtonsProps {
     setCreatingPost: (value: boolean) => any
 }
-const socket = new WebSocket('ws://127.0.0.1:8000/v1/conversations/10/ws', `Bearer_${localStorage.getItem('token')}`)
+console.log(`@Bearer_${localStorage.getItem('token')}`)
+const socket = new WebSocket('ws://127.0.0.1:8000/v1/conversations/30/ws', `Bearer_${localStorage.getItem('token')}`)
+
+socket.addEventListener('open', (e) => {
+    console.log('@ SUCCESFUL SOCKET CONNECTION', e)
+})
 
 export const ProfileButtons = memo(function ProfileButtons({ setCreatingPost }: ProfileButtonsProps) {
     let { profileInfo } = useAppSelector((state) => state.profile)

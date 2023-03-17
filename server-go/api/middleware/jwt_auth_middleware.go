@@ -16,6 +16,7 @@ func JwtAuthMiddleware(secret string) gin.HandlerFunc {
 		authHeader := c.Request.Header.Get("Authorization")
 		if authHeader == "" {
 			authHeader = c.GetHeader("Sec-WebSocket-Protocol")
+			authHeader = strings.Replace(authHeader, "_"," ",1)
 		}
 		t := strings.Split(authHeader, " ")
 		
