@@ -1,13 +1,13 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import { extendedPostSliceReducer } from './slices/extendedPostSlice'
 import { likesReducer } from './slices/likesSlice'
 import { profileSliceReducer } from './slices/profileSlice'
+import { selectedPostSliceReducer } from './slices/selectedPostSlice'
 import { userSliceReducer } from './slices/userSlice'
 
 const rootReducer = combineReducers({
     user: userSliceReducer,
     profile: profileSliceReducer,
-    extendedPost: extendedPostSliceReducer,
+    selectedPost: selectedPostSliceReducer,
     likes: likesReducer,
 })
 

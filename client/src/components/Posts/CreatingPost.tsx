@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { checks, useFormValidator, useValidator, Validation } from '../../hooks/validators'
 import { useAppDispatch } from '../../store/hooks'
-import { fetchAddPost } from '../../store/slices/profileSlice'
+import { profileActions } from '../../store/slices/profileSlice'
+import { Modal } from '../Modal/Modal'
 import { Button } from '../UI/Button/Button'
 import { FileInput } from '../UI/Input/FileInput'
 import { Input } from '../UI/Input/Input'
-import { Modal } from '../Modal/Modal'
 import styles from './CreatingPost.module.scss'
 
 //FIX PHOTO VALIDATION AND LAYOUT
@@ -23,9 +23,7 @@ export function CreatingPost({ isActive, setActive }: CreatingPostProps) {
     const [newPostImageUrl, setNewPostImageUrl] = useState('')
     const [newPostImage, setNewPostImage] = useState<File | null>(null)
 
-    const titleValidator = useValidator([
-        new Validation(checkLength(1, 30), 'Длина заголовка должна быть от 1 до 30 символов'),
-    ])
+    const titleValidator = useValidator([new Validation(checkLength(1, 30), 'Длина заголовка должна быть от 1 до 30 символов')])
     const descriptionValidator = useValidator([
         new Validation(checkLength(1, 300), 'Длина описания должна быть от 1 до 300 символов'),
     ])
@@ -60,7 +58,7 @@ export function CreatingPost({ isActive, setActive }: CreatingPostProps) {
         data.append('title', newPostTitle)
         data.append('description', newPostDescription)
         data.append('img', newPostImage as Blob)
-        dispatch(fetchAddPost(data))
+        dispatch(profileActions.addPost(data))
     }
 
     return (

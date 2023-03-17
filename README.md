@@ -22,26 +22,20 @@ Hello world! It\`s my first MERN project. The main task was to create a simple c
 :heavy_check_mark: **What is done** :heavy_check_mark::
   - Auth (Login and Registration) through jwt and auto-enter at coming back
   - Profile page (opportunities to find users by search bar, follow user and watch his followers and follows)
-  - Posts (opportunities to create post, like other posts and send comments)
+  - Posts (opportunities to create or delete post, like other posts and send comments)
   - Comments (oportunities to create, delete, like)
   - Chat on server side
   - Swagger documentation
-
+  - Adaptive design
 
 :zap: **In progress** :zap:: 
-  - Adaptive design
+  - Chat
 
 :bulb: **What planned** :bulb::
   - Deploy beta version
-  - Refactoring server-go
-  - Adaptive design
-  - Editing post
-  - Comments update (add oportunities to edit and answer to comment)
-  - Newsline
-  - Chat
   - Dark theme
-  - Localization
-  - Accessibility  
+  - i18n  
+  - Newsline
 
 :blue_book: **Commits names meanings** :blue_book::
   - **\*ADD\*** - Adding new features
@@ -53,3 +47,8 @@ Hello world! It\`s my first MERN project. The main task was to create a simple c
   - **\*OPTIMIZE\*** - Improving the performance, efficiency, or scalability of the code
   - **\*PROTO\*** - Proto
   - **\*SWAGGER\*** - Swagger
+
+**Profile**
+![profile](./README_ASSETS/profile.png)
+**Post**
+![post](./README_ASSETS/post_.jpg)

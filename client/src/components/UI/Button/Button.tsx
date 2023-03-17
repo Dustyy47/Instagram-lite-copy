@@ -20,8 +20,7 @@ export function Button({ onClick, style, disabled, className, children }: Button
             style={style}
             disabled={disabled}
             onClick={click}
-            className={`${styles.button} ${disabled ? styles.disabled : ''} ${className ? className : ''}`}
-        >
+            className={`${styles.button} ${disabled ? styles.disabled : ''} ${className ? className : ''}`}>
             {children}
         </button>
     )

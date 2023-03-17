@@ -1,0 +1,26 @@
+.form {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+}
+
+.inputWrapper {
+    max-width: 70%;
+    width: 100%;
+    margin-left: 5%;
+}
+
+.input {
+    max-height: 100px;
+    width: 100%;
+}
+
+.formLeftWrapper {
+    width: 100%;
+    justify-content: start;
+}
+
+.chat {
+    position: relative;
+}

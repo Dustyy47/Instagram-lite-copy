@@ -7,18 +7,19 @@ import { useRef, useState } from 'react'
 import { RiSendPlaneLine } from 'react-icons/ri'
 import styles from './SendMessageBar.module.scss'
 
+export interface SendMessageBarClassnames {
+    form?: string
+    emojiPicker?: string
+    inputWrapper?: string
+    input?: string
+    sendBtn?: string
+    sendBtnText?: string
+    sendBtnIcon?: string
+    leftWrapper?: string
+}
 interface SendMessageBarProps {
     onSend: (text: string) => any
-    classNames?: {
-        form?: string
-        emojiPicker?: string
-        inputWrapper?: string
-        input?: string
-        sendBtn?: string
-        sendBtnText?: string
-        sendBtnIcon?: string
-        leftWrapper?: string
-    }
+    classNames?: SendMessageBarClassnames
 }
 
 export function SendMessageBar({ onSend, classNames }: SendMessageBarProps) {
@@ -31,11 +32,7 @@ export function SendMessageBar({ onSend, classNames }: SendMessageBarProps) {
     function chooseEmoji(emoji: string) {
         messageValidator.validate(message + emoji)
         setMessage((prev) => {
-            return (
-                prev.slice(0, textArea.current?.selectionStart) +
-                emoji +
-                message.slice(textArea.current?.selectionStart)
-            )
+            return prev.slice(0, textArea.current?.selectionStart) + emoji + message.slice(textArea.current?.selectionStart)
         })
     }
 
@@ -48,7 +45,7 @@ export function SendMessageBar({ onSend, classNames }: SendMessageBarProps) {
     return (
         <form className={`${styles.form} ${classNames?.form || ''}`}>
             <div className={`${styles.formLeftWrapper} ${classNames?.leftWrapper || ''}`}>
-                <EmojiPicker className={classNames?.emojiPicker || ''} onChoose={chooseEmoji} />
+                <EmojiPicker className={classNames?.emojiPicker} onChoose={chooseEmoji} />
                 <ValidatedComponent classNames={{ wrapper: classNames?.inputWrapper }} validator={messageValidator}>
                     <TextArea
                         htmlProps={{
@@ -62,7 +59,7 @@ export function SendMessageBar({ onSend, classNames }: SendMessageBarProps) {
             </div>
             <Button className={classNames?.sendBtn || ''} onClick={handleSend} disabled={formValidator.hasErrors()}>
                 <span className={classNames?.sendBtnText || ''}>Отправить</span>
-                <RiSendPlaneLine className={classNames?.sendBtnIcon || ''} />
+                <RiSendPlaneLine className={`${styles.sendBtnIcon} ${classNames?.sendBtnIcon || ''}`} />
             </Button>
         </form>
     )

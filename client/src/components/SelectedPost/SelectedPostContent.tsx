@@ -7,7 +7,7 @@ interface SelectedPostContentProps {
 }
 
 export function SelectedPostContent({ children }: SelectedPostContentProps) {
-    const post = useAppSelector((state) => state.extendedPost.post)
+    const post = useAppSelector((state) => state.selectedPost.post)
 
     return (
         <div className={styles.content}>

@@ -2,16 +2,23 @@ import { UserModel } from '../../models/ProfileOwnerModel'
 import { Avatar } from '../Avatar/Avatar'
 import styles from './UsersList.module.scss'
 
-interface UsersListItemProps {
-    user: UserModel
-    onClick: React.MouseEventHandler
+export interface UserInfoClassnames {
+    wrapper?: string
+    avatar?: string
+    name?: string
 }
 
-export function UserInfo({ user, onClick }: UsersListItemProps) {
+interface UserInfoProps {
+    user: UserModel
+    onClick: React.MouseEventHandler
+    classNames?: UserInfoClassnames
+}
+
+export function UserInfo({ user, onClick, classNames }: UserInfoProps) {
     return (
-        <div onClick={onClick} className={styles.item}>
-            <Avatar url={user.avatarUrl as string} />
-            <p>{user.fullname}</p>
+        <div onClick={onClick} className={` ${classNames?.wrapper || ''} ${styles.item}`}>
+            <Avatar className={classNames?.avatar || ''} url={user.avatarUrl as string} />
+            <p className={classNames?.name || ''}>{user.fullname}</p>
         </div>
     )
 }

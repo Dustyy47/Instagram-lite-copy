@@ -3,5 +3,7 @@
     "tabWidth": 4,
     "semi": false,
     "singleQuote": true,
-    "printWidth": 130
+    "printWidth": 120,
+    "jsxBracketSameLine": true,
+    "jsxSingleQuote": true
 }

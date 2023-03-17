@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios'
 import { ProfileModel } from 'models/ProfileOwnerModel'
 import { $authHost } from '.'
-import { UserModel } from './../models/ProfileOwnerModel'
+import { UserModel } from '../models/ProfileOwnerModel'
 
 export interface SubscribeResponse {
     isActiveUserFollowing: boolean
@@ -65,26 +65,14 @@ export const getFollowings = async (id: number) => {
     }
 }
 
-interface SearchUserResponse {
-    isActiveUserFollowing: boolean
-    user: UserModel
-}
-
 export const searchUsers = async (nickname: string, limit: number, offset: number) => {
     try {
-        const { data } = await $authHost.get<{ usersWithIsActiveUserFollowing: SearchUserResponse[] }>(
-            `profiles/find/${nickname}`,
-            {
-                params: { limit, offset },
-            }
-        )
-        const foundUsers = data.usersWithIsActiveUserFollowing.map((user) => ({
-            ...user.user,
-            isActiveUserFollowing: user.isActiveUserFollowing,
-        }))
-        return foundUsers
+        const { data } = await $authHost.get<{ users: UserModel[] }>(`profiles/find/${nickname}`, {
+            params: { limit, offset },
+        })
+        return data.users
     } catch (e) {
-        console.log((e as AxiosError).request.response)
+        console.log(e as AxiosError)
         return undefined
     }
 }

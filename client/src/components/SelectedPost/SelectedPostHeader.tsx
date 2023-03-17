@@ -9,9 +9,9 @@ interface SelectedPostHeaderProps {
 }
 
 export function SelectedPostHeader({ children }: SelectedPostHeaderProps) {
-    const author = useAppSelector((state) => state.extendedPost.author)
-    const post = useAppSelector((state) => state.extendedPost.post)
-    const isActiveUserPost = useAppSelector((state) => state.extendedPost.isActiveUserPost)
+    const author = useAppSelector((state) => state.selectedPost.author)
+    const post = useAppSelector((state) => state.selectedPost.post)
+    const isActiveUserPost = useAppSelector((state) => state.selectedPost.isActiveUserPost)
 
     if (!author) return null
     const { avatarUrl, nickname } = author

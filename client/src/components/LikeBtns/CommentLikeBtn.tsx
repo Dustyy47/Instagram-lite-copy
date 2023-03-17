@@ -23,7 +23,7 @@ export function CommentLikeBtn({ commentID, postID }: PostLikeButtonProps) {
     function like(e: React.MouseEvent) {
         if (isGuest) return
         e.stopPropagation()
-        dispatch(likesActions.fetchLikeComment({ postID, commentID }))
+        dispatch(likesActions.likeComment({ postID, commentID }))
     }
     return <LikeBtn isLikedMe={isLikedMe} onLike={like} numLikes={numLikes} classNames={classNames} />
 }

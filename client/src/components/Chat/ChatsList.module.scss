@@ -1,0 +1,12 @@
+.chatsList {
+    background: var(--chatsListBg);
+    padding: 10px;
+    overflow: auto;
+}
+
+.user {
+    background: white;
+    width: 95%;
+    height: 50px;
+    border-radius: 5px;
+}
